@@ -1,0 +1,67 @@
+
+@host = 'https://partner-service.wknd-otto.my.id'
+@apiHost= {{host}}/api
+# headers template
+@hMultipartFormdata = 'Content-Type: multipart/form-data;boundary'
+@hFormEncoded = 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
+@hJson= 'Content-Type: application/json'
+@hWkndToken = 'wknd-token: {{getToken.response.body.data.token_code}}'
+###
+# @name getToken
+curl --request post {{apiHost}}/token/get
+  # --header 'accept: application/json'
+  # --header 'accept-charset: UTF-8'
+  # --header 'accept-encoding: gzip'
+  # --header 'connection: Keep-Alive'
+  # --header 'content-length: 47'
+  # --header 'content-type: application/x-www-form-urlencoded; charset=UTF-8'
+  # --header 'host: partner-service.wknd-otto.my.id'
+  # --header 'user-agent: Ktor client'
+  --header {{hFormEncoded}}
+  --data name=admin
+  --data secret_key=admin123
+  --data device_id=vscode
+###
+curl --request post {{apiHost}}/token/get
+  --header {{hJson}}
+  -d '{
+    "name": "admin",
+    "secret_key": "admin123",
+    "device_id": "vs code"
+  }'
+###
+###
+# @name doLogin
+curl --request post {{apiHost}}/token/login
+  --header {{hWkndToken}}
+  --data email=billy.ardiwan@weekendinc.com
+  --data email=aditya.abdul@weekendinc.com
+  --data password=Weekendinc123!
+###
+# @name checkToken
+curl --request post {{apiHost}}/token/check
+  --header {{hFormEncoded}}
+  --header {{hWkndToken}}
+  --data
+###
+# @name doLogout
+curl --request post {{apiHost}}/token/logout
+  --header {{hWkndToken}}
+  --data
+###
+###
+# @name checkGoldBalance
+curl --request post {{apiHost}}/gold/check_balance_user
+  --header {{hWkndToken}}
+  --data 'user_id="1"'
+###
+# @name getGoldTransactionList
+curl --request post {{apiHost}}/gold/get_list_gold
+  --header {{hWkndToken}}
+  --data
+###
+# @name getIframeUrl
+curl --request post {{apiHost}}/gold/get_iframe
+  --header {{hWkndToken}}
+  --data
+###
