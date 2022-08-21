@@ -1,18 +1,17 @@
 package co.touchlab.kampkit
 
-import co.touchlab.kampkit.ktor.AuthApi
-import co.touchlab.kampkit.ktor.AuthApiImpl
 import co.touchlab.kampkit.ktor.DogApi
 import co.touchlab.kampkit.ktor.DogApiImpl
 import co.touchlab.kampkit.ktor.ProductMenuApi
 import co.touchlab.kampkit.ktor.ProductMenuApiImpl
-import co.touchlab.kampkit.models.AuthRepository
+import co.touchlab.kampkit.ktor.ProfileApi
+import co.touchlab.kampkit.ktor.ProfileApiImpl
 import co.touchlab.kampkit.models.BreedRepository
 import co.touchlab.kampkit.models.ProductMenuRepository
+import co.touchlab.kampkit.models.ProfileRepository
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
-import com.russhwolf.settings.Settings
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -86,30 +85,10 @@ private val coreModule = module {
     }
   }
 
-  single<DogApi> {
-    DogApiImpl(
-      getWith("DogApiImpl"),
-      get()
-    )
-  }
-
-  single<ProductMenuApi> {
-    ProductMenuApiImpl(
-      getWith("ProductMenuApiImpl"),
-      get()
-    )
-  }
-
-  single<AuthApi> {
-    AuthApiImpl(
-      getWith("AuthApiImpl"),
-      get()
-    )
-  }
-
-  single<Clock> {
-    Clock.System
-  }
+  single<DogApi> { DogApiImpl(getWith("DogApiImpl"), get()) }
+  single<ProductMenuApi> { ProductMenuApiImpl(getWith("ProductMenuApiImpl"), get()) }
+  single<ProfileApi> { ProfileApiImpl(getWith("UserProfileApiImpl"), get()) }
+  single<Clock> { Clock.System }
 
   // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
   // uses you *may* want to have a more robust configuration from the native platform. In KaMP Kit,
@@ -120,32 +99,10 @@ private val coreModule = module {
   factory { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
 
   single<BreedRepository> {
-    BreedRepository(
-      get(),
-      get(),
-      get(),
-      getWith("BreedRepository"),
-      get()
-    )
+    BreedRepository(get(), get(), get(), getWith("BreedRepository"), get())
   }
-  single {
-    ProductMenuRepository(
-      get(),
-      get(),
-      get(),
-      getWith("ProductMenuRepository"),
-      get()
-    )
-  }
-  single {
-    AuthRepository(
-      get(),
-      get(),
-      get(),
-      getWith("AuthRepository"),
-      get()
-    )
-  }
+  single { ProductMenuRepository(get(), get(), get(), getWith("ProductMenuRepository"), get()) }
+  single { ProfileRepository(get(), get(), get(), getWith("UserProfileRepository"), get()) }
 }
 
 internal inline fun <reified T> Scope.getWith(vararg params: Any?): T {

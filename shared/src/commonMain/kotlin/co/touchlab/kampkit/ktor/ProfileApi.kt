@@ -4,7 +4,7 @@ import co.AuthTokenResulttouchlab.kampkit.response.AuthToken.Result
 import co.touchlab.kampkit.response.Balance
 import co.touchlab.kampkit.response.MasterMenu
 
-interface UserProfileApi {
+interface ProfileApi {
   suspend fun fetchAuth(): Result
   suspend fun submitLogin(tokenSession: String, email: String, pass: String): Result
   suspend fun checkAuth(tokenSession: String): Result

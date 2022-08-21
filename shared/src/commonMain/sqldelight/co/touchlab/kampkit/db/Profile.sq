@@ -1,0 +1,40 @@
+CREATE TABLE IF NOT EXISTS Profile(
+  type TEXT UNIQUE PRIMARY KEY NOT NULL,
+  payload TEXT NOT NULL DEFAULT '{}',
+  last_update TEXT NOT NULL DEFAULT (strftime('%s','now'))
+);
+
+CREATE TRIGGER trg_profile_upd
+  AFTER UPDATE
+  ON Profile
+  FOR EACH ROW
+  WHEN new.last_update = old.last_update
+BEGIN
+  UPDATE Profile SET last_update = (strftime('%s', 'now')) WHERE type = old.type;
+END;
+
+INSERT INTO Profile (type) VALUES ('AUTH');
+INSERT INTO Profile (type) VALUES ('USER');
+INSERT INTO Profile (type) VALUES ('MASTER_MENU');
+INSERT INTO Profile (type) VALUES ('SALDO');
+INSERT INTO Profile (type) VALUES ('OTHER');
+
+selectAll:
+SELECT * FROM Profile;
+selectAuth:
+SELECT * FROM Profile WHERE type = 'AUTH';
+selectProfile:
+SELECT * FROM Profile WHERE type = 'USER';
+selectMasterMenu:
+SELECT * FROM Profile WHERE type = 'MASTER_MENU';
+selectSaldo:
+SELECT * FROM Profile WHERE type= 'SALDO';
+
+updateAuth:
+UPDATE Profile SET payload = ? WHERE type = 'AUTH';
+updateProfile:
+UPDATE Profile SET payload = ? WHERE type = 'USER';
+updateMasterMenu:
+UPDATE Profile SET payload = ? WHERE type = 'MASTER_MENU';
+updateSaldo:
+UPDATE Profile SET payload = ? WHERE type  = 'SALDO';

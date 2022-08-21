@@ -1,6 +1,7 @@
 package co.touchlab.kampkit.android.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
@@ -21,6 +22,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -32,14 +34,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
+import co.touchlab.kampkit.android.BuildConfig
 import co.touchlab.kampkit.android.R
 import co.touchlab.kampkit.db.Breed
 import co.touchlab.kampkit.db.ProductMenu
-import co.touchlab.kampkit.models.AuthViewModel
+import co.touchlab.kampkit.db.Profile
 import co.touchlab.kampkit.models.BreedViewModel
 import co.touchlab.kampkit.models.BreedViewState
 import co.touchlab.kampkit.models.ProductMenuViewModel
 import co.touchlab.kampkit.models.ProductMenuViewState
+import co.touchlab.kampkit.models.ProfileState
+import co.touchlab.kampkit.models.ProfileViewModel
 import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -48,7 +53,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun MainScreen(
   viewModel: BreedViewModel,
   productMenuViewModel: ProductMenuViewModel,
-  authViewModel: AuthViewModel,
+  profileViewModel: ProfileViewModel,
   log: Logger
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
@@ -61,14 +66,16 @@ fun MainScreen(
       productMenuViewModel.productMenuState.flowWithLifecycle(lifecycleOwner.lifecycle)
     }
 
-  val lifeCycleAwareAuthFlow =
-    remember(authViewModel.authState, lifecycleOwner) {
-      authViewModel.authState.flowWithLifecycle(lifecycleOwner.lifecycle)
+  val lifecycleAwareProfileFlow =
+    remember(profileViewModel.state, lifecycleOwner) {
+      profileViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle)
     }
+
   @SuppressLint("StateFlowValueCalledInComposition") // False positive lint check when used inside collectAsState()
   val dogsState by lifecycleAwareDogsFlow.collectAsState(viewModel.breedState.value)
   val productMenuState by lifeCycleAwareProductMenuFlow.collectAsState(productMenuViewModel.productMenuState.value)
   // val authState by lifeCycleAwareAuthFlow.collectAsState(authViewModel.authState.value)
+  val profileState by lifecycleAwareProfileFlow.collectAsState(profileViewModel.state.value)
 
   MainScreenContent(
     productMenuState = productMenuState,
@@ -80,15 +87,24 @@ fun MainScreen(
     onRefresh = {
       viewModel.refreshBreeds()
       productMenuViewModel.refreshProductMenuList()
-      authViewModel.getAuth()
+      profileViewModel.refreshProfileAuth()
     },
     onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
     onError = { exception -> log.e { "Displaying error: $exception" } },
     onFavorite = { viewModel.updateBreedFavorite(it) },
-    doAuth = { authViewModel.getAuth() }
+    profile = profileState
   )
 }
+class Ref(var value: Int)
 
+@Composable
+inline fun LogCompositions(tag: String, msg: String) {
+  if (BuildConfig.DEBUG) {
+    val ref = remember { Ref(0) }
+    SideEffect { ref.value++ }
+    Log.d(tag, "Compositions: [$msg] ${ref.value}")
+  }
+}
 @Composable
 fun MainScreenContent(
   productMenuState: ProductMenuViewState,
@@ -101,7 +117,9 @@ fun MainScreenContent(
   onSuccess: (List<Breed>) -> Unit = {},
   onError: (String) -> Unit = {},
   onFavorite: (Breed) -> Unit = {},
-  doAuth: () -> Unit = {}
+  doAuth: () -> Unit = {},
+  profile: ProfileState
+
 ) {
   Surface(
     color = MaterialTheme.colors.background,
@@ -111,9 +129,9 @@ fun MainScreenContent(
       state = rememberSwipeRefreshState(isRefreshing = dogsState.isLoading),
       onRefresh = onRefresh
     ) {
-      if (dogsState.isEmpty) {
-        Empty()
-      }
+      // if(dogsState.isEmpty) {
+      Empty(json = profile.toString())
+      // }
       val breeds = dogsState.breeds
       val menu = productMenuState.productMenu
       if (breeds != null && menu != null) {
@@ -142,7 +160,8 @@ fun MainScreenContent(
 }
 
 @Composable
-fun Empty() {
+fun Empty(json: String) {
+  LogCompositions("FDLN", json)
   Column(
     modifier = Modifier
       .fillMaxSize()
@@ -150,7 +169,8 @@ fun Empty() {
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
-    Text(stringResource(R.string.empty_breeds))
+    // Text(stringResource(R.string.empty_breeds))
+    Text(json)
   }
 }
 
@@ -238,6 +258,7 @@ fun MainScreenContentPreview_Success() {
         Breed(0, "appenzeller", false),
         Breed(1, "australian", true)
       )
-    )
+    ),
+    profile = ProfileState(Profile("x", "xxx", ""), true, "")
   )
 }

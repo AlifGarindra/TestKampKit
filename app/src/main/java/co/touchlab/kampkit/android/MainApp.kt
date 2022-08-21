@@ -6,9 +6,9 @@ import android.content.SharedPreferences
 import android.util.Log
 import co.touchlab.kampkit.AppInfo
 import co.touchlab.kampkit.initKoin
-import co.touchlab.kampkit.models.AuthViewModel
 import co.touchlab.kampkit.models.BreedViewModel
 import co.touchlab.kampkit.models.ProductMenuViewModel
+import co.touchlab.kampkit.models.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -25,9 +25,12 @@ class MainApp : Application() {
         single<Context> { this@MainApp }
         viewModel { BreedViewModel(get(), get { parametersOf("BreedViewModel") }) }
         viewModel { ProductMenuViewModel(get(), get { parametersOf("ProductMenuViewModel") }) }
-        viewModel { AuthViewModel(get(), get { parametersOf("AuthViewModel") }) }
+        viewModel { ProfileViewModel(get(), get { parametersOf("ProfileViewModel") }) }
         single<SharedPreferences> {
-          get<Context>().getSharedPreferences("KAMPSTARTER_SETTINGS", Context.MODE_PRIVATE)
+          get<Context>().getSharedPreferences(
+            "KAMPSTARTER_SETTINGS",
+            Context.MODE_PRIVATE
+          )
         }
         single<AppInfo> { AndroidAppInfo }
         single {

@@ -19,10 +19,10 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import co.touchlab.kermit.Logger as KermitLogger
 
-class UserProfileApiImpl(
+class ProfileApiImpl(
   private val log: KermitLogger,
   private val httpClient: HttpClient
-) : UserProfileApi {
+) : ProfileApi {
   init {
     ensureNeverFrozen()
   }
@@ -79,5 +79,5 @@ class UserProfileApiImpl(
     }) {
       endpoint("/api/gold/check_balance_user")
       headerSession(tokenSession)
-    }.body(
+    }.body()
 }

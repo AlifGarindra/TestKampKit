@@ -1,11 +1,9 @@
 package co.touchlab.kampkit
 
-import co.AuthTokenResulttouchlab.kampkit.response.AuthToken
-import co.touchlab.kampkit.db.Auth
 import co.touchlab.kampkit.db.Breed
 import co.touchlab.kampkit.db.KaMPKitDb
 import co.touchlab.kampkit.db.ProductMenu
-import co.touchlab.kampkit.db.UserProfile
+import co.touchlab.kampkit.db.Profile
 import co.touchlab.kampkit.response.ProductMenuItem
 import co.touchlab.kampkit.sqldelight.transactionWithContext
 import co.touchlab.kermit.Logger
@@ -57,58 +55,31 @@ class DatabaseHelper(
     }
   }
 
-  suspend fun insertAuth(result: AuthToken.Result) {
-    log.d { "Inserting ${result.data.tokenCode}, user_id ${result.data.tokenProfile?.userId}" }
-    dbRef.transactionWithContext(backgroundDispatcher) {
-      when (result.error) {
-        null -> ""
-        else -> result.error.message
-      }.let {
-        result.data.tokenProfile?.let { it1 ->
-          dbRef.authQueries.insertAuth(
-            user_id = result.data.tokenProfile?.userId,
-            apps_id = result.data.appsId,
-            device_id = result.data.deviceId,
-            device_type = result.data.deviceType,
-            token_code = result.data.tokenCode,
-            refresh_token = result.data.refreshToken,
-            created_date = result.data.createdDate,
-            expired_date = result.data.expiredDate,
-            last_activity = it1.lastActivity,
-            error_code = result.code.toLong(),
-            error_message = it
-            // error_code = result.code,
-          )
-        }
-      }
-    }
-  }
-
-  fun selectProfileAuth(): Flow<UserProfile> =
-    dbRef.userProfileQueries
+  fun selectProfileAuth(): Flow<Profile> =
+    dbRef.profileQueries
       .selectAuth()
       .asFlow()
       .mapToOne()
       .flowOn(backgroundDispatcher)
 
   suspend fun updateProfileAuth(json: String) {
-    log.i { "UserProfile $json" }
+    log.i { "Profile $json" }
     dbRef.transactionWithContext(backgroundDispatcher) {
-      dbRef.userProfileQueries.updateAuth("{{{}}}")
+      dbRef.profileQueries.updateAuth(json)
     }
   }
 
   suspend fun updateProfile(json: String) {
-    log.i { "UserProfile update $json" }
+    log.i { "Profile update $json" }
     dbRef.transactionWithContext(backgroundDispatcher) {
-      dbRef.userProfileQueries.updateProfile(json)
+      dbRef.profileQueries.updateProfile(json)
     }
   }
 
   suspend fun updateBalance(json: String) {
     log.i { "Balance update ${json}" }
     dbRef.transactionWithContext(backgroundDispatcher) {
-      dbRef.userProfileQueries.updateSaldo(json)
+      dbRef.profileQueries.updateSaldo(json)
     }
   }
 
@@ -119,34 +90,25 @@ class DatabaseHelper(
     }
   }
 
-  fun selectAllProfile(): FLow<UserProfile> =
-    dbRef.userProfileQueries
-  fun selectProfileUser(): Flow<UserProfile> =
-    dbRef.userProfileQueries
+  fun selectAllProfile(): Flow<List<Profile>> =
+    dbRef.profileQueries
+      .selectAll()
+      .asFlow()
+      .mapToList()
+      .flowOn(backgroundDispatcher)
+
+  fun selectProfileUser(): Flow<Profile> =
+    dbRef.profileQueries
       .selectProfile()
       .asFlow()
       .mapToOne()
       .flowOn(backgroundDispatcher)
 
-  fun selectProfileMasterMenu(): Flow<UserProfile> =
-    dbRef.userProfileQueries
+  fun selectProfileMasterMenu(): Flow<Profile> =
+    dbRef.profileQueries
       .selectMasterMenu()
       .asFlow()
       .mapToOne()
-      .flowOn(backgroundDispatcher)
-
-  fun getAuth(): Flow<Auth> =
-    dbRef.authQueries
-      .selectByUserId("1")
-      .asFlow()
-      .mapToOne()
-      .flowOn(backgroundDispatcher)
-
-  fun selectAll(): Flow<List<Auth>> =
-    dbRef.authQueries
-      .selectAll()
-      .asFlow()
-      .mapToList()
       .flowOn(backgroundDispatcher)
 
   fun selectById(id: Long): Flow<List<Breed>> =
