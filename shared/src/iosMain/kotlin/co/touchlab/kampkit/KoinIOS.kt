@@ -15,31 +15,33 @@ import org.koin.dsl.module
 import platform.Foundation.NSUserDefaults
 
 fun initKoinIos(
-    userDefaults: NSUserDefaults,
-    appInfo: AppInfo,
-    doOnStartup: () -> Unit
+  userDefaults: NSUserDefaults,
+  appInfo: AppInfo,
+  doOnStartup: () -> Unit
 ): KoinApplication = initKoin(
-    module {
-        single<Settings> { AppleSettings(userDefaults) }
-        single { appInfo }
-        single { doOnStartup }
-    }
+  module {
+    single<Settings> { AppleSettings(userDefaults) }
+    single { appInfo }
+    single { doOnStartup }
+  }
 )
 
 actual val platformModule = module {
-    single<SqlDriver> { NativeSqliteDriver(KaMPKitDb.Schema, "KampkitDb") }
+  single<SqlDriver> { NativeSqliteDriver(KaMPKitDb.Schema, "KampkitDb") }
 
-    single { Darwin.create() }
+  single { Darwin.create() }
 
-    single { BreedCallbackViewModel(get(), getWith("BreedCallbackViewModel")) }
+  single { BreedCallbackViewModel(get(), getWith("BreedCallbackViewModel")) }
+  single { ProfileCallbackViewModel(get(), getWith("ProfileCallbackViewModel")) }
 }
 
 // Access from Swift to create a logger
 @Suppress("unused")
 fun Koin.loggerWithTag(tag: String) =
-    get<Logger>(qualifier = null) { parametersOf(tag) }
+  get<Logger>(qualifier = null) { parametersOf(tag) }
 
 @Suppress("unused") // Called from Swift
 object KotlinDependencies : KoinComponent {
-    fun getBreedViewModel() = getKoin().get<BreedCallbackViewModel>()
+  fun getBreedViewModel() = getKoin().get<BreedCallbackViewModel>()
+  fun getProfileViewModel() = getKoin().get<ProfileCallbackViewModel>()
 }
