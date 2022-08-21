@@ -1,18 +1,21 @@
 package co.touchlab.kampkit.ktor
 
 import co.AuthTokenResulttouchlab.kampkit.response.AuthToken
+import co.touchlab.kampkit.request.Auth
 import co.touchlab.kampkit.response.AuthLoginResult
 import co.touchlab.stately.ensureNeverFrozen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
-import kotlinx.serialization.Serializable
 import co.touchlab.kermit.Logger as KermitLogger
 
 class AuthApiImpl(
@@ -24,48 +27,33 @@ class AuthApiImpl(
     ensureNeverFrozen()
   }
 
-  private fun HttpRequestBuilder.authToken(path: String) {
-    url {
-      takeFrom("https://partner-service.wknd-otto.my.id")
-      // takeFrom("http://192.168.1.10:3005")
-      encodedPath = path
-    }
-    // headersOf("Content-Type", "application/json")
+  private fun HttpRequestBuilder.endpoint(path: String) = url {
+    takeFrom("https://partner-service.wknd-otto.my.id")
+    encodedPath = path
   }
 
-  override suspend fun getToken(): AuthToken.Result {
-    log.d { "Fetching Token" }
-    log.d { "Fetching Token" }
+  private fun HttpRequestBuilder.headerSession(token: String) {
+    headers { append("wknd-token", token) }
+  }
 
-    // val response: HttpResponse = httpClient.submitForm(
-    //   formParameters = Parameters.build {
-    //     append("name", "admin")
-    //     append("device_id", "android")
-    //     append("secret_key", "admin123")
-    //   }) {
-    //   authToken("/api/token/get")
-    // }
-    // return response.body()
-    @Serializable
-    data class Credential(val name: String, val secret_key: String, val device_id: String)
-
-    return httpClient.post {
-      authToken("/api/token/get")
-      contentType(ContentType.Application.Json)
-      setBody(
-        Credential(
-          "admin",
-          "admin123",
-          "kotlin",
-        )
+  override suspend fun fetchAuth(): AuthToken.Result = httpClient.post {
+    endpoint("/api/token/get")
+    contentType(ContentType.Application.Json)
+    setBody(
+      Auth.Request(
+        "admin",
+        "admin123",
+        "android"
       )
-    }.body()
-  }
+    )
+  }.body()
 
-  override suspend fun doLogin(): AuthLoginResult {
-    log.d { "SubmitLogin" }
-    return httpClient.post {
-      authToken("login")
-    }.body()
-  }
+  override suspend fun doLogin(): AuthLoginResult = httpClient.submitForm(
+    formParameters = Parameters.build {
+      append("email", "aditya.abdul@weekendinc.com")
+      append("password", "Weekendinc123!")
+    }) {
+    endpoint("/api/token/login")
+    headerSession("sGpQjtKHhn0wqHArcLS1vRRTbZZnlyro")
+  }.body()
 }

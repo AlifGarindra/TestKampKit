@@ -5,12 +5,15 @@ import co.touchlab.kampkit.ApiConstant.INVALID_AUTH
 import co.touchlab.kampkit.ApiConstant.OK
 import co.touchlab.kampkit.DatabaseHelper
 import co.touchlab.kampkit.db.Auth
+import co.touchlab.kampkit.db.UserProfile
 import co.touchlab.kampkit.ktor.AuthApi
 import co.touchlab.kermit.Logger
 import co.touchlab.stately.ensureNeverFrozen
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class AuthRepository(
   private val dbHelper: DatabaseHelper,
@@ -30,15 +33,26 @@ class AuthRepository(
   }
 
   fun getAuths(): Flow<List<Auth>> = dbHelper.selectAll()
-
+  fun loadAuth(): Flow<UserProfile> = dbHelper.selectProfileAuth()
   suspend fun refreshAuthIfStale() {
-    if (isAuthStale()) {
-      getAuth()
+    if (isAuthStale()) loadAuth()
+  }
+
+  suspend fun fetchAuth() {
+    val result: AuthToken.Result = authApi.fetchAuth()
+    settings.putLong(DB_TIMESTAMP_KEY, clock.now().toEpochMilliseconds())
+    when (result.code.toInt()) {
+      OK -> dbHelper.updateProfileAuth(Json.encodeToString(result))
+      INVALID_AUTH -> log.e { "INVALID CREDENTIAL: ${result.error?.message}" }
+      else -> log.e { "AUTH ERROR" }
     }
+  }
+  suspend fun submitLogin() {
+   // val result:AuthToken.Result = authApi
   }
 
   suspend fun getAuth() {
-    val result: AuthToken.Result = authApi.getToken()
+    val result: AuthToken.Result = authApi.fetchAuth()
     log.v { "Auth net. result [token_code]: ${result.data.tokenCode}" }
     settings.putLong(DB_TIMESTAMP_KEY, clock.now().toEpochMilliseconds())
     when (result.code.toInt()) {
