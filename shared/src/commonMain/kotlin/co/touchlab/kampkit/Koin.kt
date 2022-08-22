@@ -102,7 +102,7 @@ private val coreModule = module {
     BreedRepository(get(), get(), get(), getWith("BreedRepository"), get())
   }
   single { ProductMenuRepository(get(), get(), get(), getWith("ProductMenuRepository"), get()) }
-  single { ProfileRepository(get(), get(), get(), getWith("UserProfileRepository"), get()) }
+  single { ProfileRepository(get(), get(), get(), getWith("ProfileRepository"), get()) }
 }
 
 internal inline fun <reified T> Scope.getWith(vararg params: Any?): T {

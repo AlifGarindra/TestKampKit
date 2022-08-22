@@ -72,6 +72,7 @@ class ProductMenuViewModel(
     }
   }
 
+
   private fun handleProductMenuError(throwable: Throwable) {
     log.e(throwable) { "Error download product menu list" }
     mutableProductMenuState.update {

@@ -7,6 +7,7 @@ import co.touchlab.kampkit.DatabaseHelper
 import co.touchlab.kampkit.db.Profile
 import co.touchlab.kampkit.ktor.ProfileApi
 import co.touchlab.kampkit.response.Balance
+import co.touchlab.kampkit.response.MasterMenu
 import co.touchlab.kermit.Logger
 import co.touchlab.stately.ensureNeverFrozen
 import com.russhwolf.settings.Settings
@@ -25,7 +26,9 @@ class ProfileRepository(
   private val log = log.withTag("ProfileMode")
 
   companion object {
-    internal const val DB_TIMESTAMP_KEY = "DbTimestampKey"
+    internal const val DB_TIMESTAMP_AUTH = "DbTimestampAuth"
+    internal const val DB_TIMESTAMP_MASTER_MENU = "DbTimestampMasterMenu"
+    internal const val DB_TIMESTAMP_BALANCE = "DbTimestampBalance"
   }
 
   init {
@@ -34,14 +37,20 @@ class ProfileRepository(
 
   fun selectAll(): Flow<List<Profile>> = dbHelper.selectAllProfile()
   fun selectAuth(): Flow<Profile> = dbHelper.selectProfileAuth()
+  fun selectMasterMenu(): Flow<Profile> = dbHelper.selectProfileMasterMenu()
   fun selectProfile(): Flow<Profile> = dbHelper.selectProfileUser()
+
   suspend fun refreshAuthIfStale() {
     if (isAuthStale()) fetchAuth()
   }
 
+  suspend fun refreshMasterMenuIfStale() {
+    if (isMasterMenuStale()) fetchMasterMenu()
+  }
+
   suspend fun fetchAuth() {
     val result: AuthToken.Result = profile.fetchAuth()
-    settings.putLong(DB_TIMESTAMP_KEY, clock.now().toEpochMilliseconds())
+    settings.putLong(DB_TIMESTAMP_AUTH, clock.now().toEpochMilliseconds())
     when (result.code) {
       OK -> dbHelper.updateProfileAuth(Json.encodeToString(result))
       INVALID_SESSION -> log.e { "INVALID CREDENTIAL ${result.error?.message}" }
@@ -56,7 +65,7 @@ class ProfileRepository(
         "aditya.abdul@weekendinc.com",
         "Weekendinc123!"
       )
-    settings.putLong(DB_TIMESTAMP_KEY, clock.now().toEpochMilliseconds())
+    settings.putLong(DB_TIMESTAMP_AUTH, clock.now().toEpochMilliseconds())
     when (result.code) {
       OK -> dbHelper.updateProfileAuth(Json.encodeToString(result))
       INVALID_SESSION -> log.e { "INVALID CREDENTIAL ${result.error?.message}" }
@@ -64,12 +73,19 @@ class ProfileRepository(
     }
   }
 
+  suspend fun fetchMasterMenu() {
+    val result: MasterMenu.Result = profile.fetchMasterMenu()
+    settings.putLong(DB_TIMESTAMP_MASTER_MENU, clock.now().toEpochMilliseconds())
+    if (result.features.isNotEmpty())
+      dbHelper.updateMasterMenu(Json.encodeToString(result))
+  }
+
   suspend fun fetchBalance() {
     val result: Balance = profile.fetchBalance(
       "token here",
       "1"
     )
-    settings.putLong(DB_TIMESTAMP_KEY, clock.now().toEpochMilliseconds())
+    settings.putLong(DB_TIMESTAMP_BALANCE, clock.now().toEpochMilliseconds())
     when (result.code) {
       OK -> dbHelper.updateBalance(Json.encodeToString(result))
       else -> log.e { "UMKNOWN ERROR ${result.toString()}" }
@@ -77,11 +93,21 @@ class ProfileRepository(
   }
 
   private fun isAuthStale(): Boolean {
-    val lastDownloadTimeMS = settings.getLong(DB_TIMESTAMP_KEY, 0)
+    val lastDownloadTimeMS = settings.getLong(DB_TIMESTAMP_AUTH, 0)
     val oneHourMS = 100
     val stale = lastDownloadTimeMS + oneHourMS < clock.now().toEpochMilliseconds()
     if (!stale) {
       log.i { "auth not fetched from network. Recently update" }
+    }
+    return stale
+  }
+
+  private fun isMasterMenuStale(): Boolean {
+    val lastDownloadTimeMS = settings.getLong(DB_TIMESTAMP_MASTER_MENU, 0)
+    val oneMinuteMS = 1 * 60 * 1000
+    val stale = lastDownloadTimeMS + oneMinuteMS < clock.now().toEpochMilliseconds()
+    if (!stale) {
+      log.i { "master menu not fetched from network. Recently update" }
     }
     return stale
   }

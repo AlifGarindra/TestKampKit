@@ -83,6 +83,11 @@ class DatabaseHelper(
     }
   }
 
+  suspend fun updateMasterMenu(json: String): Unit =
+    dbRef.transactionWithContext(backgroundDispatcher) {
+      dbRef.profileQueries.updateMasterMenu(json)
+    }
+
   suspend fun updateFavorite(breedId: Long, favorite: Boolean) {
     log.i { "Breed $breedId: Favorited $favorite" }
     dbRef.transactionWithContext(backgroundDispatcher) {

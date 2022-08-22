@@ -16,7 +16,13 @@ class ProfileViewModel(
 ) : ViewModel() {
   private val log = log.withTag("ProfileViewModel")
   private val mutableState: MutableStateFlow<ProfileState> =
-    MutableStateFlow(ProfileState(isLoading = true))
+    MutableStateFlow(
+      ProfileState(
+        isLoading = true,
+        isLoadingMasterMenu = true
+      )
+    )
+
   val state: StateFlow<ProfileState> = mutableState
 
   init {
@@ -31,6 +37,7 @@ class ProfileViewModel(
     val refreshFlow = flow<Throwable?> {
       try {
         repository.refreshAuthIfStale()
+        // repository.refreshMasterMenuIfStale()
         emit(null)
       } catch (e: Exception) {
         emit(e)
@@ -38,9 +45,13 @@ class ProfileViewModel(
     }
 
     viewModelScope.launch {
-      combine(refreshFlow, repository.selectAuth()) { throwable, profile ->
-        throwable to profile
+      combine(
+        refreshFlow,
+        repository.selectAuth()
+      ) { throwable, auth ->
+        throwable to auth
       }.collect { (error, profile) ->
+        log.e { "${profile.toString()}" }
         mutableState.update { previousState ->
           val errorMessage = if (error != null) {
             "Unable to download profiles"
@@ -50,7 +61,6 @@ class ProfileViewModel(
 
           ProfileState(
             isLoading = false,
-            all = profile,
             error = errorMessage
           )
         }
@@ -72,6 +82,27 @@ class ProfileViewModel(
     }
   }
 
+  fun refreshMasterMenu(): Job {
+    mutableState.update {
+      it.copy(isLoadingMasterMenu = true)
+    }
+    return viewModelScope.launch {
+      try {
+        repository.fetchMasterMenu()
+      } catch (e: Exception) {
+        handleErrorMasterMenu(e)
+      }
+    }
+  }
+
+  private fun handleErrorMasterMenu(throwable: Throwable) {
+    mutableState.update {
+      if (it.masterMenu.payload.isBlank())
+        ProfileState(errorMasterMenu = "Unable load Master Menu")
+      else it.copy(isLoadingMasterMenu = false)
+    }
+  }
+
   private fun handleError(throwable: Throwable) {
     log.e(throwable) { "Error on PROFILE" }
     mutableState.update {
@@ -85,7 +116,10 @@ class ProfileViewModel(
 }
 
 data class ProfileState(
-  val all: Profile = Profile("", "x", ""),
+  val all: Profile = Profile("AUTH", "x", ""),
+  val masterMenu: Profile = Profile("MASTER_MENU", "", ""),
   val isLoading: Boolean = false,
-  val error: String = ""
+  val isLoadingMasterMenu: Boolean = false,
+  val error: String = "",
+  val errorMasterMenu: String = ""
 )

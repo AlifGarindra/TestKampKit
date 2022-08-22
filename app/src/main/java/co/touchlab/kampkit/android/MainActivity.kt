@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
   private val log: Logger by injectLogger("MainActivity")
   private val viewModel: BreedViewModel by viewModel<BreedViewModel>()
   private val productMenuViewModel: ProductMenuViewModel by viewModel<ProductMenuViewModel>()
-  private val userProfileViewModel: ProfileViewModel by viewModel<ProfileViewModel>()
+  private val profileViewModel: ProfileViewModel by viewModel<ProfileViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         MainScreen(
           viewModel,
           productMenuViewModel,
-          userProfileViewModel,
+          profileViewModel,
           log
         )
       }

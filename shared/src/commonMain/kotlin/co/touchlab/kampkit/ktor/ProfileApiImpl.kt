@@ -9,6 +9,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.submitForm
+import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -69,9 +70,8 @@ class ProfileApiImpl(
       headerSession(tokenSession)
     }.body()
 
-  override suspend fun fetchMasterMenu(): MasterMenu {
-    TODO("Not yet implemented")
-  }
+  override suspend fun fetchMasterMenu(): MasterMenu.Result =
+    httpClient.get("https://app.weekendinc.com/data/data.json").body()
 
   override suspend fun fetchBalance(tokenSession: String, userId: String): Balance =
     httpClient.submitForm(formParameters = Parameters.build {

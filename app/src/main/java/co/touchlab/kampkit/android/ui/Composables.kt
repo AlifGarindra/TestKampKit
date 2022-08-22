@@ -88,6 +88,7 @@ fun MainScreen(
       viewModel.refreshBreeds()
       productMenuViewModel.refreshProductMenuList()
       profileViewModel.refreshProfileAuth()
+      // profileViewModel.refreshMasterMenu()
     },
     onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
     onError = { exception -> log.e { "Displaying error: $exception" } },
@@ -95,6 +96,7 @@ fun MainScreen(
     profile = profileState
   )
 }
+
 class Ref(var value: Int)
 
 @Composable
@@ -105,6 +107,7 @@ inline fun LogCompositions(tag: String, msg: String) {
     Log.d(tag, "Compositions: [$msg] ${ref.value}")
   }
 }
+
 @Composable
 fun MainScreenContent(
   productMenuState: ProductMenuViewState,
@@ -242,23 +245,23 @@ fun FavoriteIcon(breed: Breed) {
     }
   }
 }
-
-@Preview
-@Composable
-fun MainScreenContentPreview_Success() {
-  MainScreenContent(
-    productMenuState = ProductMenuViewState(
-      productMenu = listOf(
-        ProductMenu(1, "pln", "listrik"),
-        ProductMenu(2, "pulsa", "telpon")
-      )
-    ),
-    dogsState = BreedViewState(
-      breeds = listOf(
-        Breed(0, "appenzeller", false),
-        Breed(1, "australian", true)
-      )
-    ),
-    profile = ProfileState(Profile("x", "xxx", ""), true, "")
-  )
-}
+//
+// @Preview
+// @Composable
+// fun MainScreenContentPreview_Success() {
+//   MainScreenContent(
+//     productMenuState = ProductMenuViewState(
+//       productMenu = listOf(
+//         ProductMenu(1, "pln", "listrik"),
+//         ProductMenu(2, "pulsa", "telpon")
+//       )
+//     ),
+//     dogsState = BreedViewState(
+//       breeds = listOf(
+//         Breed(0, "appenzeller", false),
+//         Breed(1, "australian", true)
+//       )
+//     ),
+//     profile = ProfileState(Profile("x", "xxx", ""), true, "")
+//   )
+// }
