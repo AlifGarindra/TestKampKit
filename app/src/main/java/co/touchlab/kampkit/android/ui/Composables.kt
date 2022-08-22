@@ -31,18 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import co.touchlab.kampkit.android.BuildConfig
 import co.touchlab.kampkit.android.R
 import co.touchlab.kampkit.db.Breed
-import co.touchlab.kampkit.db.ProductMenu
-import co.touchlab.kampkit.db.Profile
 import co.touchlab.kampkit.models.BreedViewModel
 import co.touchlab.kampkit.models.BreedViewState
-import co.touchlab.kampkit.models.ProductMenuViewModel
-import co.touchlab.kampkit.models.ProductMenuViewState
 import co.touchlab.kampkit.models.ProfileState
 import co.touchlab.kampkit.models.ProfileViewModel
 import co.touchlab.kermit.Logger
@@ -52,7 +47,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun MainScreen(
   viewModel: BreedViewModel,
-  productMenuViewModel: ProductMenuViewModel,
   profileViewModel: ProfileViewModel,
   log: Logger
 ) {
@@ -61,11 +55,6 @@ fun MainScreen(
     viewModel.breedState.flowWithLifecycle(lifecycleOwner.lifecycle)
   }
 
-  val lifeCycleAwareProductMenuFlow =
-    remember(productMenuViewModel.productMenuState, lifecycleOwner) {
-      productMenuViewModel.productMenuState.flowWithLifecycle(lifecycleOwner.lifecycle)
-    }
-
   val lifecycleAwareProfileFlow =
     remember(profileViewModel.state, lifecycleOwner) {
       profileViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -73,22 +62,16 @@ fun MainScreen(
 
   @SuppressLint("StateFlowValueCalledInComposition") // False positive lint check when used inside collectAsState()
   val dogsState by lifecycleAwareDogsFlow.collectAsState(viewModel.breedState.value)
-  val productMenuState by lifeCycleAwareProductMenuFlow.collectAsState(productMenuViewModel.productMenuState.value)
   // val authState by lifeCycleAwareAuthFlow.collectAsState(authViewModel.authState.value)
   val profileState by lifecycleAwareProfileFlow.collectAsState(profileViewModel.state.value)
 
   MainScreenContent(
-    productMenuState = productMenuState,
-    onProductMenuRefresh = { productMenuViewModel.refreshProductMenuList() },
-    onProductMenuSuccess = { data -> log.v { "View updating with ${data?.size} product menu list" } },
-    onProductMenuError = { exception -> log.e { "Displaying error $exception" } },
-
     dogsState = dogsState,
     onRefresh = {
       viewModel.refreshBreeds()
-      productMenuViewModel.refreshProductMenuList()
       profileViewModel.refreshProfileAuth()
-      // profileViewModel.refreshMasterMenu()
+      if (profileState.masterMenu.payload.isNullOrBlank())
+      profileViewModel.refreshMasterMenu()
     },
     onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
     onError = { exception -> log.e { "Displaying error: $exception" } },
@@ -110,11 +93,6 @@ inline fun LogCompositions(tag: String, msg: String) {
 
 @Composable
 fun MainScreenContent(
-  productMenuState: ProductMenuViewState,
-  onProductMenuRefresh: () -> Unit = {},
-  onProductMenuSuccess: (List<ProductMenu>?) -> Unit = {},
-  onProductMenuError: (String) -> Unit = {},
-
   dogsState: BreedViewState,
   onRefresh: () -> Unit = {},
   onSuccess: (List<Breed>) -> Unit = {},
@@ -136,21 +114,12 @@ fun MainScreenContent(
       Empty(json = profile.toString())
       // }
       val breeds = dogsState.breeds
-      val menu = productMenuState.productMenu
-      if (breeds != null && menu != null) {
+      if (breeds != null) {
         LaunchedEffect(breeds) {
           onSuccess(breeds)
         }
-        LaunchedEffect(menu) {
-          onProductMenuSuccess(menu)
-        }
-        // Success(successData = breeds, favoriteBreed = onFavorite)
-        Success(successData = breeds, favoriteBreed = onFavorite, menu = menu)
+        Success(successData = breeds, favoriteBreed = onFavorite)
       }
-      // val productMenu = productMenuState.productMenu
-      // LaunchedEffect(productMenu) {
-      //   onProductMenuSuccess(productMenu)
-      // }
       val error = dogsState.error
       if (error != null) {
         LaunchedEffect(error) {
@@ -194,16 +163,15 @@ fun Error(error: String) {
 fun Success(
   successData: List<Breed>,
   favoriteBreed: (Breed) -> Unit,
-  menu: List<ProductMenu>
 ) {
-  DogList(breeds = successData, favoriteBreed, menu = menu)
+  DogList(breeds = successData, favoriteBreed)
 }
 
 @Composable
-fun DogList(breeds: List<Breed>, onItemClick: (Breed) -> Unit, menu: List<ProductMenu>) {
+fun DogList(breeds: List<Breed>, onItemClick: (Breed) -> Unit) {
   LazyColumn {
     items(breeds) { breed ->
-      DogRow(breed = breed, menu = null) {
+      DogRow(breed = breed) {
         onItemClick(it)
       }
       Divider()
@@ -212,7 +180,7 @@ fun DogList(breeds: List<Breed>, onItemClick: (Breed) -> Unit, menu: List<Produc
 }
 
 @Composable
-fun DogRow(breed: Breed, menu: ProductMenu?, onClick: (Breed) -> Unit) {
+fun DogRow(breed: Breed, onClick: (Breed) -> Unit) {
   Row(
     Modifier
       .clickable { onClick(breed) }

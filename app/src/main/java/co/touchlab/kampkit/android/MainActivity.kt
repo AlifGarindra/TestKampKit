@@ -7,7 +7,6 @@ import co.touchlab.kampkit.android.ui.MainScreen
 import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
 import co.touchlab.kampkit.injectLogger
 import co.touchlab.kampkit.models.BreedViewModel
-import co.touchlab.kampkit.models.ProductMenuViewModel
 import co.touchlab.kampkit.models.ProfileViewModel
 import co.touchlab.kermit.Logger
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
 
   private val log: Logger by injectLogger("MainActivity")
   private val viewModel: BreedViewModel by viewModel<BreedViewModel>()
-  private val productMenuViewModel: ProductMenuViewModel by viewModel<ProductMenuViewModel>()
   private val profileViewModel: ProfileViewModel by viewModel<ProfileViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
       KaMPKitTheme {
         MainScreen(
           viewModel,
-          productMenuViewModel,
           profileViewModel,
           log
         )

@@ -2,12 +2,9 @@ package co.touchlab.kampkit
 
 import co.touchlab.kampkit.ktor.DogApi
 import co.touchlab.kampkit.ktor.DogApiImpl
-import co.touchlab.kampkit.ktor.ProductMenuApi
-import co.touchlab.kampkit.ktor.ProductMenuApiImpl
 import co.touchlab.kampkit.ktor.ProfileApi
 import co.touchlab.kampkit.ktor.ProfileApiImpl
 import co.touchlab.kampkit.models.BreedRepository
-import co.touchlab.kampkit.models.ProductMenuRepository
 import co.touchlab.kampkit.models.ProfileRepository
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
@@ -86,7 +83,6 @@ private val coreModule = module {
   }
 
   single<DogApi> { DogApiImpl(getWith("DogApiImpl"), get()) }
-  single<ProductMenuApi> { ProductMenuApiImpl(getWith("ProductMenuApiImpl"), get()) }
   single<ProfileApi> { ProfileApiImpl(getWith("UserProfileApiImpl"), get()) }
   single<Clock> { Clock.System }
 
@@ -101,7 +97,6 @@ private val coreModule = module {
   single<BreedRepository> {
     BreedRepository(get(), get(), get(), getWith("BreedRepository"), get())
   }
-  single { ProductMenuRepository(get(), get(), get(), getWith("ProductMenuRepository"), get()) }
   single { ProfileRepository(get(), get(), get(), getWith("ProfileRepository"), get()) }
 }
 

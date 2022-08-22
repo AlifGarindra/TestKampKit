@@ -7,7 +7,6 @@ import android.util.Log
 import co.touchlab.kampkit.AppInfo
 import co.touchlab.kampkit.initKoin
 import co.touchlab.kampkit.models.BreedViewModel
-import co.touchlab.kampkit.models.ProductMenuViewModel
 import co.touchlab.kampkit.models.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
@@ -24,7 +23,6 @@ class MainApp : Application() {
         Product("10001", "indomie")
         single<Context> { this@MainApp }
         viewModel { BreedViewModel(get(), get { parametersOf("BreedViewModel") }) }
-        viewModel { ProductMenuViewModel(get(), get { parametersOf("ProductMenuViewModel") }) }
         viewModel { ProfileViewModel(get(), get { parametersOf("ProfileViewModel") }) }
         single<SharedPreferences> {
           get<Context>().getSharedPreferences(

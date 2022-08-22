@@ -104,7 +104,7 @@ class ProfileRepository(
 
   private fun isMasterMenuStale(): Boolean {
     val lastDownloadTimeMS = settings.getLong(DB_TIMESTAMP_MASTER_MENU, 0)
-    val oneMinuteMS = 1 * 60 * 1000
+    val oneMinuteMS = 0 * 60 * 1000
     val stale = lastDownloadTimeMS + oneMinuteMS < clock.now().toEpochMilliseconds()
     if (!stale) {
       log.i { "master menu not fetched from network. Recently update" }

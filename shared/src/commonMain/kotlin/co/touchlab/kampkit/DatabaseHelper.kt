@@ -2,9 +2,7 @@ package co.touchlab.kampkit
 
 import co.touchlab.kampkit.db.Breed
 import co.touchlab.kampkit.db.KaMPKitDb
-import co.touchlab.kampkit.db.ProductMenu
 import co.touchlab.kampkit.db.Profile
-import co.touchlab.kampkit.response.ProductMenuItem
 import co.touchlab.kampkit.sqldelight.transactionWithContext
 import co.touchlab.kermit.Logger
 import com.squareup.sqldelight.db.SqlDriver
@@ -29,28 +27,11 @@ class DatabaseHelper(
       .mapToList()
       .flowOn(backgroundDispatcher)
 
-  fun selectAllProductMenu(): Flow<List<ProductMenu>> =
-    dbRef.productMenuQueries.selectAll().asFlow().mapToList()
-      .flowOn(backgroundDispatcher)
-
   suspend fun insertBreeds(breeds: List<String>) {
     log.d { "Inserting ${breeds.size} breeds into database" }
     dbRef.transactionWithContext(backgroundDispatcher) {
       breeds.forEach { breed ->
         dbRef.tableQueries.insertBreed(breed)
-      }
-    }
-  }
-
-  suspend fun insertProductMenuList(productMenuList: List<ProductMenuItem>) {
-    log.d("Inserting ${productMenuList.size} productMenuList into database")
-    dbRef.transactionWithContext(backgroundDispatcher) {
-      productMenuList.forEach { productMenu ->
-        dbRef.productMenuQueries.insertProductMenu(
-          rank = productMenu.rank,
-          code = productMenu.code,
-          name = productMenu.name
-        )
       }
     }
   }

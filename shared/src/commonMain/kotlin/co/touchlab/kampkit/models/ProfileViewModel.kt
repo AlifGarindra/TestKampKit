@@ -37,7 +37,7 @@ class ProfileViewModel(
     val refreshFlow = flow<Throwable?> {
       try {
         repository.refreshAuthIfStale()
-        // repository.refreshMasterMenuIfStale()
+        repository.refreshMasterMenuIfStale()
         emit(null)
       } catch (e: Exception) {
         emit(e)
@@ -47,20 +47,31 @@ class ProfileViewModel(
     viewModelScope.launch {
       combine(
         refreshFlow,
-        repository.selectAuth()
-      ) { throwable, auth ->
-        throwable to auth
-      }.collect { (error, profile) ->
-        log.e { "${profile.toString()}" }
-        mutableState.update { previousState ->
+        repository.selectAuth(),
+        repository.selectMasterMenu(),
+      ) { throwable, auth, masterMenu ->
+        throwable to mapOf("auth" to auth, "masterMenu" to masterMenu)
+      }.collect { (error, res) ->
+        log.e { "OBS OBS OBS OBS OBS" }
+        mutableState.update { prevState ->
           val errorMessage = if (error != null) {
             "Unable to download profiles"
           } else {
-            previousState.error
+            prevState.error
           }
+          val auth = if (res["auth"] != null) {
+            res["auth"]
+          } else {
+            Profile("auth", "x", "")
+          }
+          val masterMenu = if (res["masterMenu"] != null) {
+            res["masterMenu"]
+          } else Profile("masterMenu", "x", "")
 
-          ProfileState(
+          prevState.copy(
             isLoading = false,
+            auth = res["auth"]!!,
+            masterMenu = res["masterMenu"]!!,
             error = errorMessage
           )
         }
@@ -73,7 +84,7 @@ class ProfileViewModel(
       it.copy(isLoading = true)
     }
     return viewModelScope.launch {
-      log.v { "refresh profileauth" }
+      log.e { "refresh profileauth" }
       try {
         repository.fetchAuth()
       } catch (e: Exception) {
@@ -106,7 +117,7 @@ class ProfileViewModel(
   private fun handleError(throwable: Throwable) {
     log.e(throwable) { "Error on PROFILE" }
     mutableState.update {
-      if (it.all.type.isBlank()) {
+      if (it.auth.type.isBlank()) {
         ProfileState(error = "Unable to refresh profiles")
       } else {
         it.copy(isLoading = false)
@@ -116,7 +127,7 @@ class ProfileViewModel(
 }
 
 data class ProfileState(
-  val all: Profile = Profile("AUTH", "x", ""),
+  val auth: Profile = Profile("AUTH", "x", ""),
   val masterMenu: Profile = Profile("MASTER_MENU", "", ""),
   val isLoading: Boolean = false,
   val isLoadingMasterMenu: Boolean = false,
