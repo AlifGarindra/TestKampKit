@@ -12,6 +12,44 @@ import shared
 
 private let log = koin.loggerWithTag(tag: "ViewController")
 
+class ObservableProfileModel: ObservableObject {
+    private var viewModel: ProfileCallbackViewModel?
+
+    @Published
+    var loading = false
+
+    @Published
+    var profile: Profile?
+
+    @Published
+    var error: String?
+
+    private var cancellables = [AnyCancellable]()
+
+    func activate() {
+        let viewModel = KotlinDependencies.shared.getProfileViewModel()
+
+        doPublish(viewModel.profile) { [weak self] profileState in
+            self?.loading = profileState.isLoading
+            self?.profile = profileState.all
+            self?.error = profileState.error
+        }.store(in: &cancellables)
+
+        self.viewModel = viewModel
+    }
+
+    func deactivate() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+
+        viewModel?.clear()
+        viewModel = nil
+    }
+
+    func refresh() {
+        viewModel?.refreshProfile()
+    }
+}
 class ObservableBreedModel: ObservableObject {
     private var viewModel: BreedCallbackViewModel?
 
@@ -66,19 +104,28 @@ struct BreedListScreen: View {
     @StateObject
     var observableModel = ObservableBreedModel()
 
+    @StateObject
+    var profileModel = ObservableProfileModel()
+
     var body: some View {
         BreedListContent(
             loading: observableModel.loading,
             breeds: observableModel.breeds,
+            profile: profileModel.profile,
             error: observableModel.error,
             onBreedFavorite: { observableModel.onBreedFavorite($0) },
-            refresh: { observableModel.refresh() }
+            refresh: {
+                observableModel.refresh()
+                profileModel.refresh()
+            }
         )
         .onAppear(perform: {
             observableModel.activate()
+            profileModel.activate()
         })
         .onDisappear(perform: {
             observableModel.deactivate()
+            profileModel.deactivate()
         })
     }
 }
@@ -86,6 +133,7 @@ struct BreedListScreen: View {
 struct BreedListContent: View {
     var loading: Bool
     var breeds: [Breed]?
+    var profile: Profile?
     var error: String?
     var onBreedFavorite: (Breed) -> Void
     var refresh: () -> Void
@@ -108,7 +156,7 @@ struct BreedListContent: View {
                     refresh()
                 }
             }
-            if loading { Text("Loading...") }
+            if true { Text(profile?.payload ?? "") }
         }
     }
 }
