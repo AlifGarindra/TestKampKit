@@ -15,4 +15,8 @@ class ProfileCallbackViewModel(
   fun refreshProfile() {
     viewModel.refreshProfileAuth()
   }
+
+  fun refreshMasterMenu() {
+    viewModel.refreshMasterMenu()
+  }
 }

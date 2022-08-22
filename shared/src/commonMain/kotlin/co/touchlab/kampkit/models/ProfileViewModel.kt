@@ -1,6 +1,7 @@
 package co.touchlab.kampkit.models
 
-import co.touchlab.kampkit.db.Profile
+import co.AuthTokenResulttouchlab.kampkit.response.AuthToken
+import co.touchlab.kampkit.response.MasterMenu
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class ProfileViewModel(
   private val repository: ProfileRepository,
@@ -52,26 +55,28 @@ class ProfileViewModel(
       ) { throwable, auth, masterMenu ->
         throwable to mapOf("auth" to auth, "masterMenu" to masterMenu)
       }.collect { (error, res) ->
-        log.e { "OBS OBS OBS OBS OBS" }
         mutableState.update { prevState ->
           val errorMessage = if (error != null) {
             "Unable to download profiles"
           } else {
             prevState.error
           }
-          val auth = if (res["auth"] != null) {
-            res["auth"]
-          } else {
-            Profile("auth", "x", "")
-          }
-          val masterMenu = if (res["masterMenu"] != null) {
-            res["masterMenu"]
-          } else Profile("masterMenu", "x", "")
+          val auth: AuthToken.Auth = if (res["auth"] != null) {
+            val jsonAuth: String = res["auth"]?.payload ?: "[]"
+            val resAuth: AuthToken.Result = Json.decodeFromString(jsonAuth)
+            resAuth.data
+          } else AuthToken.Auth()
+          val masterMenu: List<MasterMenu.Item> = if (res["masterMenu"] != null) {
+            val jsonMasterMenu: String = res["masterMenu"]?.payload ?: "[]"
+            val resMasterMenu: MasterMenu.Result = Json.decodeFromString(jsonMasterMenu)
+            resMasterMenu.features.filter { it.key == "QzzEp5g29fFymxeMX27vc2W9mZ2Qab" }[0].item
+          } else arrayListOf()
 
           prevState.copy(
             isLoading = false,
-            auth = res["auth"]!!,
-            masterMenu = res["masterMenu"]!!,
+            isLoadingMasterMenu = false,
+            auth = auth,
+            masterMenu = masterMenu,
             error = errorMessage
           )
         }
@@ -108,7 +113,7 @@ class ProfileViewModel(
 
   private fun handleErrorMasterMenu(throwable: Throwable) {
     mutableState.update {
-      if (it.masterMenu.payload.isBlank())
+      if (it.masterMenu.isEmpty())
         ProfileState(errorMasterMenu = "Unable load Master Menu")
       else it.copy(isLoadingMasterMenu = false)
     }
@@ -117,7 +122,7 @@ class ProfileViewModel(
   private fun handleError(throwable: Throwable) {
     log.e(throwable) { "Error on PROFILE" }
     mutableState.update {
-      if (it.auth.type.isBlank()) {
+      if (it.auth.tokenCode.isBlank()) {
         ProfileState(error = "Unable to refresh profiles")
       } else {
         it.copy(isLoading = false)
@@ -127,8 +132,8 @@ class ProfileViewModel(
 }
 
 data class ProfileState(
-  val auth: Profile = Profile("AUTH", "x", ""),
-  val masterMenu: Profile = Profile("MASTER_MENU", "", ""),
+  val auth: AuthToken.Auth = AuthToken.Auth(),
+  val masterMenu: List<MasterMenu.Item> = arrayListOf(),
   val isLoading: Boolean = false,
   val isLoadingMasterMenu: Boolean = false,
   val error: String = "",

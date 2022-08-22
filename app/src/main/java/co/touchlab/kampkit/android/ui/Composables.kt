@@ -70,7 +70,7 @@ fun MainScreen(
     onRefresh = {
       viewModel.refreshBreeds()
       profileViewModel.refreshProfileAuth()
-      if (profileState.masterMenu.payload.isNullOrBlank())
+      // if (profileState.masterMenu.payload.isNullOrBlank())
       profileViewModel.refreshMasterMenu()
     },
     onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
@@ -111,7 +111,7 @@ fun MainScreenContent(
       onRefresh = onRefresh
     ) {
       // if(dogsState.isEmpty) {
-      Empty(json = profile.toString())
+      Empty(json = "${profile.auth.tokenCode} ${profile.masterMenu.size}")
       // }
       val breeds = dogsState.breeds
       if (breeds != null) {
