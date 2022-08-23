@@ -21,7 +21,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,15 +39,25 @@ import co.touchlab.kampkit.models.BreedViewModel
 import co.touchlab.kampkit.models.BreedViewState
 import co.touchlab.kampkit.models.ProfileState
 import co.touchlab.kampkit.models.ProfileViewModel
+import co.touchlab.kampkit.response.MasterMenu
 import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+
+fun sortByName(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.name }
+fun sortByNameDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
+  items.sortedByDescending { it.name }
+
+fun sortByRank(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.rank }
+fun sortByRankDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
+  items.sortedByDescending { it.rank }
 
 @Composable
 fun MainScreen(
   viewModel: BreedViewModel,
   profileViewModel: ProfileViewModel,
-  log: Logger
+  log: Logger,
+  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByRank
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
   val lifecycleAwareDogsFlow = remember(viewModel.breedState, lifecycleOwner) {
@@ -76,7 +85,8 @@ fun MainScreen(
     onSuccess = { data -> log.v { "View updating with ${data.size} breeds" } },
     onError = { exception -> log.e { "Displaying error: $exception" } },
     onFavorite = { viewModel.updateBreedFavorite(it) },
-    profile = profileState
+    profile = profileState,
+    doSort = fSort
   )
 }
 
@@ -99,6 +109,7 @@ fun MainScreenContent(
   onError: (String) -> Unit = {},
   onFavorite: (Breed) -> Unit = {},
   doAuth: () -> Unit = {},
+  doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
   profile: ProfileState
 
 ) {
@@ -113,20 +124,21 @@ fun MainScreenContent(
       // if(dogsState.isEmpty) {
       Empty(json = "${profile.auth.tokenCode} ${profile.masterMenu.size}")
       // }
-      val breeds = dogsState.breeds
-      if (breeds != null) {
-        LaunchedEffect(breeds) {
-          onSuccess(breeds)
-        }
-        Success(successData = breeds, favoriteBreed = onFavorite)
+      val masterMenu = profile.masterMenu
+      // val breeds = dogsState.breeds
+      if (masterMenu.isNotEmpty()) {
+        // LaunchedEffect(breeds) {
+        //   onSuccess(breeds)
+        // }
+        Success(successData = masterMenu, favoriteBreed = onFavorite, doSort = doSort)
       }
-      val error = dogsState.error
-      if (error != null) {
-        LaunchedEffect(error) {
-          onError(error)
-        }
-        Error(error)
-      }
+      // val error = dogsState.error
+      // if (error != null) {
+      //   LaunchedEffect(error) {
+      //     onError(error)
+      //   }
+      //   Error(error)
+      // }
     }
   }
 }
@@ -161,10 +173,13 @@ fun Error(error: String) {
 
 @Composable
 fun Success(
-  successData: List<Breed>,
+  successData: List<MasterMenu.Item>,
   favoriteBreed: (Breed) -> Unit,
+  doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>
 ) {
-  DogList(breeds = successData, favoriteBreed)
+  // DogList(breeds = successData, favoriteBreed)
+
+  MenuList(items = doSort(successData))
 }
 
 @Composable
@@ -176,6 +191,23 @@ fun DogList(breeds: List<Breed>, onItemClick: (Breed) -> Unit) {
       }
       Divider()
     }
+  }
+}
+
+@Composable
+fun MenuList(items: List<MasterMenu.Item>) {
+  LazyColumn {
+    items(items) { item ->
+      MenuRow(item = item)
+      Divider()
+    }
+  }
+}
+
+@Composable
+fun MenuRow(item: MasterMenu.Item) {
+  Row(Modifier.padding(10.dp)) {
+    Text("[ ${item.rank} ] ${item.name}")
   }
 }
 
