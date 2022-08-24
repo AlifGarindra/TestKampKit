@@ -1,5 +1,6 @@
 package co.touchlab.kampkit.android.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -45,6 +46,7 @@ class Webview : ComponentActivity() {
   }
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun MyWebview(url: String) {
   var backEnabled = remember { mutableStateOf(false) }

@@ -46,11 +46,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared"))
     implementation(libs.bundles.app.ui)
-    implementation(libs.multiplatformSettings.common)
+    // implementation(libs.multiplatformSettings.common)
     implementation(libs.kotlinx.dateTime)
+    implementation(project(mapOf("path" to ":sdk")))
     coreLibraryDesugaring(libs.android.desugaring)
-    implementation(libs.koin.android)
+    // implementation(libs.koin.android)
     testImplementation(libs.junit)
 }

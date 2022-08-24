@@ -27,8 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
-import co.touchlab.kampkit.android.BuildConfig
-import co.touchlab.kampkit.android.R
 import co.touchlab.kampkit.android.ui.data.PpobMenuModel
 import co.touchlab.kampkit.models.ProfileState
 import co.touchlab.kampkit.models.ProfileViewModel
@@ -36,7 +34,9 @@ import co.touchlab.kampkit.response.MasterMenu
 import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.otto.sdk.SDKManager
+import otto.com.sdk.BuildConfig
+import otto.com.sdk.R
+import otto.com.sdk.SDKManager
 
 fun sortByName(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.name }
 fun sortByNameDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =

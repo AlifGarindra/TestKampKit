@@ -19,8 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import co.touchlab.kampkit.android.R
 import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import otto.com.sdk.R
 
 @Composable
 fun SortButton(

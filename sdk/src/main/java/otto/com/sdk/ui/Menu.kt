@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import co.touchlab.kampkit.android.R
 import co.touchlab.kampkit.android.ui.data.PpobMenuModel
+import otto.com.sdk.R
 
 @Composable
 fun MenuItemView(
@@ -109,7 +109,7 @@ fun GridPreview(showIcon: Boolean = true) {
     PpobMenuModel("Pulsa", R.drawable.ic_isimple_telepon, 0, ""),
     PpobMenuModel("Pinjaman", R.drawable.ic_isimple_pinjaman, 0, ""),
   )
-  GridMenuView(listOfMenu)
+  GridMenuView(listOfMenu, showIcon)
 }
 
 @Preview(showBackground = true)
