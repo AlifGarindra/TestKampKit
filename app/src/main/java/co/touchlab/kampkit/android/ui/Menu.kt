@@ -1,0 +1,112 @@
+package co.touchlab.kampkit.android.ui
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.material.Card
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import co.touchlab.kampkit.android.R
+import co.touchlab.kampkit.android.ui.data.PpobMenuModel
+
+@Composable
+fun MenuItemView(
+  item: PpobMenuModel,
+  showIcon: Boolean = true
+) {
+  Card(
+    modifier = Modifier
+      .wrapContentSize(Alignment.Center, false)
+      .clickable {
+        // TODO: do on click
+      },
+    backgroundColor = Color.Transparent,
+    elevation = 0.dp
+  ) {
+    Column(modifier = Modifier) {
+      if (showIcon) {
+        Image(
+          painter = painterResource(id = item.imageRes),
+          contentDescription = "",
+          modifier = Modifier
+            .size(height = 48.dp, width = 48.dp)
+            .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+      }
+      Text(
+        text = item.title,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.align(Alignment.CenterHorizontally)
+      )
+      Spacer(modifier = Modifier.height(8.dp))
+    }
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MenuItemViewPreview(showIcon: Boolean = true) {
+  MenuItemView(
+    item = PpobMenuModel(
+      title = "Listrik",
+      imageRes = R.drawable.ic_imkas_bpjs,
+      rank = 1,
+      url = ""
+    ),
+    showIcon
+  )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MenuItemViewNoIconPreview() {
+  MenuItemViewPreview(false)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Preview(showBackground = true)
+@Composable
+fun GridPreview(showIcon: Boolean = true) {
+  LazyVerticalGrid(
+    cells = GridCells.Fixed(4),
+    contentPadding = PaddingValues(top = 25.dp),
+    modifier = Modifier.padding(horizontal = 10.dp)
+  ) {
+    val listOfMenu = arrayListOf(
+      PpobMenuModel("Listrik", R.drawable.ic_imkas_bpjs, 0, ""),
+      PpobMenuModel("Insurance", R.drawable.ic_imkas_insurance, 0, ""),
+      PpobMenuModel("Voucher Game", R.drawable.ic_imkas_game, 0, ""),
+      PpobMenuModel("Wallet", R.drawable.ic_isimple_wallet, 0, ""),
+      PpobMenuModel("Pulsa", R.drawable.ic_imkas_phone, 0, ""),
+      PpobMenuModel("Asuransi", R.drawable.ic_isimple_asuransi, 0, ""),
+      PpobMenuModel("Pinjaman", R.drawable.ic_imkas_multifinance, 0, ""),
+    )
+    items(listOfMenu.size) { number ->
+      val menu = listOfMenu[number]
+      MenuItemView(menu, showIcon)
+    }
+  }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GridNoTitlePreview() {
+  GridPreview(false)
+}
