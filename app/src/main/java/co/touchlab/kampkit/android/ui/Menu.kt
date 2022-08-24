@@ -48,8 +48,8 @@ fun MenuItemView(
             .size(height = 48.dp, width = 48.dp)
             .align(Alignment.CenterHorizontally)
         )
-        Spacer(modifier = Modifier.height(5.dp))
       }
+      Spacer(modifier = Modifier.height(8.dp))
       Text(
         text = item.title,
         textAlign = TextAlign.Center,
@@ -60,13 +60,31 @@ fun MenuItemView(
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun GridMenuView(
+  listOfMenu: List<PpobMenuModel> = arrayListOf(),
+  showIcon: Boolean = true
+) {
+  LazyVerticalGrid(
+    cells = GridCells.Fixed(4),
+    contentPadding = PaddingValues(top = 25.dp),
+    modifier = Modifier.padding(horizontal = 10.dp)
+  ) {
+    items(listOfMenu.size) { number ->
+      val menu = listOfMenu[number]
+      MenuItemView(menu, showIcon)
+    }
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun MenuItemViewPreview(showIcon: Boolean = true) {
   MenuItemView(
     item = PpobMenuModel(
-      title = "Listrik",
-      imageRes = R.drawable.ic_imkas_bpjs,
+      title = "Pendanaan",
+      imageRes = R.drawable.ic_isimple_pinjaman,
       rank = 1,
       url = ""
     ),
@@ -80,29 +98,18 @@ fun MenuItemViewNoIconPreview() {
   MenuItemViewPreview(false)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = true)
 @Composable
 fun GridPreview(showIcon: Boolean = true) {
-  LazyVerticalGrid(
-    cells = GridCells.Fixed(4),
-    contentPadding = PaddingValues(top = 25.dp),
-    modifier = Modifier.padding(horizontal = 10.dp)
-  ) {
-    val listOfMenu = arrayListOf(
-      PpobMenuModel("Listrik", R.drawable.ic_imkas_bpjs, 0, ""),
-      PpobMenuModel("Insurance", R.drawable.ic_imkas_insurance, 0, ""),
-      PpobMenuModel("Voucher Game", R.drawable.ic_imkas_game, 0, ""),
-      PpobMenuModel("Wallet", R.drawable.ic_isimple_wallet, 0, ""),
-      PpobMenuModel("Pulsa", R.drawable.ic_imkas_phone, 0, ""),
-      PpobMenuModel("Asuransi", R.drawable.ic_isimple_asuransi, 0, ""),
-      PpobMenuModel("Pinjaman", R.drawable.ic_imkas_multifinance, 0, ""),
-    )
-    items(listOfMenu.size) { number ->
-      val menu = listOfMenu[number]
-      MenuItemView(menu, showIcon)
-    }
-  }
+  val listOfMenu = arrayListOf(
+    PpobMenuModel("Asuransi", R.drawable.ic_isimple_asuransi, 0, ""),
+    PpobMenuModel("BPJS", R.drawable.ic_isimple_bpjs, 0, ""),
+    PpobMenuModel("Voucher Game", R.drawable.ic_isimple_game, 0, ""),
+    PpobMenuModel("Wallet", R.drawable.ic_isimple_wallet, 0, ""),
+    PpobMenuModel("Pulsa", R.drawable.ic_isimple_telepon, 0, ""),
+    PpobMenuModel("Pinjaman", R.drawable.ic_isimple_pinjaman, 0, ""),
+  )
+  GridMenuView(listOfMenu)
 }
 
 @Preview(showBackground = true)

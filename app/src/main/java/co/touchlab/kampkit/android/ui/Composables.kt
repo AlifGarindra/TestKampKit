@@ -5,21 +5,14 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -108,35 +101,18 @@ fun MainScreenContent(
     color = MaterialTheme.colors.background,
     modifier = Modifier.fillMaxSize()
   ) {
-    val listOfMenu: ArrayList<PpobMenuModel> = getListOfMenu()
-    if (listOfMenu.size == 0) {
-      Column(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(horizontal = 30.dp)
-      ) {
-        Spacer(modifier = Modifier.height(60.dp))
-        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-      }
-    } else {
-      LazyVerticalGrid(
-        cells = GridCells.Fixed(4),
-        contentPadding = PaddingValues(top = 25.dp),
-        modifier = Modifier.padding(horizontal = 10.dp)
-      ) {
-        items(listOfMenu.size) { number ->
-          val menu = listOfMenu[number]
-          MenuItemView(menu)
-        }
-      }
-    }
     SwipeRefresh(
       state = rememberSwipeRefreshState(isRefreshing = profileState.isLoading),
       onRefresh = onRefresh
     ) {
-      val masterMenu = profileState.masterMenu
-      if (masterMenu.isNotEmpty()) {
-        Success(successData = masterMenu, doSort = doSort)
+      Column(modifier = Modifier) {
+        val listOfMenu: ArrayList<PpobMenuModel> = getListOfMenu()
+        GridMenuView(listOfMenu)
+
+        val masterMenu = profileState.masterMenu
+        if (masterMenu.isNotEmpty()) {
+          Success(successData = masterMenu, doSort = doSort)
+        }
       }
     }
   }
