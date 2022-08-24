@@ -22,8 +22,6 @@ class MainActivity : ComponentActivity(), KoinComponent {
     setContent {
       KaMPKitTheme {
         MainScreen(
-          profileViewModel,
-          log,
           // TODO: default sort = @see Composables.kt
 
           // TODO: pre-defined sort fuction

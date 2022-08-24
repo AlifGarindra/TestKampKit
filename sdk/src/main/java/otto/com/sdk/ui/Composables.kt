@@ -34,6 +34,10 @@ import co.touchlab.kampkit.response.MasterMenu
 import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import org.koin.androidx.compose.getKoin
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.Koin
+import org.koin.core.context.GlobalContext.get
 import otto.com.sdk.BuildConfig
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
@@ -48,8 +52,7 @@ fun sortByRankDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
 
 @Composable
 fun MainScreen(
-  profileViewModel: ProfileViewModel,
-  log: Logger,
+  profileViewModel: ProfileViewModel = getViewModel(),
   fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByRank
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current

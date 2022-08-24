@@ -1,17 +1,14 @@
 package co.touchlab.kampkit.android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import otto.com.sdk.MainActivity
 
 class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContent {
-      KaMPKitTheme {
-      }
-    }
+    startActivity(Intent(this, MainActivity::class.java))
   }
 }
