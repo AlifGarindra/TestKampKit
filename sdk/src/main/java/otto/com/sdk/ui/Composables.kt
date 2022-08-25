@@ -181,7 +181,7 @@ fun MenuRow(item: MasterMenu.Item) {
 fun getListOfMenu(): ArrayList<PpobMenuModel> {
   val menuModelArrayList: ArrayList<PpobMenuModel> = ArrayList()
   menuModelArrayList.add(
-    PpobMenuModel("Telepon & Air", R.drawable.ic_isimple_telepon, 5, "www.google.com")
+    PpobMenuModel("Telepon & Air", R.drawable.ic_wysiwyg, 5, "www.google.com")
   )
   menuModelArrayList.add(
     PpobMenuModel("Listrik", R.drawable.ic_isimple_listrik, 2, "www.facebook.com")

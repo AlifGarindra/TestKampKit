@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Card
@@ -38,8 +39,20 @@ fun MenuItemView(
     backgroundColor = Color.Transparent,
     elevation = 0.dp
   ) {
-    Column(modifier = Modifier) {
+    Column(
+      modifier = Modifier
+        .wrapContentWidth(Alignment.CenterHorizontally)
+    ) {
       if (showIcon) {
+        // Icon(
+        //   painter = painterResource(id = item.imageRes),
+        //   contentDescription = "iconRes",
+        //   tint = Color.,
+        //   modifier = Modifier
+        //     .padding(top = 8.dp)
+        //     .size(height = 48.dp, width = 48.dp)
+        //     .align(Alignment.CenterHorizontally)
+        // )
         Image(
           painter = painterResource(id = item.imageRes),
           contentDescription = "",
@@ -53,6 +66,7 @@ fun MenuItemView(
       Text(
         text = item.title,
         textAlign = TextAlign.Center,
+        maxLines = 2,
         modifier = Modifier.align(Alignment.CenterHorizontally)
       )
       Spacer(modifier = Modifier.height(8.dp))
@@ -102,7 +116,7 @@ fun MenuItemViewNoIconPreview() {
 @Composable
 fun GridPreview(showIcon: Boolean = true) {
   val listOfMenu = arrayListOf(
-    PpobMenuModel("Asuransi", R.drawable.ic_isimple_asuransi, 0, ""),
+    PpobMenuModel("Asuransi", R.drawable.ic_wysiwyg, 0, ""),
     PpobMenuModel("BPJS", R.drawable.ic_isimple_bpjs, 0, ""),
     PpobMenuModel("Voucher Game", R.drawable.ic_isimple_game, 0, ""),
     PpobMenuModel("Wallet", R.drawable.ic_isimple_wallet, 0, ""),
