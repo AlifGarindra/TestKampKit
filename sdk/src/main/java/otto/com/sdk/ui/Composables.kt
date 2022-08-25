@@ -17,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,13 +32,9 @@ import co.touchlab.kampkit.android.ui.data.PpobMenuModel
 import co.touchlab.kampkit.models.ProfileState
 import co.touchlab.kampkit.models.ProfileViewModel
 import co.touchlab.kampkit.response.MasterMenu
-import co.touchlab.kermit.Logger
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import org.koin.androidx.compose.getKoin
 import org.koin.androidx.compose.getViewModel
-import org.koin.core.Koin
-import org.koin.core.context.GlobalContext.get
 import otto.com.sdk.BuildConfig
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
@@ -53,7 +50,10 @@ fun sortByRankDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
 @Composable
 fun MainScreen(
   profileViewModel: ProfileViewModel = getViewModel(),
-  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByRank
+  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByRank,
+  onStartTrack: () -> Unit = {},
+  onEndTrack: () -> Unit = {}
+
 ) {
   val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -67,9 +67,9 @@ fun MainScreen(
   val profileState by lifecycleAwareProfileFlow.collectAsState(profileViewModel.state.value)
 
   val sdk = SDKManager.getInstance(LocalContext.current)
-
   MainScreenContent(
     {
+      onStartTrack()
       profileViewModel.refreshProfileAuth()
       // if (profileState.masterMenu.payload.isNullOrBlank())
       profileViewModel.refreshMasterMenu()
@@ -78,6 +78,7 @@ fun MainScreen(
     },
     fSort,
     profileState,
+    onEndTrack = onEndTrack
   )
 }
 
@@ -97,8 +98,10 @@ inline fun LogCompositions(tag: String, msg: String) {
 fun MainScreenContent(
   onRefresh: () -> Unit = {},
   doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
-  profileState: ProfileState
-
+  profileState: ProfileState,
+  onSuccess: () -> Unit = {},
+  onError: () -> Unit = {},
+  onEndTrack: () -> Unit = {}
 ) {
   Surface(
     color = MaterialTheme.colors.background,
@@ -113,7 +116,9 @@ fun MainScreenContent(
         GridMenuView(listOfMenu)
 
         val masterMenu = profileState.masterMenu
+        val token = profileState.auth.tokenCode
         if (masterMenu.isNotEmpty()) {
+          LaunchedEffect(token) { onEndTrack() }
           Success(successData = masterMenu, doSort = doSort)
         }
       }
@@ -164,7 +169,7 @@ fun Success(
 fun MenuList(items: List<MasterMenu.Item>) {
   LazyColumn {
     items(items) { item ->
-      MenuRow(item = item, )
+      MenuRow(item = item)
       Divider()
     }
   }

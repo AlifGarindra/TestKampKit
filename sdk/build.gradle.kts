@@ -64,4 +64,6 @@ dependencies {
   implementation(libs.koin.android)
   implementation(libs.koin.compose)
   testImplementation(libs.junit)
+
+  implementation("io.sentry:sentry-android:6.4.0")
 }
