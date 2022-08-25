@@ -4,17 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import co.touchlab.kampkit.android.ui.MainScreen
-import co.touchlab.kampkit.android.ui.sortByRankDescend
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
-import co.touchlab.kampkit.injectLogger
-import co.touchlab.kampkit.models.ProfileViewModel
-import co.touchlab.kermit.Logger
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.component.KoinComponent
 import otto.com.sdk.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,7 +17,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MenuFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MenuFragment : Fragment()  {
+class MenuFragment : Fragment() {
   // TODO: Rename and change types of parameters
   private var param1: String? = null
   private var param2: String? = null

@@ -7,8 +7,8 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
         applicationId = "co.touchlab.kampkit"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk = 21
+        targetSdk = 31
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -46,6 +46,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.5.0")
+    // implementation("com.google.android.material:material:1.6.1")
     implementation(libs.bundles.app.ui)
     // implementation(libs.multiplatformSettings.common)
     implementation(libs.kotlinx.dateTime)
