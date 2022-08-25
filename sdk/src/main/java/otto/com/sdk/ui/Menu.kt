@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.Card
@@ -32,7 +31,7 @@ fun MenuItemView(
 ) {
   Card(
     modifier = Modifier
-      .wrapContentSize(Alignment.Center, false)
+      // .wrapContentSize(Alignment.Center, false)
       .clickable {
         // TODO: do on click
       },
@@ -45,6 +44,7 @@ fun MenuItemView(
           painter = painterResource(id = item.imageRes),
           contentDescription = "",
           modifier = Modifier
+            .padding(top = 8.dp)
             .size(height = 48.dp, width = 48.dp)
             .align(Alignment.CenterHorizontally)
         )

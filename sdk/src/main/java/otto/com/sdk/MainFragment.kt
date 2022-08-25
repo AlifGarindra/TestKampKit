@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import co.touchlab.kampkit.android.ui.MainScreen
 import co.touchlab.kampkit.android.ui.sortByRankDescend
 import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
-import co.touchlab.kampkit.response.MasterMenu
 
 class MainFragment : Fragment() {
 
@@ -32,15 +31,15 @@ class MainFragment : Fragment() {
             // TODO: default sort = @see Composables.kt
 
             // TODO: pre-defined sort fuction
-            // fSort = ::sortByRankDescend
+            fSort = ::sortByRankDescend
 
             // TODO: custom sort function
-            fSort = { items ->
-              val newItems = arrayListOf<MasterMenu.Item>()
-              val emas: MasterMenu.Item? = items.find { it.code == "emas" }
-              emas?.let { newItems.add(it) }
-              newItems
-            }
+            // fSort = { items ->
+            //   val newItems = arrayListOf<MasterMenu.Item>()
+            //   val emas: MasterMenu.Item? = items.find { it.code == "emas" }
+            //   emas?.let { newItems.add(it) }
+            //   newItems
+            // }
           )
         }
       }

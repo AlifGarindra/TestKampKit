@@ -1,10 +1,7 @@
 package co.touchlab.kampkit.android
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import otto.com.sdk.MainActivity
 import otto.com.sdk.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -16,5 +13,6 @@ class MainActivity : AppCompatActivity() {
       supportFragmentManager.beginTransaction()
         .replace(R.id.container, MainFragment.newInstance())
         .commitNow()
-    }  }
+    }
+  }
 }

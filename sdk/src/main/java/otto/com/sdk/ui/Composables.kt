@@ -164,7 +164,7 @@ fun Success(
 fun MenuList(items: List<MasterMenu.Item>) {
   LazyColumn {
     items(items) { item ->
-      MenuRow(item = item)
+      MenuRow(item = item, )
       Divider()
     }
   }

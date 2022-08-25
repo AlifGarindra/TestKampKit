@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import co.touchlab.kampkit.AppInfo
 import co.touchlab.kampkit.initKoin
 import co.touchlab.kampkit.models.ProfileViewModel
+import co.touchlab.kampkit.request.Auth
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
