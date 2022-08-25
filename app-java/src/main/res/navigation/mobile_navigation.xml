@@ -23,5 +23,4 @@
         android:name="otto.com.sdk.MainFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
-</navigati        android:name="com.otto.app.ui.notifications.NotificationsFragment"
-on>
+</navigation>
