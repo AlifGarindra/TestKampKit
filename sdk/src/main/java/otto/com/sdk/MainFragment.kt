@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import co.touchlab.kampkit.android.ui.MainScreen
-import co.touchlab.kampkit.android.ui.sortByRankDescend
+import co.touchlab.kampkit.android.ui.sortByRank
 import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
 import io.sentry.ISpan
 import io.sentry.ITransaction
@@ -17,7 +17,7 @@ import otto.com.sdk.ui.data.MenuItem
 
 class MainFragment : Fragment() {
 
-  lateinit var itemsModifier: (List<MenuItem>) -> List<MenuItem>
+  var itemsModifier: (List<MenuItem>) -> List<MenuItem> = ::sortByRank
 
   companion object {
     fun newInstance(
@@ -28,9 +28,9 @@ class MainFragment : Fragment() {
       }
     }
 
-    // fun newInstance(): MainFragment {
-    //   return MainFragment()
-    // }
+    fun newInstance(): MainFragment {
+      return MainFragment()
+    }
   }
 
   // override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
@@ -50,6 +50,7 @@ class MainFragment : Fragment() {
     var transaction: ITransaction? = null
     var span: ISpan? = null
     // Sentry.captureMessage("testing SDK setup")
+    // itemsModifier = ::sortByRankDescend
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
@@ -60,7 +61,7 @@ class MainFragment : Fragment() {
             // TODO: pre-defined sort function
             // fSort = itemsModifier,
             fy = itemsModifier,
-            fSort = ::sortByRankDescend,
+            // fSort = ::sortByRankDescend,
             onStartTrack = {
               transaction =
                 Sentry.startTransaction("master-menu", "get-master-menu")

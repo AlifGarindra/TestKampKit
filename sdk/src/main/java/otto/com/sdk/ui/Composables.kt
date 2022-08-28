@@ -52,28 +52,25 @@ fun MenuItem.toMasterMenuItem() = MasterMenu.Item(
   rank = this.rank
 )
 
-// fun mapper(menuItems: List<MenuItem>): List<MasterMenu.Item> {
-//
-// }
 fun fx(
   items: List<MasterMenu.Item> = arrayListOf(),
   fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank
 ): List<MasterMenu.Item> = fy(items.map { it.toMenuItem() }).map { it.toMasterMenuItem() }
 
-fun sortByName(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.name }
-fun sortByNameDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
+fun sortByName(items: List<MenuItem>): List<MenuItem> = items.sortedBy { it.name }
+fun sortByNameDescend(items: List<MenuItem>): List<MenuItem> =
   items.sortedByDescending { it.name }
 
 // fun sortByRank(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.rank }
 fun sortByRank(items: List<MenuItem>): List<MenuItem> = items.sortedBy { it.rank }
-fun sortByRankDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
+fun sortByRankDescend(items: List<MenuItem>): List<MenuItem> =
   items.sortedByDescending { it.rank }
 
 @Composable
 fun MainScreen(
   profileViewModel: ProfileViewModel = getViewModel(),
   fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank,
-  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByName,
+  // fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByName,
   onStartTrack: () -> Unit = {},
   onEndTrack: () -> Unit = {}
 
@@ -100,7 +97,7 @@ fun MainScreen(
       println(sdk.x)
     },
     fy = fy,
-    doSort = fSort,
+    // doSort = fSort,
     profileState = profileState,
     onEndTrack = onEndTrack
   )
@@ -123,7 +120,7 @@ fun MainScreenContent(
   onRefresh: () -> Unit = {},
   // fx: (List<MasterMenu.Item>, (List<MasterMenu>) -> List<MenuItem>) -> List<MasterMenu.Item>,
   fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank,
-  doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
+  // doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
   profileState: ProfileState,
   onSuccess: () -> Unit = {},
   onError: () -> Unit = {},

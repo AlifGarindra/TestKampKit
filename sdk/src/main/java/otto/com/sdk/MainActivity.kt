@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
           // TODO: default sort = @see Composables.kt
 
           // TODO: pre-defined sort fuction
-          fSort = ::sortByRankDescend
+          // fSort = ::sortByRankDescend
 
           // TODO: custom sort function
           // fSort = { items ->
