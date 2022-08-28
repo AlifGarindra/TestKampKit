@@ -1,7 +1,6 @@
 package otto.com.sdk
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +13,24 @@ import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
 import io.sentry.ISpan
 import io.sentry.ITransaction
 import io.sentry.Sentry
+import otto.com.sdk.ui.data.MenuItem
 
 class MainFragment : Fragment() {
 
+  lateinit var itemsModifier: (List<MenuItem>) -> List<MenuItem>
+
   companion object {
-    fun newInstance() = MainFragment()
+    fun newInstance(
+      itemsModifier: (items: List<MenuItem>) -> List<MenuItem>
+    ): MainFragment {
+      return MainFragment().apply {
+        this.itemsModifier = itemsModifier
+      }
+    }
+
+    fun newInstance(): MainFragment {
+      return MainFragment()
+    }
   }
 
   // override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
@@ -46,6 +58,8 @@ class MainFragment : Fragment() {
             // TODO: default sort = @see Composables.kt
 
             // TODO: pre-defined sort function
+            // fSort = itemsModifier,
+            fy = itemsModifier,
             fSort = ::sortByRankDescend,
             onStartTrack = {
               transaction =

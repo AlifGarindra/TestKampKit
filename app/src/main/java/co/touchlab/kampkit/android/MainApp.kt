@@ -7,9 +7,11 @@ class MainApp : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    val sdk = SDKManager.getInstance(this)
-    println("INIT ${sdk.x}")
-    sdk.changeTheX("YYYY")
+    // SDKManager.getInstance(Config(context = this, clientKey = "myClientKey123!"))
+    val sdkman = SDKManager.getInstance(this)
+      .clientKey("myClientKey")
+      .build()
+    sdkman.changeTheX("NNNNNN")
   }
 }
 

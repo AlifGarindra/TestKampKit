@@ -38,19 +38,42 @@ import org.koin.androidx.compose.getViewModel
 import otto.com.sdk.BuildConfig
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
+import otto.com.sdk.ui.data.MenuItem
+
+fun MasterMenu.Item.toMenuItem() = MenuItem(
+  code = this.code,
+  name = this.name,
+  rank = this.rank
+)
+
+fun MenuItem.toMasterMenuItem() = MasterMenu.Item(
+  code = this.code,
+  name = this.name,
+  rank = this.rank
+)
+
+// fun mapper(menuItems: List<MenuItem>): List<MasterMenu.Item> {
+//
+// }
+fun fx(
+  items: List<MasterMenu.Item> = arrayListOf(),
+  fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank
+): List<MasterMenu.Item> = fy(items.map { it.toMenuItem() }).map { it.toMasterMenuItem() }
 
 fun sortByName(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.name }
 fun sortByNameDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
   items.sortedByDescending { it.name }
 
-fun sortByRank(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.rank }
+// fun sortByRank(items: List<MasterMenu.Item>): List<MasterMenu.Item> = items.sortedBy { it.rank }
+fun sortByRank(items: List<MenuItem>): List<MenuItem> = items.sortedBy { it.rank }
 fun sortByRankDescend(items: List<MasterMenu.Item>): List<MasterMenu.Item> =
   items.sortedByDescending { it.rank }
 
 @Composable
 fun MainScreen(
   profileViewModel: ProfileViewModel = getViewModel(),
-  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByRank,
+  fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank,
+  fSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item> = ::sortByName,
   onStartTrack: () -> Unit = {},
   onEndTrack: () -> Unit = {}
 
@@ -68,7 +91,7 @@ fun MainScreen(
 
   val sdk = SDKManager.getInstance(LocalContext.current)
   MainScreenContent(
-    {
+    onRefresh = {
       onStartTrack()
       profileViewModel.refreshProfileAuth()
       // if (profileState.masterMenu.payload.isNullOrBlank())
@@ -76,8 +99,9 @@ fun MainScreen(
       sdk.changeTheX("${System.currentTimeMillis()}")
       println(sdk.x)
     },
-    fSort,
-    profileState,
+    fy = fy,
+    doSort = fSort,
+    profileState = profileState,
     onEndTrack = onEndTrack
   )
 }
@@ -97,6 +121,8 @@ inline fun LogCompositions(tag: String, msg: String) {
 @Composable
 fun MainScreenContent(
   onRefresh: () -> Unit = {},
+  // fx: (List<MasterMenu.Item>, (List<MasterMenu>) -> List<MenuItem>) -> List<MasterMenu.Item>,
+  fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank,
   doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
   profileState: ProfileState,
   onSuccess: () -> Unit = {},
@@ -119,7 +145,7 @@ fun MainScreenContent(
         val token = profileState.auth.tokenCode
         if (masterMenu.isNotEmpty()) {
           LaunchedEffect(token) { onEndTrack() }
-          Success(successData = masterMenu, doSort = doSort)
+          Success(successData = masterMenu, fy)
         }
       }
     }
@@ -160,9 +186,14 @@ fun Error(error: String) {
 @Composable
 fun Success(
   successData: List<MasterMenu.Item>,
-  doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>
+  // doSort: (List<MasterMenu.Item>) -> List<MasterMenu.Item>,
+  // fx: (List<MasterMenu.Item>, (List<MasterMenu>) -> List<MenuItem>) -> List<MasterMenu.Item>,
+  fy: (List<MenuItem>) -> List<MenuItem> = ::sortByRank,
 ) {
-  MenuList(items = doSort(successData))
+  // MenuList(items = doSort(successData))
+  val result: List<MasterMenu.Item> =
+    fy(successData.map { it.toMenuItem() }).map { it.toMasterMenuItem() }
+  MenuList(items = result)
 }
 
 @Composable
