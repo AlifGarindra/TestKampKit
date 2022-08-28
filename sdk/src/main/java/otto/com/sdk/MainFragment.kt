@@ -28,9 +28,9 @@ class MainFragment : Fragment() {
       }
     }
 
-    fun newInstance(): MainFragment {
-      return MainFragment()
-    }
+    // fun newInstance(): MainFragment {
+    //   return MainFragment()
+    // }
   }
 
   // override fun onInflate(context: Context, attrs: AttributeSet, savedInstanceState: Bundle?) {
