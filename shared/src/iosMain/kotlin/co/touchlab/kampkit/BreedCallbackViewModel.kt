@@ -1,9 +1,9 @@
 package co.touchlab.kampkit
 
 import co.touchlab.kampkit.db.Breed
-import co.touchlab.kampkit.models.BreedRepository
-import co.touchlab.kampkit.models.BreedViewModel
-import co.touchlab.kampkit.models.CallbackViewModel
+import com.otto.sdk.shared.models.BreedRepository
+import com.otto.sdk.shared.models.BreedViewModel
+import com.otto.sdk.shared.models.CallbackViewModel
 import co.touchlab.kermit.Logger
 
 @Suppress("Unused") // Members are called from Swift

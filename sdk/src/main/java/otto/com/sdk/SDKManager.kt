@@ -3,9 +3,9 @@ package otto.com.sdk
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import co.touchlab.kampkit.AppInfo
-import co.touchlab.kampkit.initKoin
-import co.touchlab.kampkit.models.ProfileViewModel
+import com.otto.sdk.shared.AppInfo
+import com.otto.sdk.shared.initKoin
+import com.otto.sdk.shared.models.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module

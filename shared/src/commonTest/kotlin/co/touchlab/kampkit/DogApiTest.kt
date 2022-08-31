@@ -1,7 +1,7 @@
 package co.touchlab.kampkit
 
-import co.touchlab.kampkit.ktor.DogApiImpl
-import co.touchlab.kampkit.response.BreedResult
+import com.otto.sdk.shared.ktor.DogApiImpl
+import com.otto.sdk.shared.response.BreedResult
 import co.touchlab.kermit.LogWriter
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.LoggerConfig

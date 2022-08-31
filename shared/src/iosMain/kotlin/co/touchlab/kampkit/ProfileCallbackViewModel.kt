@@ -1,8 +1,8 @@
 package co.touchlab.kampkit
 
-import co.touchlab.kampkit.models.CallbackViewModel
-import co.touchlab.kampkit.models.ProfileRepository
-import co.touchlab.kampkit.models.ProfileViewModel
+import com.otto.sdk.shared.models.CallbackViewModel
+import com.otto.sdk.shared.models.ProfileRepository
+import com.otto.sdk.shared.models.ProfileViewModel
 import co.touchlab.kermit.Logger
 
 @Suppress("Unused")

@@ -3,7 +3,7 @@ package co.touchlab.kampkit.android
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import co.touchlab.kampkit.response.MasterMenu
+import com.otto.sdk.shared.response.MasterMenu
 import otto.com.sdk.MainFragment
 import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.MenuItem

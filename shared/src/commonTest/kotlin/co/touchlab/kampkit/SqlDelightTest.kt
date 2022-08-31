@@ -1,6 +1,7 @@
 package co.touchlab.kampkit
 
 import co.touchlab.kermit.Logger
+import com.otto.sdk.shared.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

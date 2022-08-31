@@ -29,9 +29,9 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
 import co.touchlab.kampkit.android.ui.data.PpobMenuModel
-import co.touchlab.kampkit.models.ProfileState
-import co.touchlab.kampkit.models.ProfileViewModel
-import co.touchlab.kampkit.response.MasterMenu
+import com.otto.sdk.shared.models.ProfileState
+import com.otto.sdk.shared.models.ProfileViewModel
+import com.otto.sdk.shared.response.MasterMenu
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.androidx.compose.getViewModel

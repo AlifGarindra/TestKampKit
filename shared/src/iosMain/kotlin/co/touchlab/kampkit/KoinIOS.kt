@@ -2,6 +2,7 @@ package co.touchlab.kampkit
 
 import co.touchlab.kampkit.db.KaMPKitDb
 import co.touchlab.kermit.Logger
+import com.otto.sdk.shared.AppInfo
 import com.russhwolf.settings.AppleSettings
 import com.russhwolf.settings.Settings
 import com.squareup.sqldelight.db.SqlDriver

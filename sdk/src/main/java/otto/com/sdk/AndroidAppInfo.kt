@@ -1,6 +1,6 @@
 package otto.com.sdk
 
-import co.touchlab.kampkit.AppInfo
+import com.otto.sdk.shared.AppInfo
 
 object AndroidAppInfo : AppInfo {
   override val appId: String = "com.otto.sdk"
