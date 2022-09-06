@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui
+package otto.com.sdk.ui
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -28,7 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.flowWithLifecycle
-import co.touchlab.kampkit.android.ui.data.PpobMenuModel
+import otto.com.sdk.ui.data.PpobMenuModel
 import com.otto.sdk.shared.models.ProfileState
 import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.response.MasterMenu

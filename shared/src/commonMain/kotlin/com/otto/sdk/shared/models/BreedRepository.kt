@@ -1,10 +1,10 @@
 package com.otto.sdk.shared.models
 
 import com.otto.sdk.shared.DatabaseHelper
-import co.touchlab.kampkit.db.Breed
 import com.otto.sdk.shared.ktor.DogApi
 import co.touchlab.kermit.Logger
 import co.touchlab.stately.ensureNeverFrozen
+import com.otto.sdk.shared.db.Breed
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock

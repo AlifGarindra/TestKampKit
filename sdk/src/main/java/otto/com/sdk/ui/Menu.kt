@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui
+package otto.com.sdk.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import co.touchlab.kampkit.android.ui.data.PpobMenuModel
+import otto.com.sdk.ui.data.PpobMenuModel
 import otto.com.sdk.R
 
 @Composable

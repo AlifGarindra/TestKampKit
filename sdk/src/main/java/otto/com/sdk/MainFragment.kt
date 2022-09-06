@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import co.touchlab.kampkit.android.ui.MainScreen
-import co.touchlab.kampkit.android.ui.sortByRank
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import otto.com.sdk.ui.MainScreen
+import otto.com.sdk.ui.sortByRank
+import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
 import io.sentry.ISpan
 import io.sentry.ITransaction
 import io.sentry.Sentry

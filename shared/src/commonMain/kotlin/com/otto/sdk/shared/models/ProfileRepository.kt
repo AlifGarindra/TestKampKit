@@ -4,12 +4,12 @@ import co.AuthTokenResulttouchlab.kampkit.response.AuthToken
 import com.otto.sdk.shared.ApiConstant.INVALID_SESSION
 import com.otto.sdk.shared.ApiConstant.OK
 import com.otto.sdk.shared.DatabaseHelper
-import co.touchlab.kampkit.db.Profile
 import com.otto.sdk.shared.ktor.ProfileApi
 import com.otto.sdk.shared.response.Balance
 import com.otto.sdk.shared.response.MasterMenu
 import co.touchlab.kermit.Logger
 import co.touchlab.stately.ensureNeverFrozen
+import com.otto.sdk.shared.db.Profile
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock

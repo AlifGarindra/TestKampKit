@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui
+package otto.com.sdk.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

@@ -1,7 +1,7 @@
 package com.otto.sdk.shared.models
 
-import co.touchlab.kampkit.db.Breed
 import co.touchlab.kermit.Logger
+import com.otto.sdk.shared.db.Breed
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

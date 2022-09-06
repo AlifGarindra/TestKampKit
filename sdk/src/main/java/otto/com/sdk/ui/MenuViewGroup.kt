@@ -1,18 +1,5 @@
 package otto.com.sdk.ui
 
-import android.app.Application
-import android.content.Context
-import android.util.AttributeSet
-import android.widget.LinearLayout
-import androidx.compose.ui.platform.ComposeView
-import androidx.lifecycle.ViewModelProvider
-import co.touchlab.kampkit.android.ui.MainScreen
-import co.touchlab.kampkit.android.ui.sortByRankDescend
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
-import com.otto.sdk.shared.models.ProfileViewModel
-import co.touchlab.kermit.Logger
-import org.koin.core.component.KoinComponent
-
 /**
  * TODO: document your custom view class.
  */

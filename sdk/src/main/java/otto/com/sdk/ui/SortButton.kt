@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui
+package otto.com.sdk.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -19,7 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
 import otto.com.sdk.R
 
 @Composable

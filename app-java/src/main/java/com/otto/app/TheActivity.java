@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import co.touchlab.kampkit.android.ui.ComposablesKt;
 import otto.com.sdk.MainFragment;
+import otto.com.sdk.ui.ComposablesKt;
 
 public class TheActivity extends AppCompatActivity {
 

@@ -6,7 +6,7 @@ plugins {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        applicationId = "co.touchlab.kampkit"
+        applicationId = "com.otto.sdk.shared.kampkit"
         minSdk = 21
         targetSdk = 31
         versionCode = 1

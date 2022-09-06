@@ -3,9 +3,8 @@ package otto.com.sdk
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import co.touchlab.kampkit.android.ui.MainScreen
-import co.touchlab.kampkit.android.ui.sortByRankDescend
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import otto.com.sdk.ui.MainScreen
+import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
 import com.otto.sdk.shared.models.ProfileViewModel
 import co.touchlab.kermit.Logger
 import com.otto.sdk.shared.injectLogger

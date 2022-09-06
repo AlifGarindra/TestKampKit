@@ -126,6 +126,6 @@ kotlin {
 
 sqldelight {
     database("KaMPKitDb") {
-        packageName = "co.touchlab.kampkit.db"
+        packageName = "com.otto.sdk.shared.kampkit.db"
     }
 }

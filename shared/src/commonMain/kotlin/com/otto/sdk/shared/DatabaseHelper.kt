@@ -1,10 +1,10 @@
 package com.otto.sdk.shared
 
-import co.touchlab.kampkit.db.Breed
-import co.touchlab.kampkit.db.KaMPKitDb
-import co.touchlab.kampkit.db.Profile
+import com.otto.sdk.shared.kampkit.db.KaMPKitDb
 import com.otto.sdk.shared.sqldelight.transactionWithContext
 import co.touchlab.kermit.Logger
+import com.otto.sdk.shared.db.Breed
+import com.otto.sdk.shared.db.Profile
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList

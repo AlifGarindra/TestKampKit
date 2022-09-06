@@ -1,6 +1,6 @@
 package com.otto.sdk.shared.models
 
-import co.touchlab.kampkit.FlowAdapter
+import com.otto.sdk.shared.kampkit.FlowAdapter
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow

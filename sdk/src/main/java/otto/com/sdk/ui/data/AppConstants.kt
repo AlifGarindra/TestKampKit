@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.data
+package otto.com.sdk.ui.data
 
 class AppConstants {
     val BASE_URL = "https://jsonplaceholder.typicode.com/"

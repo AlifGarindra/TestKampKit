@@ -1,6 +1,6 @@
 package com.otto.sdk.shared
 
-import co.touchlab.kampkit.db.KaMPKitDb
+import com.otto.sdk.shared.kampkit.db.KaMPKitDb
 import com.russhwolf.settings.AndroidSettings
 import com.russhwolf.settings.Settings
 import com.squareup.sqldelight.android.AndroidSqliteDriver

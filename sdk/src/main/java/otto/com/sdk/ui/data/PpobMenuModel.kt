@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui.data
+package otto.com.sdk.ui.data
 
 data class PpobMenuModel(
   var title: String,

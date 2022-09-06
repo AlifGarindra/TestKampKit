@@ -1,4 +1,4 @@
-package co.touchlab.kampkit.android.ui
+package otto.com.sdk.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-import co.touchlab.kampkit.android.ui.theme.KaMPKitTheme
+import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
 
 class Webview : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
