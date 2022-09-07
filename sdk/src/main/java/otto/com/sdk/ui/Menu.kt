@@ -1,5 +1,6 @@
 package otto.com.sdk.ui
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -18,26 +19,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import otto.com.sdk.ui.data.PpobMenuModel
 import otto.com.sdk.R
+import otto.com.sdk.ui.screen.WebViewKt
 
 @Composable
 fun MenuItemView(
   item: PpobMenuModel,
   showIcon: Boolean = true
 ) {
+  val mContext = LocalContext.current
   Card(
     modifier = Modifier
       // .wrapContentSize(Alignment.Center, false)
       .clickable {
-        // TODO: do on click
+        var intent = Intent(mContext, WebViewKt::class.java)
+        // intent.putExtra("openURL", PpobDataObject.url)
+        mContext.startActivity(intent);
       },
     backgroundColor = Color.Transparent,
-    elevation = 0.dp
+    elevation = 0.dp,
   ) {
     Column(
       modifier = Modifier

@@ -2,20 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="otto.com.sdk">
 
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application>
+    <activity
+        android:name=".ui.screen.WebViewKt"
+      android:exported="false" />
+
     <meta-data
       android:name="io.sentry.dsn"
       android:value="https://d25da3ad698c486c9117bcb036c0c30a@o339163.ingest.sentry.io/6688736" />
-    <!-- Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-       We recommend adjusting this value in production. -->
+    <!--
+ Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+       We recommend adjusting this value in production.
+        -->
     <meta-data
       android:name="io.sentry.traces.sample-rate"
-      android:value="1.0" />
-    <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
+      android:value="1.0" /> <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
     <meta-data
       android:name="io.sentry.traces.user-interaction.enable"
-      android:value="true" />
-    <!-- Performance Monitoring -->
+      android:value="true" /> <!-- Performance Monitoring -->
     <meta-data
       android:name="io.sentry.traces.sample-rate"
       android:value="1.0" />
