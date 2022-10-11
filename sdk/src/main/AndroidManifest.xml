@@ -8,7 +8,9 @@
     tools:ignore="ScopedStorage"/>
   <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
-  <application>
+  <application
+    android:requestLegacyExternalStorage="true"
+    >
     <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="${applicationId}.provider"

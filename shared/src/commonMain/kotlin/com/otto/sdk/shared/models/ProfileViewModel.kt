@@ -43,7 +43,7 @@ class ProfileViewModel(
         repository.refreshMasterMenuIfStale()
         emit(null)
       } catch (e: Exception) {
-        emit(e)
+        // emit(e)
       }
     }
 

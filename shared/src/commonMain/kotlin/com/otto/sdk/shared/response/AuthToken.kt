@@ -7,11 +7,11 @@ object AuthToken {
 
   @Serializable
   data class Result(
-    @SerialName("api_version") val apiVersion: String,
-    @SerialName("memory_usage") val memoryUsage: String,
-    @SerialName("elapse_time") val elapseTime: String,
-    val lang: String,
-    val code: Int,
+    @SerialName("api_version") val apiVersion: String = "",
+    @SerialName("memory_usage") val memoryUsage: String = "",
+    @SerialName("elapse_time") val elapseTime: String = "",
+    val lang: String = "",
+    val code: Int = 1,
     val error: Error? = null,
     val data: Auth
   )
