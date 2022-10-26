@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,27 +17,44 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.response.GeneralStatus
 import otto.com.sdk.R
+import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.JSBridge
 
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
-  var webviewBack : String = JSBridge(this).value
+  // var webviewBack : String = JSBridge(this).value
   lateinit var secondWV : WebView
-  lateinit var button1 : Button
-  var helo = "helo"
+  lateinit var intent : String
+
+  var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListener()
+  // lateinit var button1 : Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)
+
     requestPhonePermissions()
     setUpWebView()
     }
+
+  override fun onDestroy() {
+    var status = GeneralStatus
+    status.state = "destroy"
+    status.message = ""
+    generalListener?.onClosePPOB(status)
+    Log.d("test123", "onPageStarted: $generalListener")
+    super.onDestroy()
+  }
+
 
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   secondWV= findViewById(R.id.webviewkt)
   // var openUrl =  intent.getStringExtra("openURL")
-  secondWV.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0857000002")
+  // secondWV.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0857000002")
+  secondWV.loadUrl("www.google.com")
   secondWV.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
   secondWV.settings.javaScriptEnabled = true
   secondWV.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
@@ -78,7 +96,20 @@ fun setUpWebView(){
       // Log.e("URL onPageFinished", url)
       // progressBar.visibility = View.GONE
     }
+
+    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+      if (url != null) {
+        if(url.contains("google.com")){
+          var status = GeneralStatus
+          status.state = "success"
+          status.message = ""
+          generalListener?.onOpenPPOB(status)
+          Log.d("test123", "onPageStarted: $generalListener")
+        }
+      }
+    }
   }
+
 
   // secondWV.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
   //   // val i = Intent(Intent.ACTION_VIEW)
@@ -143,18 +174,18 @@ fun setUpWebView(){
     }
   }
   override fun onBackPressed(){
-       secondWV.evaluateJavascript(
-           "nativeBackPressed()",
-           {
-               Log.d("goback", it)
-           })
-
-
+       // secondWV.evaluateJavascript(
+       //     "nativeBackPressed()",
+       //     {
+       //         Log.d("goback", it)
+       //     })
 //     if(secondWV.canGoBack()){
 //       secondWV.goBack()
 //     }else{
 //       finish()
 //     }
+
+    super.onBackPressed()
 
   }
 }
