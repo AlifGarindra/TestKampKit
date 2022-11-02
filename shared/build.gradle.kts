@@ -6,6 +6,7 @@ plugins {
     id("kotlinx-serialization")
     id("com.android.library")
     id("com.squareup.sqldelight")
+    id("maven-publish")
 }
 
 android {
@@ -127,5 +128,37 @@ kotlin {
 sqldelight {
     database("KaMPKitDb") {
         packageName = "com.otto.sdk.shared.kampkit.db"
+    }
+}
+
+afterEvaluate{
+    publishing {
+        publications {
+            create<MavenPublication>("gpr") {
+                afterEvaluate {
+                    groupId = "com.alifg.libraries"
+                    artifactId = "kampkitshared"
+                    version = "1.0.4"
+                    // artifact("$projectDir/libs/sharedkampkit.aar"){
+                    //   classifier = "sharedkampkit"
+                    //   extension = "aar"
+                    // }
+                    if (plugins.hasPlugin("java")) {
+                        from(components["java"])
+                    } else if (plugins.hasPlugin("android-library")) {
+                        from(components["release"])
+                    }
+                }
+                repositories {
+                    maven {
+                        url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
+                        credentials {
+                            username = "AlifGarindra"
+                            password = "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"
+                        }
+                    }
+                }
+            }
+        }
     }
 }

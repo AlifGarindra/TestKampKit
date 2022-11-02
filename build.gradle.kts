@@ -26,6 +26,14 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
+      credentials {
+        username = "AlifGarindra"
+        password = "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"
+      }
+    }
   }
 }
 

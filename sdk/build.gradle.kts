@@ -1,6 +1,8 @@
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
+  id("maven-publish")
+  id("signing")
 }
 
 android {
@@ -46,6 +48,7 @@ android {
   }
 }
 
+
 dependencies {
 
   implementation("androidx.core:core-ktx:1.8.0")
@@ -55,8 +58,9 @@ dependencies {
   // testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.3")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
-  api(project(":shared"))
+  // implementation("io.sentry:sentry:6.6.0")
+  // api(project(":shared"))
+  api("com.alifg.libraries:kampkitshared:1.0.4")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
   implementation(libs.kotlinx.dateTime)
@@ -66,4 +70,36 @@ dependencies {
   testImplementation(libs.junit)
 
   implementation("io.sentry:sentry-android:6.4.0")
+}
+
+afterEvaluate{
+  publishing {
+    publications {
+      create<MavenPublication>("gpr") {
+        afterEvaluate {
+          groupId = "com.alifg.libraries"
+          artifactId = "testkampkit"
+          version = "1.1.6"
+          // artifact("$projectDir/libs/sharedkampkit.aar"){
+          //   classifier = "sharedkampkit"
+          //   extension = "aar"
+          // }
+          if (plugins.hasPlugin("java")) {
+            from(components["java"])
+          } else if (plugins.hasPlugin("android-library")) {
+            from(components["release"])
+          }
+        }
+        repositories {
+          maven {
+            url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
+            credentials {
+              username = "AlifGarindra"
+              password = "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"
+            }
+          }
+        }
+      }
+    }
+  }
 }

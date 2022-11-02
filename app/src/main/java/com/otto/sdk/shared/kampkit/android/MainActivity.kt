@@ -2,6 +2,8 @@ package com.otto.sdk.shared.kampkit.android
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.response.GeneralStatus
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     }
     Log.e("NNN", SDKManager.getInstance(this).x)
 
+    SDKManager.getInstance(this).trySentry();
 
     SDKManager.getInstance(this).setGeneralListener(object : GeneralListener {
      override fun onOpenPPOB(status: GeneralStatus) {
@@ -50,5 +53,18 @@ class MainActivity : AppCompatActivity() {
         TODO("Not yet implemented")
       }
     })
+    onPressButton();
+  }
+
+  fun onPressButton(){
+    var button : Button = findViewById(R.id.button1)
+    button.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).openPPOB("www.google.com",this@MainActivity)
+//                SDKManager.getInstance(this@MainActivity).trySentry();
+//               var hello =  SDKManager.getInstance(this@MainActivity).getBalancePPOB()
+//                Log.e("error", "onClick: $hello", )
+      }
+  })
   }
 }

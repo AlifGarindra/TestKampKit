@@ -27,10 +27,8 @@ class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
   // var webviewBack : String = JSBridge(this).value
   lateinit var secondWV : WebView
-  lateinit var intent : String
 
   var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListener()
-  // lateinit var button1 : Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)
@@ -52,9 +50,15 @@ class WebViewKt : AppCompatActivity() {
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   secondWV= findViewById(R.id.webviewkt)
-  // var openUrl =  intent.getStringExtra("openURL")
+
+  var openUrl =  intent.getStringExtra("urlPPOB")
   // secondWV.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0857000002")
-  secondWV.loadUrl("www.google.com")
+  if(openUrl !== null){
+    secondWV.loadUrl(openUrl)
+  }else{
+    secondWV.loadUrl("www.google.com")
+  }
+
   secondWV.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
   secondWV.settings.javaScriptEnabled = true
   secondWV.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->

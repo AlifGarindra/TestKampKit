@@ -47,6 +47,7 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.5.0")
+    // implementation("com.alifg.libraries:kampkitshared:1.0.4")
     // implementation("com.google.android.material:material:1.6.1")
     implementation(libs.bundles.app.ui)
     // implementation(libs.multiplatformSettings.common)

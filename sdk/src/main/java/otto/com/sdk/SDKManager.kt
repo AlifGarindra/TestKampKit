@@ -1,5 +1,6 @@
 package otto.com.sdk
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -12,6 +13,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
+import io.sentry.Sentry
 
 data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) {
@@ -43,6 +45,19 @@ class SDKManager private constructor(context: Context) {
     this.generalListener = listener
   }
 
+  fun trySentry(){
+    var status = object{
+      val helloWorld = "hellow"
+      val helloWorld2 = "hellow"
+    }
+    try {
+      // throw Exception()
+      val data = 20 / 0
+    } catch (e: Exception) {
+      Sentry.captureException(e)
+    }
+  }
+
   fun getBalancePPOB() : String{
     return "10000"
   }
@@ -52,17 +67,25 @@ class SDKManager private constructor(context: Context) {
     return this.generalListener;
   }
 
-
-  fun openPPOB(feature:String?) {
-    var ourContext = getContext()
-    if(feature == null){
+  fun openPPOB(feature:String?,activity: Activity) {
       var intent = Intent(mContext,WebViewKt::class.java)
-    }else{
-
+      activity.startActivity(intent)
+    if(feature != null) {
+      intent.putExtra("urlPPOB", feature)
     }
   }
 
   fun build(): SDKManager {
+
+    Sentry.init { options ->
+      options.dsn = "https://03b330c4b8da43d0801e3afcbc6f3983@o4504072784773120.ingest.sentry.io/4504073112387584"
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0
+      // When first trying Sentry it's good to see what the SDK is doing:
+      options.isDebug = true
+    }
+
     initKoin(
       module {
         single<Context> { mContext }
