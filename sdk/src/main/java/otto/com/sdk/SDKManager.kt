@@ -5,24 +5,30 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.models.PostRepository
+import com.otto.sdk.shared.models.ProfileRepository
 import com.otto.sdk.shared.models.ProfileViewModel
+import com.otto.sdk.shared.response.Posts
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 import io.sentry.Sentry
+import org.koin.android.ext.android.inject
 
 data class Config(val clientKey: String)
-class SDKManager private constructor(context: Context) {
+class SDKManager private constructor(context: Context) : AppCompatActivity()  {
+  private val postRepository : PostRepository by inject()
+
   companion object : SingletonHolder<SDKManager, Context>(::SDKManager)
 
   var generalListener : GeneralListener? = null
 
   private var mContext: Context
-
   init {
     Log.e("SDK MANAGER", "INIT")
     mContext = context
@@ -40,10 +46,11 @@ class SDKManager private constructor(context: Context) {
     return this@SDKManager
   }
 
-  @JvmName("setGeneralListener1")
+  @JvmName("setTheGeneralListener")
   fun setGeneralListener(listener : GeneralListener){
     this.generalListener = listener
   }
+
 
   fun trySentry(){
     var status = object{
@@ -58,11 +65,24 @@ class SDKManager private constructor(context: Context) {
     }
   }
 
+  fun testingHOC(integer: (Int) -> Unit){
+    integer(10)
+  }
+
   fun getBalancePPOB() : String{
     return "10000"
   }
 
-  @JvmName("getGeneralListener1")
+  fun getPosts(resp:(Any)->(Unit)){
+    try{
+      var test = postRepository.fetchFirstPost()
+      resp(test)
+    }catch(e:Exception){
+      resp(e)
+    }
+  }
+
+  @JvmName("getTheGeneralListener")
   fun getGeneralListener() : GeneralListener? {
     return this.generalListener;
   }

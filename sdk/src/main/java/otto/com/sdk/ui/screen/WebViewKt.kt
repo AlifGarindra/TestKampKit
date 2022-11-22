@@ -18,15 +18,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.models.PostRepository
+
 import com.otto.sdk.shared.response.GeneralStatus
+import com.otto.sdk.shared.response.Posts
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.JSBridge
 
-class WebViewKt : AppCompatActivity() {
+class WebViewKt : AppCompatActivity(),KoinComponent {
   private val readStoragePermission = 11
   // var webviewBack : String = JSBridge(this).value
   lateinit var secondWV : WebView
+  private val postRepository : PostRepository by inject()
+
 
   var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListener()
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +49,7 @@ class WebViewKt : AppCompatActivity() {
 
     requestPhonePermissions()
     setUpWebView()
+
     }
 
   override fun onDestroy() {
@@ -56,7 +71,7 @@ fun setUpWebView(){
   if(openUrl !== null){
     secondWV.loadUrl(openUrl)
   }else{
-    secondWV.loadUrl("www.google.com")
+    secondWV.loadUrl("https://poc-otto.web.app/")
   }
 
   secondWV.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
@@ -101,15 +116,17 @@ fun setUpWebView(){
       // progressBar.visibility = View.GONE
     }
 
+
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
-        if(url.contains("google.com")){
+        // if(url.contains("poc")){
+          var posts : Posts = postRepository.fetchFirstPost()
           var status = GeneralStatus
           status.state = "success"
           status.message = ""
           generalListener?.onOpenPPOB(status)
-          Log.d("test123", "onPageStarted: $generalListener")
-        }
+          Log.d("test123", "onPageStarted: $posts")
+        // }
       }
     }
   }
@@ -146,6 +163,12 @@ fun setUpWebView(){
   // })
 
 }
+
+  // suspend fun callApi() : Job  = runBlocking {
+  //   GlobalScope.launch(start = CoroutineStart.LAZY) {
+  //     postRepository.fetchFirstPost()
+  //   }
+  // }
 
   private fun requestPhonePermissions() {
     if (ContextCompat.checkSelfPermission(this,

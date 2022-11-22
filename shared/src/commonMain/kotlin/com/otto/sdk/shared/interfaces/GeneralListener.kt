@@ -6,4 +6,7 @@ interface GeneralListener {
 fun onOpenPPOB( status : GeneralStatus)
 fun onClosePPOB(status : GeneralStatus)
 fun onError(status : GeneralStatus)
+fun onAccessTokenRemoved(status : GeneralStatus){
+  // misalnya gaperlu di implement
+}
 }

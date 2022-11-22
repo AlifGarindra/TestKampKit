@@ -5,9 +5,12 @@ import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
 import com.otto.sdk.shared.ktor.DogApi
 import com.otto.sdk.shared.ktor.DogApiImpl
+import com.otto.sdk.shared.ktor.PostApi
+import com.otto.sdk.shared.ktor.PostsApiImpl
 import com.otto.sdk.shared.ktor.ProfileApi
 import com.otto.sdk.shared.ktor.ProfileApiImpl
 import com.otto.sdk.shared.models.BreedRepository
+import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
@@ -84,6 +87,7 @@ private val coreModule = module {
 
   single<DogApi> { DogApiImpl(getWith("DogApiImpl"), get()) }
   single<ProfileApi> { ProfileApiImpl(getWith("UserProfileApiImpl"), get()) }
+  single<PostApi> { PostsApiImpl(getWith("PostsApiImpl"),get()) }
   single<Clock> { Clock.System }
 
   // platformLogWriter() is a relatively simple config option, useful for local debugging. For production
@@ -98,6 +102,7 @@ private val coreModule = module {
     BreedRepository(get(), get(), get(), getWith("BreedRepository"), get())
   }
   single { ProfileRepository(get(), get(), get(), getWith("ProfileRepository"), get()) }
+  single { PostRepository(get()) }
 }
 
 internal inline fun <reified T> Scope.getWith(vararg params: Any?): T {

@@ -8,8 +8,10 @@ import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
 import com.otto.sdk.shared.models.ProfileViewModel
 import co.touchlab.kermit.Logger
 import com.otto.sdk.shared.injectLogger
+import com.otto.sdk.shared.models.PostRepository
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class MainActivity : ComponentActivity(), KoinComponent {
 

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.response.GeneralStatus
 import com.otto.sdk.shared.response.MasterMenu
+import com.otto.sdk.shared.response.Posts
 import otto.com.sdk.MainFragment
 import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.MenuItem
@@ -36,7 +37,9 @@ class MainActivity : AppCompatActivity() {
     }
     Log.e("NNN", SDKManager.getInstance(this).x)
 
-    SDKManager.getInstance(this).trySentry();
+    SDKManager.getInstance(this).getPosts{
+      Log.d("test123", "$it")
+    }
 
     SDKManager.getInstance(this).setGeneralListener(object : GeneralListener {
      override fun onOpenPPOB(status: GeneralStatus) {
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     button.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).openPPOB("www.google.com",this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).testingHOC { Log.d("hoc", "$it") }
 //                SDKManager.getInstance(this@MainActivity).trySentry();
 //               var hello =  SDKManager.getInstance(this@MainActivity).getBalancePPOB()
 //                Log.e("error", "onClick: $hello", )
