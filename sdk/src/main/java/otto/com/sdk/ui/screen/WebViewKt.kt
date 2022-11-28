@@ -28,14 +28,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import org.koin.android.ext.android.inject
 
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.JSBridge
 
-class WebViewKt : AppCompatActivity(),KoinComponent {
+class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
   // var webviewBack : String = JSBridge(this).value
   lateinit var secondWV : WebView
@@ -46,10 +45,8 @@ class WebViewKt : AppCompatActivity(),KoinComponent {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)
-
     requestPhonePermissions()
     setUpWebView()
-
     }
 
   override fun onDestroy() {

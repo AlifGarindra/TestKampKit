@@ -9,7 +9,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SDKManager sdkManager = SDKManager.Companion.getInstance(this)
-                .clientKey("myClientKey")
+                .setClientKey("myClientKey")
                 .build();
 //        SDKManager sdkman = SDKManager.Companion.config(config).getInstance(this)
 //        Log.e("XXXXXX", sdkman.getX());

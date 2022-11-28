@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.interfaces.TransactionListener
 import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileRepository
 import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.response.Posts
+import com.otto.sdk.shared.response.UserAuth
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -27,8 +29,10 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   companion object : SingletonHolder<SDKManager, Context>(::SDKManager)
 
   var generalListener : GeneralListener? = null
+  var transactionListener : TransactionListener? = null
 
   private var mContext: Context
+
   init {
     Log.e("SDK MANAGER", "INIT")
     mContext = context
@@ -41,7 +45,8 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   lateinit var clientKey: String
-  fun clientKey(clientKey: String): SDKManager {
+
+  fun setClientKey(clientKey: String): SDKManager {
     this.clientKey = clientKey
     return this@SDKManager
   }
@@ -51,6 +56,10 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     this.generalListener = listener
   }
 
+  @JvmName("getTheGeneralListener")
+  fun getGeneralListener() : GeneralListener? {
+    return this.generalListener;
+  }
 
   fun trySentry(){
     var status = object{
@@ -65,13 +74,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  fun testingHOC(integer: (Int) -> Unit){
-    integer(10)
-  }
-
-  fun getBalancePPOB() : String{
-    return "10000"
-  }
+  // fun testingHOC(integer: (Int) -> Unit){
+  //   integer(10)
+  // }
+  //
+  // fun getBalancePPOB() : String{
+  //   return "10000"
+  // }
 
   fun getPosts(resp:(Any)->(Unit)){
     try{
@@ -82,18 +91,78 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  @JvmName("getTheGeneralListener")
-  fun getGeneralListener() : GeneralListener? {
-    return this.generalListener;
+  fun setPhoneNumber(phone:String) : SDKManager {
+    UserAuth.phoneNumber = phone
+    return this@SDKManager
   }
 
-  fun openPPOB(feature:String?,activity: Activity) {
-      var intent = Intent(mContext,WebViewKt::class.java)
-      activity.startActivity(intent)
-    if(feature != null) {
-      intent.putExtra("urlPPOB", feature)
+  fun setOutletName(name:String) : SDKManager {
+    UserAuth.userAccessToken = name
+    return this@SDKManager
+  }
+
+  fun setClientToken(token:String) : SDKManager {
+    UserAuth.clientToken = token
+    return this@SDKManager
+  }
+
+  fun setUserAccessToken(token:String) : SDKManager {
+    UserAuth.userAccessToken = token
+    return this@SDKManager
+  }
+
+  fun openActivity(){
+    var checker = checkFirstAuthLayer()
+    if (checker.size == 0){
+
     }
   }
+
+  fun openPPOB(context:Context) {
+    if(UserAuth.userAccessToken != ""){
+      var intent = Intent(mContext,WebViewKt::class.java)
+      context.startActivity(intent)
+    }else{
+      var intent = Intent(mContext,WebViewKt::class.java)
+      context.startActivity(intent)
+    }
+  }
+
+  fun openProduct(){
+
+  }
+
+  private fun checkFirstAuthLayer(): ArrayList<String> {
+   var checker : ArrayList<String> = ArrayList()
+    if(UserAuth.phoneNumber == ""){
+      checker.add("phone")
+    }
+    if(UserAuth.clientToken == ""){
+      checker.add("client-token")
+    }
+    if(UserAuth.outletName == ""){
+      checker.add("outlet-name")
+    }
+    return checker
+  }
+
+  private fun checkSecondAuthLayer(): ArrayList<String> {
+    var checker = checkFirstAuthLayer()
+    if(UserAuth.userAccessToken == ""){
+      checker.add("user-access-token")
+    }
+    return checker
+  }
+
+  fun getUserInfo(){
+
+  }
+
+
+  fun clearSDKSession(){
+
+  }
+
 
   fun build(): SDKManager {
 

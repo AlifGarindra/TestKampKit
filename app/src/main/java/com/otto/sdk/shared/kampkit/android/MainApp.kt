@@ -9,7 +9,7 @@ class MainApp : Application() {
     super.onCreate()
     // SDKManager.getInstance(Config(context = this, clientKey = "myClientKey123!"))
     val sdkman = SDKManager.getInstance(this)
-      .clientKey("myClientKey")
+      .setClientKey("myClientKey")
       .build()
     sdkman.changeTheX("NNNNNN")
   }

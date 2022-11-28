@@ -1,15 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/scrollView"
+  android:layout_width="match_parent"
   android:layout_height="match_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical">
-  <Button
-    android:id="@+id/button1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>
-  <FrameLayout xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity" />
-</LinearLayout>
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <LinearLayout android:layout_width="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+      android:id="@+id/button_open_PPOB"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="open PPOB"/>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="20.dp"
+      />
+
+    <TextView
+      android:id="@+id/label3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Phone Number:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+
+    <EditText
+      android:id="@+id/text_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      android:inputType="number"
+      tools:ignore="LabelFor,TextFields"
+      android:importantForAutofill="no" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+
+    <Button
+      android:id="@+id/button_set_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="set phone number"/>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="20.dp"
+      />
+
+    <TextView
+      android:id="@+id/label4"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Outlet Name:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <EditText
+      android:id="@+id/text_outlet_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      android:inputType="text"
+      tools:ignore="LabelFor,TextFields"
+      android:importantForAutofill="no" />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <Button
+      android:id="@+id/button_set_outlet_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="set Outlet Name"/>
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="20.dp"
+      />
+
+    <TextView
+      android:id="@+id/label1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Client Token:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <TextView
+      android:id="@+id/text_client_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <Button
+      android:id="@+id/button_set_client_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="set client token"
+      android:textAlignment="center"/>
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="20.dp"
+      />
+    <TextView
+      android:id="@+id/label2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="User Access Token:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <TextView
+      android:id="@+id/text_user_access_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      />
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+    <Button
+      android:id="@+id/button_set_user_access_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="set user access token"/>
+
+    <!--  <Button-->
+    <!--    android:id="@+id/button4"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:text="open PPOB"/>-->
+    <!--  <FrameLayout xmlns:tools="http://schemas.android.com/tools"-->
+    <!--    android:id="@+id/container"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    tools:context=".MainActivity" />-->
+  </LinearLayout>
+</ScrollView>
+

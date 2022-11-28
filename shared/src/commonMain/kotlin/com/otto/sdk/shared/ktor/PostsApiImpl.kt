@@ -26,7 +26,7 @@ class PostsApiImpl(
 
   override suspend fun getSinglePost(): Posts {
     return httpClient.get {
-      endpoint("/postus/1")
+      endpoint("/posts/1")
     }.body()
   }
 
