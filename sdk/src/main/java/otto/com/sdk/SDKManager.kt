@@ -61,6 +61,16 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     return this.generalListener;
   }
 
+  @JvmName("setTheTransactionListener")
+  fun setTransactionListener(listener : TransactionListener){
+    this.transactionListener = listener
+  }
+
+  @JvmName("getTheTransactionListener")
+  fun getTransactionListener() : TransactionListener? {
+    return this.transactionListener;
+  }
+
   fun trySentry(){
     var status = object{
       val helloWorld = "hellow"

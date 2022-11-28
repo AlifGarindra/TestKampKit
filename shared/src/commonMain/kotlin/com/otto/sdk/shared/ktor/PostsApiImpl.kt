@@ -7,6 +7,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 
@@ -29,5 +30,4 @@ class PostsApiImpl(
       endpoint("/posts/1")
     }.body()
   }
-
 }
