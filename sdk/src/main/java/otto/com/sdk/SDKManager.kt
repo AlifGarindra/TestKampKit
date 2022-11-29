@@ -1,9 +1,11 @@
 package otto.com.sdk
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
@@ -48,6 +50,26 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun setClientKey(clientKey: String): SDKManager {
     this.clientKey = clientKey
+    return this@SDKManager
+  }
+
+  fun setPhoneNumber(phone:String) : SDKManager {
+    UserAuth.phoneNumber = phone
+    return this@SDKManager
+  }
+
+  fun setOutletName(name:String) : SDKManager {
+    UserAuth.outletName = name
+    return this@SDKManager
+  }
+
+  fun setClientToken(token:String) : SDKManager {
+    UserAuth.clientToken = token
+    return this@SDKManager
+  }
+
+  fun setUserAccessToken(token:String) : SDKManager {
+    UserAuth.userAccessToken = token
     return this@SDKManager
   }
 
@@ -101,25 +123,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  fun setPhoneNumber(phone:String) : SDKManager {
-    UserAuth.phoneNumber = phone
-    return this@SDKManager
-  }
+  // @SuppressLint("HardwareIds")
+  // fun getDeviceId() : String{
+  //   return Settings.Secure.getString( mContext.contentResolver,Settings.Secure.ANDROID_ID).toString()
+  // }
 
-  fun setOutletName(name:String) : SDKManager {
-    UserAuth.userAccessToken = name
-    return this@SDKManager
-  }
-
-  fun setClientToken(token:String) : SDKManager {
-    UserAuth.clientToken = token
-    return this@SDKManager
-  }
-
-  fun setUserAccessToken(token:String) : SDKManager {
-    UserAuth.userAccessToken = token
-    return this@SDKManager
-  }
 
   fun openActivity(){
     var checker = checkFirstAuthLayer()
@@ -128,7 +136,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  fun openPPOB(context:Context) {
+  fun openPpob(context:Context) {
     if(UserAuth.userAccessToken != ""){
       var intent = Intent(mContext,WebViewKt::class.java)
       context.startActivity(intent)
@@ -142,17 +150,19 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   }
 
-  private fun checkFirstAuthLayer(): ArrayList<String> {
+   private fun checkFirstAuthLayer(): ArrayList<String> {
    var checker : ArrayList<String> = ArrayList()
     if(UserAuth.phoneNumber == ""){
       checker.add("phone")
+      //bisa lempar ke listener
     }
     if(UserAuth.clientToken == ""){
       checker.add("client-token")
+      //bisa lempar ke listener kalau ada
     }
-    if(UserAuth.outletName == ""){
-      checker.add("outlet-name")
-    }
+    // if(UserAuth.outletName == ""){
+    //   checker.add("outlet-name")
+    // }
     return checker
   }
 

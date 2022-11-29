@@ -71,6 +71,9 @@ fun setUpWebView(){
     secondWV.loadUrl("https://poc-otto.web.app/")
   }
 
+
+  //Harusnya ambil Context dari punyanya host app
+
   secondWV.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
   secondWV.settings.javaScriptEnabled = true
   secondWV.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->

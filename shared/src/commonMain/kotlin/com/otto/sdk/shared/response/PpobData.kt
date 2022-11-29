@@ -3,7 +3,7 @@ package com.otto.sdk.shared.response
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-object PPOBData {
+object PpobData {
 
   @Serializable
   data class UserInfo(

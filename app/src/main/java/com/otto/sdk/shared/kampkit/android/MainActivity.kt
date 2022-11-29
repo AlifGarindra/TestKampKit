@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
@@ -17,10 +18,12 @@ import otto.com.sdk.ui.data.MenuItem
 
 class MainActivity : AppCompatActivity() {
 
-
-  // fun fx(items: List<MenuItem>): List<MenuItem> {
-  //   return arrayListOf()
-  // }
+  lateinit var userAccessTokenLabel : TextView
+  lateinit var clientTokenLabel : TextView
+  lateinit var phoneNumberLabel : TextView
+  lateinit var outletNameLabel : TextView
+  lateinit var phoneNumberInput : EditText
+  lateinit var outletNameInput : EditText
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -37,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     //     )
     //     .commitNow()
     // }
+
+
 
 
     SDKManager.getInstance(this).getPosts{
@@ -56,42 +61,69 @@ class MainActivity : AppCompatActivity() {
         TODO("Not yet implemented")
       }
     })
+
+    onLabelSet()
+
     onPressButton()
-    onSetLabel()
+
   }
 
   fun onPressButton(){
     var openPPOBButton : Button = findViewById(R.id.button_open_PPOB)
+    var phoneNumberButton : Button = findViewById(R.id.button_set_phone_number)
+    var outletNameButton : Button = findViewById(R.id.button_set_outlet_name)
     var clientTokenButton : Button = findViewById(R.id.button_set_client_token)
     var userAccessTokenButton : Button = findViewById(R.id.button_set_user_access_token)
+
+    // var clientKeyButton : Button = findViewById(R.id.button_set_client_key)
+
     openPPOBButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).openPPOB(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
         // SDKManager.getInstance(this@MainActivity).testingHOC { Log.d("hoc", "$it") }
 //                SDKManager.getInstance(this@MainActivity).trySentry();
 //               var hello =  SDKManager.getInstance(this@MainActivity).getBalancePPOB()
 //                Log.e("error", "onClick: $hello", )
       }
   })
+
+    phoneNumberButton.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).setPhoneNumber(phoneNumberInput.text.toString())
+        phoneNumberLabel.text = UserAuth.phoneNumber
+      }
+    })
+
+    outletNameButton.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).setOutletName(outletNameInput.text.toString())
+        outletNameLabel.text = UserAuth.outletName
+      }
+    })
+
     clientTokenButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setClientToken("abcdeefajsdbfjabsifasasfasf")
-        onSetLabel()
+        clientTokenLabel.text = UserAuth.clientToken
       }
     })
+
     userAccessTokenButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setUserAccessToken("osdgfiuasdtbgts8 8wdg f8asgdf9 asdfsa")
-        onSetLabel()
+        userAccessTokenLabel.text = UserAuth.userAccessToken
       }
     })
-  }
-
-  fun onSetLabel(){
-    var clientTokenLabel : TextView = findViewById(R.id.text_client_token)
-    var useraccessTokenLabel : TextView = findViewById(R.id.text_user_access_token)
-    clientTokenLabel.setText(UserAuth.clientToken)
-    useraccessTokenLabel.setText(UserAuth.userAccessToken)
 
   }
+
+  fun onLabelSet(){
+    userAccessTokenLabel = findViewById(R.id.text_user_access_token)
+    clientTokenLabel = findViewById(R.id.text_client_token)
+    phoneNumberLabel = findViewById(R.id.text_phone_number)
+    outletNameLabel = findViewById(R.id.text_outlet_name)
+    phoneNumberInput = findViewById(R.id.input_phone_number)
+    outletNameInput = findViewById(R.id.input_outlet_name)
+  }
+
 }

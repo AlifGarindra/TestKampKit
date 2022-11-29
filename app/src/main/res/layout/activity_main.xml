@@ -5,6 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   xmlns:android="http://schemas.android.com/apk/res/android">
+
   <LinearLayout android:layout_width="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -17,6 +18,46 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="open PPOB"/>
+
+<!--    <View-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="20.dp"-->
+<!--      />-->
+
+<!--    <TextView-->
+<!--      android:id="@+id/label5"-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="wrap_content"-->
+<!--      android:text="Client Key:"-->
+<!--      android:textStyle="bold"-->
+<!--      android:textAlignment="center"-->
+<!--      />-->
+
+<!--    <View-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="10.dp"-->
+<!--      />-->
+
+<!--    <EditText-->
+<!--      android:id="@+id/text_client_key"-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="wrap_content"-->
+<!--      android:textAlignment="center"-->
+<!--      android:inputType="text"-->
+<!--      tools:ignore="LabelFor,TextFields"-->
+<!--      android:importantForAutofill="no" />-->
+
+<!--    <View-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="10.dp"-->
+<!--      />-->
+
+<!--    <Button-->
+<!--      android:id="@+id/button_set_client_key"-->
+<!--      android:layout_width="match_parent"-->
+<!--      android:layout_height="wrap_content"-->
+<!--      android:text="set client key"/>-->
+
 
     <View
       android:layout_width="match_parent"
@@ -38,13 +79,25 @@
       />
 
     <EditText
-      android:id="@+id/text_phone_number"
+      android:id="@+id/input_phone_number"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAlignment="center"
       android:inputType="number"
       tools:ignore="LabelFor,TextFields"
       android:importantForAutofill="no" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+
+    <TextView
+      android:id="@+id/text_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      />
 
     <View
       android:layout_width="match_parent"
@@ -74,14 +127,28 @@
       android:layout_width="match_parent"
       android:layout_height="10.dp"
       />
+
     <EditText
-      android:id="@+id/text_outlet_name"
+      android:id="@+id/input_outlet_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAlignment="center"
       android:inputType="text"
       tools:ignore="LabelFor,TextFields"
       android:importantForAutofill="no" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="10.dp"
+      />
+
+    <TextView
+      android:id="@+id/text_outlet_name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      />
+
     <View
       android:layout_width="match_parent"
       android:layout_height="10.dp"
