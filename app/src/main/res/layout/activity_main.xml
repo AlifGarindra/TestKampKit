@@ -13,69 +13,26 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <Button
-      android:id="@+id/button_open_PPOB"
+    <!--isimpel app-->
+
+    <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="open PPOB"/>
-
-<!--    <View-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="20.dp"-->
-<!--      />-->
-
-<!--    <TextView-->
-<!--      android:id="@+id/label5"-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="wrap_content"-->
-<!--      android:text="Client Key:"-->
-<!--      android:textStyle="bold"-->
-<!--      android:textAlignment="center"-->
-<!--      />-->
-
-<!--    <View-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="10.dp"-->
-<!--      />-->
-
-<!--    <EditText-->
-<!--      android:id="@+id/text_client_key"-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="wrap_content"-->
-<!--      android:textAlignment="center"-->
-<!--      android:inputType="text"-->
-<!--      tools:ignore="LabelFor,TextFields"-->
-<!--      android:importantForAutofill="no" />-->
-
-<!--    <View-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="10.dp"-->
-<!--      />-->
-
-<!--    <Button-->
-<!--      android:id="@+id/button_set_client_key"-->
-<!--      android:layout_width="match_parent"-->
-<!--      android:layout_height="wrap_content"-->
-<!--      android:text="set client key"/>-->
-
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="20.dp"
+      android:text="ISimpel App"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:textSize="24sp"
+      android:textColor="@color/colorPrimaryDark"
+      android:layout_marginVertical="20dp"
       />
 
     <TextView
-      android:id="@+id/label3"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Phone Number:"
       android:textStyle="bold"
       android:textAlignment="center"
-      />
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
+      android:layout_marginVertical="10dp"
       />
 
     <EditText
@@ -85,47 +42,16 @@
       android:textAlignment="center"
       android:inputType="number"
       tools:ignore="LabelFor,TextFields"
-      android:importantForAutofill="no" />
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
+      android:importantForAutofill="no"
+      android:layout_marginVertical="10dp"/>
 
     <TextView
-      android:id="@+id/text_phone_number"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textAlignment="center"
-      />
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
-
-    <Button
-      android:id="@+id/button_set_phone_number"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="set phone number"/>
-
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="20.dp"
-      />
-
-    <TextView
-      android:id="@+id/label4"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Outlet Name:"
       android:textStyle="bold"
       android:textAlignment="center"
-      />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
+      android:layout_marginVertical="10dp"
       />
 
     <EditText
@@ -135,11 +61,103 @@
       android:textAlignment="center"
       android:inputType="text"
       tools:ignore="LabelFor,TextFields"
-      android:importantForAutofill="no" />
+      android:importantForAutofill="no"
+      android:layout_marginVertical="10dp"/>
 
-    <View
+    <TextView
       android:layout_width="match_parent"
-      android:layout_height="10.dp"
+      android:layout_height="wrap_content"
+      android:text="Client Token:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <TextView
+      android:id="@+id/text_client_token_app"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <Button
+      android:id="@+id/button_get_client_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="get client token"
+      android:layout_marginVertical="10dp"/>
+
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="User Access Token:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <TextView
+      android:id="@+id/text_user_access_token_app"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <Button
+      android:id="@+id/button_get_user_access_token"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="get user access token"
+      android:layout_marginVertical="10dp"/>
+
+    <!--SDK-->
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="SDK"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:textSize="24sp"
+      android:textColor="@color/colorPrimaryDark"
+      android:layout_marginVertical="20sp"
+      />
+
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Phone Number:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <TextView
+      android:id="@+id/text_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
+      />
+
+    <Button
+      android:id="@+id/button_set_phone_number"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="set phone number"
+      android:layout_marginVertical="10dp"/>
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Outlet Name:"
+      android:textStyle="bold"
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
 
     <TextView
@@ -147,85 +165,76 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
 
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
     <Button
       android:id="@+id/button_set_outlet_name"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="set Outlet Name"/>
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="20.dp"
-      />
+      android:text="set Outlet Name"
+      android:layout_marginVertical="10dp"/>
 
     <TextView
-      android:id="@+id/label1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Client Token:"
       android:textStyle="bold"
       android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
+
     <TextView
-      android:id="@+id/text_client_token"
+      android:id="@+id/text_client_token_sdk"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
+
     <Button
       android:id="@+id/button_set_client_token"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="set client token"
-      android:textAlignment="center"/>
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="20.dp"
-      />
+      android:textAlignment="center"
+      android:layout_marginVertical="10dp"/>
+
     <TextView
-      android:id="@+id/label2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="User Access Token:"
       android:textStyle="bold"
       android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
+
     <TextView
-      android:id="@+id/text_user_access_token"
+      android:id="@+id/text_user_access_token_sdk"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:textAlignment="center"
+      android:layout_marginVertical="10dp"
       />
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="10.dp"
-      />
+
     <Button
       android:id="@+id/button_set_user_access_token"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="set user access token"/>
+      android:text="set user access token"
+      android:layout_marginVertical="10dp"/>
+
+    <Button
+      android:id="@+id/button_open_PPOB"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="open PPOB"
+      android:layout_marginVertical="10dp"/>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="30dp"/>
+
 
     <!--  <Button-->
     <!--    android:id="@+id/button4"-->

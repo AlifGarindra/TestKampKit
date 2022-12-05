@@ -1,9 +1,8 @@
-package com.otto.sdk.shared.response
+package com.otto.sdk.shared.localData
 
 object UserAuth {
   var clientToken : String = ""
   var phoneNumber : String = ""
-  var ClientKey : String = ""
   var outletName:  String = ""
   var userAccessToken : String = ""
 }

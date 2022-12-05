@@ -1,4 +1,4 @@
-package com.otto.sdk.shared.response
+package com.otto.sdk.shared.localData
 
 object GeneralStatus {
   var state:String = "success"

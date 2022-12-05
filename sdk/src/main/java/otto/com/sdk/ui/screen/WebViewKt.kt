@@ -2,42 +2,33 @@ package otto.com.sdk.ui.screen
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
+import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.localData.GeneralStatus
+import com.otto.sdk.shared.localData.UserAuth
 import com.otto.sdk.shared.models.PostRepository
-
-import com.otto.sdk.shared.response.GeneralStatus
 import com.otto.sdk.shared.response.Posts
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
-
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
-import otto.com.sdk.ui.data.JSBridge
 
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
   // var webviewBack : String = JSBridge(this).value
-  lateinit var secondWV : WebView
+  lateinit var webView : WebView
   private val postRepository : PostRepository by inject()
 
 
@@ -50,89 +41,95 @@ class WebViewKt : AppCompatActivity() {
     }
 
   override fun onDestroy() {
-    var status = GeneralStatus
-    status.state = "destroy"
-    status.message = ""
-    generalListener?.onClosePPOB(status)
-    Log.d("test123", "onPageStarted: $generalListener")
+    webView.evaluateJavascript("window.localStorage.clear()",{
+      Log.d("test1234", "onPageFinished:$it ")
+    })
+    // var status = GeneralStatus
+    // status.state = "destroy"
+    // status.message = ""
+    // generalListener?.onClosePPOB(status)
+    // Log.d("test123", "onPageStarted: $generalListener")
     super.onDestroy()
   }
 
 
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
-  secondWV= findViewById(R.id.webviewkt)
-
-  var openUrl =  intent.getStringExtra("urlPPOB")
-  // secondWV.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0857000002")
-  if(openUrl !== null){
-    secondWV.loadUrl(openUrl)
-  }else{
-    secondWV.loadUrl("https://poc-otto.web.app/")
-  }
+  webView= findViewById(R.id.webviewkt)
 
 
   //Harusnya ambil Context dari punyanya host app
+  webView.webViewClient = object : WebViewClient() {
 
-  secondWV.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
-  secondWV.settings.javaScriptEnabled = true
-  secondWV.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
-    secondWV.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
-  }
-  secondWV.settings.setSupportZoom(true)
-  secondWV.settings.setAppCachePath(applicationContext.cacheDir.absolutePath)
-  secondWV.settings.cacheMode = WebSettings.LOAD_DEFAULT
-  secondWV.settings.databaseEnabled = true
-  secondWV.settings.domStorageEnabled = true
-  secondWV.settings.useWideViewPort = true
-  secondWV.settings.loadWithOverviewMode = true
+    @TargetApi(Build.VERSION_CODES.N)
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+      Log.d("test1234", "shouldOverrideUrlLoading1: ")
+      return true
+    }
 
-  secondWV.settings.pluginState = WebSettings.PluginState.ON
-  // secondWV.addJavascriptInterface(JSBridge(this),"JSBridge")
-
-//        secondWV.loadUrl("https://test-communication.netlify.app?phoneNumber=123")
-
-
-  secondWV.webViewClient = object : WebViewClient() {
-
-    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-
-      return if (url.startsWith("tel:") || url.startsWith("mailto:")) {
-        view.context.startActivity(
-          Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        )
-        true
-      } else {
-        view.loadUrl(url)
-        true
-      }
+    @Deprecated("Deprecated in Java")
+    @SuppressWarnings("deprecation")
+    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+      Log.d("test1234", "shouldOverrideUrlLoading2: ")
+      return true
     }
 
     override fun onLoadResource(view: WebView, url: String) {
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      // Log.e("URL onPageFinished", url)
-      // progressBar.visibility = View.GONE
+      view.evaluateJavascript("window.localStorage.getItem('client_token')",{
+        Log.d("test1234", "onPageFinished:$it ")
+      })
     }
 
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
+        val userAccessToken = "window.localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+        val clientToken = "window.localStorage.setItem('client_token', '${UserAuth.clientToken}');"
+        webView.evaluateJavascript(clientToken, null)
+        webView.evaluateJavascript(userAccessToken, null)
         // if(url.contains("poc")){
-          var posts : Posts = postRepository.fetchFirstPost()
-          var status = GeneralStatus
-          status.state = "success"
-          status.message = ""
-          generalListener?.onOpenPPOB(status)
-          Log.d("test123", "onPageStarted: $posts")
+        var posts : Posts = postRepository.fetchFirstPost()
+        var status = GeneralStatus
+        status.state = "success"
+        status.message = ""
+        generalListener?.onOpenPPOB(status)
+        Log.d("test123", "onPageStarted: $posts")
         // }
       }
     }
   }
 
+  var openUrl =  intent.getStringExtra("urlPPOB")
+  if(openUrl !== null){
+    webView.loadUrl(openUrl)
+  }
 
-  // secondWV.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+  webView.addJavascriptInterface(JavaScriptInterface(this), "Android")
+  webView.settings.javaScriptEnabled = true
+  webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+    webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
+  }
+  webView.settings.setSupportZoom(true)
+  webView.settings.setAppCachePath(this.cacheDir.absolutePath)
+  webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+  webView.settings.databaseEnabled = true
+  webView.settings.domStorageEnabled = true
+  webView.settings.useWideViewPort = true
+  webView.settings.loadWithOverviewMode = true
+
+  webView.settings.pluginState = WebSettings.PluginState.ON
+  // webView.addJavascriptInterface(JSBridge(this),"JSBridge")
+
+//        webView.loadUrl("https://test-communication.netlify.app?phoneNumber=123")
+
+
+
+
+
+  // webView.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
   //   // val i = Intent(Intent.ACTION_VIEW)
   //   // i.data = Uri.parse(url)
   //   // startActivity(i)
@@ -163,12 +160,6 @@ fun setUpWebView(){
   // })
 
 }
-
-  // suspend fun callApi() : Job  = runBlocking {
-  //   GlobalScope.launch(start = CoroutineStart.LAZY) {
-  //     postRepository.fetchFirstPost()
-  //   }
-  // }
 
   private fun requestPhonePermissions() {
     if (ContextCompat.checkSelfPermission(this,
@@ -201,18 +192,27 @@ fun setUpWebView(){
     }
   }
   override fun onBackPressed(){
-       // secondWV.evaluateJavascript(
+       // webView.evaluateJavascript(
        //     "nativeBackPressed()",
        //     {
        //         Log.d("goback", it)
        //     })
-//     if(secondWV.canGoBack()){
-//       secondWV.goBack()
+//     if(webView.canGoBack()){
+//       webView.goBack()
 //     }else{
 //       finish()
 //     }
+//     webView.loadUrl("tel:081324")
 
-    super.onBackPressed()
+      // val intent = Intent(Intent.ACTION_VIEW);
+      // intent.data = Uri.parse("mailto:garindra.alif@gmail.com")
+      // startActivity(intent)
+
+    // Log.d("test1234", webView.url.toString())
+    // super.onBackPressed()
+    webView.evaluateJavascript("window.localStorage.getItem('client_token')",{
+      Log.d("test1234", "back:$it ")
+    })
 
   }
 }

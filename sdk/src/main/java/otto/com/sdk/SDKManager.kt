@@ -1,22 +1,18 @@
 package otto.com.sdk
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
+import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.TransactionListener
 import com.otto.sdk.shared.models.PostRepository
-import com.otto.sdk.shared.models.ProfileRepository
 import com.otto.sdk.shared.models.ProfileViewModel
-import com.otto.sdk.shared.response.Posts
-import com.otto.sdk.shared.response.UserAuth
+import com.otto.sdk.shared.localData.UserAuth
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -48,6 +44,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   lateinit var clientKey: String
 
+  @JvmName("setTheClientKey")
   fun setClientKey(clientKey: String): SDKManager {
     this.clientKey = clientKey
     return this@SDKManager
@@ -130,6 +127,9 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
 
   fun openActivity(){
+    //perlu cek satu satu di function ini
+    //set logger.e
+    //throw error function di generallistener
     var checker = checkFirstAuthLayer()
     if (checker.size == 0){
 
@@ -137,13 +137,9 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun openPpob(context:Context) {
-    if(UserAuth.userAccessToken != ""){
       var intent = Intent(mContext,WebViewKt::class.java)
+      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
       context.startActivity(intent)
-    }else{
-      var intent = Intent(mContext,WebViewKt::class.java)
-      context.startActivity(intent)
-    }
   }
 
   fun openProduct(){

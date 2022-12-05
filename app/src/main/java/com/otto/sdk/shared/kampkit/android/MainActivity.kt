@@ -8,13 +8,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
-import com.otto.sdk.shared.response.GeneralStatus
-import com.otto.sdk.shared.response.MasterMenu
-import com.otto.sdk.shared.response.Posts
-import com.otto.sdk.shared.response.UserAuth
-import otto.com.sdk.MainFragment
+import com.otto.sdk.shared.localData.GeneralStatus
+import com.otto.sdk.shared.localData.UserAuth
 import otto.com.sdk.SDKManager
-import otto.com.sdk.ui.data.MenuItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +55,11 @@ class MainActivity : AppCompatActivity() {
 
       override fun onError(status: GeneralStatus) {
         TODO("Not yet implemented")
+      }
+
+      override fun onUserAccessTokenExpired() {
+        SDKManager.getInstance(this@MainActivity).setOutletName("helo")
+        Log.d("expireduat", "onUserAccessTokenExpired: ${UserAuth.outletName} ")
       }
     })
 
@@ -118,8 +119,8 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun onLabelSet(){
-    userAccessTokenLabel = findViewById(R.id.text_user_access_token)
-    clientTokenLabel = findViewById(R.id.text_client_token)
+    userAccessTokenLabel = findViewById(R.id.text_user_access_token_sdk)
+    clientTokenLabel = findViewById(R.id.text_client_token_sdk)
     phoneNumberLabel = findViewById(R.id.text_phone_number)
     outletNameLabel = findViewById(R.id.text_outlet_name)
     phoneNumberInput = findViewById(R.id.input_phone_number)

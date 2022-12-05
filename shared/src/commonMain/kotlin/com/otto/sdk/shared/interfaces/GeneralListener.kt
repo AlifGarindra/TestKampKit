@@ -1,6 +1,6 @@
 package com.otto.sdk.shared.interfaces
 
-import com.otto.sdk.shared.response.GeneralStatus
+import com.otto.sdk.shared.localData.GeneralStatus
 
 interface GeneralListener {
 fun onOpenPPOB( status : GeneralStatus)
@@ -20,10 +20,7 @@ fun onUserAccessTokenEmpty(status : GeneralStatus){
   fun onClientTokenExpired(){
     // misalnya gaperlu di implement
   }
-  fun onUserAccessTokenExpired(){
-    // misalnya gaperlu di implement
-
-  }
+  fun onUserAccessTokenExpired()
   fun onAuthCode(){
     // misalnya gaperlu di implement
   }
