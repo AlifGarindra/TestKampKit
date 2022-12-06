@@ -10,6 +10,7 @@ import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.TransactionListener
+import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.localData.UserAuth
@@ -126,48 +127,57 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   // }
 
 
-  fun openActivity(){
-    //perlu cek satu satu di function ini
-    //set logger.e
-    //throw error function di generallistener
-    var checker = checkFirstAuthLayer()
-    if (checker.size == 0){
-
+  fun openActivation(context:Context,product:String?){
+    try {
+      checkFirstAuthLayer()
+      var intent = Intent(mContext,WebViewKt::class.java)
+      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
+      context.startActivity(intent)
+    }catch (e:Exception){
+      GeneralStatus.state = e.message.toString()
+      generalListener?.onError(GeneralStatus)
     }
   }
 
   fun openPpob(context:Context) {
+    try {
+      checkFirstAuthLayer()
+      checkSecondAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
       intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
       context.startActivity(intent)
+    }catch (e:Exception){
+      GeneralStatus.state = e.message.toString()
+      generalListener?.onError(GeneralStatus)
+    }
   }
 
-  fun openProduct(){
-
+  fun openProduct(context:Context){
+    try {
+      checkFirstAuthLayer()
+      checkSecondAuthLayer()
+      var intent = Intent(mContext,WebViewKt::class.java)
+      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
+      context.startActivity(intent)
+    }catch (e:Exception){
+      GeneralStatus.state = e.message.toString()
+      generalListener?.onError(GeneralStatus)
+    }
   }
 
-   private fun checkFirstAuthLayer(): ArrayList<String> {
-   var checker : ArrayList<String> = ArrayList()
+   private fun checkFirstAuthLayer() {
     if(UserAuth.phoneNumber == ""){
-      checker.add("phone")
-      //bisa lempar ke listener
+      throw Exception("need_phone_number")
     }
     if(UserAuth.clientToken == ""){
-      checker.add("client-token")
-      //bisa lempar ke listener kalau ada
+      throw Exception("need_client_token")
     }
-    // if(UserAuth.outletName == ""){
-    //   checker.add("outlet-name")
-    // }
-    return checker
   }
 
-  private fun checkSecondAuthLayer(): ArrayList<String> {
-    var checker = checkFirstAuthLayer()
+  private fun checkSecondAuthLayer(){
     if(UserAuth.userAccessToken == ""){
-      checker.add("user-access-token")
+      throw Exception("need_user_access_token")
     }
-    return checker
   }
 
   fun getUserInfo(){

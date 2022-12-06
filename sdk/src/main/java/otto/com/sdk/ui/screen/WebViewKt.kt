@@ -15,6 +15,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.localData.UserAuth
@@ -62,14 +63,16 @@ fun setUpWebView(){
     @TargetApi(Build.VERSION_CODES.N)
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
       Log.d("test1234", "shouldOverrideUrlLoading1: ")
-      return true
+      //kalau sudah ada implementasi :tel, :mailto  baru return true ya
+      return false
     }
 
     @Deprecated("Deprecated in Java")
     @SuppressWarnings("deprecation")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
       Log.d("test1234", "shouldOverrideUrlLoading2: ")
-      return true
+      //kalau sudah ada implementasi :tel, :mailto baru return true ya
+      return false
     }
 
     override fun onLoadResource(view: WebView, url: String) {
@@ -103,7 +106,7 @@ fun setUpWebView(){
 
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl !== null){
-    webView.loadUrl(openUrl)
+    webView.loadUrl(Constants.environment.Menu_URL(UserAuth.phoneNumber))
   }
 
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
@@ -193,21 +196,29 @@ fun setUpWebView(){
 
 
   override fun onBackPressed(){
-       webView.evaluateJavascript(
-           "nativeBackPressed()",
-           {
-               Log.d("goback", it)
-           })
+    if(webView.url?.startsWith(Constants.environment.Ppob_Domain) == true){
+      webView.evaluateJavascript(
+        "nativeBackPressed()",
+        {
+          Log.d("goback", it)
+        })
+    }else{
+      if(webView.canGoBack()){
+        webView.goBack()
+      }else{
+        finish()
+      }
+    }
     // webView.evaluateJavascript(
     //   "window.nativeBackPress()",
     //   {
     //     Log.d("goback", it)
     //   })
-//     if(webView.canGoBack()){
-//       webView.goBack()
-//     }else{
-//       finish()
-//     }
+    // if(webView.canGoBack()){
+    //   webView.goBack()
+    // }else{
+    //   finish()
+    // }
 //     webView.loadUrl("tel:081324")
 
       // val intent = Intent(Intent.ACTION_VIEW);

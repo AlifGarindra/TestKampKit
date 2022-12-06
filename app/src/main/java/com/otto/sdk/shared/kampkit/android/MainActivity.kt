@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.localData.GeneralStatus
@@ -54,7 +55,9 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onError(status: GeneralStatus) {
-        TODO("Not yet implemented")
+        Log.e("test1234", "onError:${status.state} ", )
+        val showError = Toast.makeText(this@MainActivity,"${status.state}",Toast.LENGTH_SHORT)
+        showError.show()
       }
 
       override fun onUserAccessTokenExpired() {
