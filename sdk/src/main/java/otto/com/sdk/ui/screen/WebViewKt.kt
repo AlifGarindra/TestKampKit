@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
-import android.webkit.WebStorage
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +23,7 @@ import com.otto.sdk.shared.response.Posts
 import org.koin.android.ext.android.inject
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
+import otto.com.sdk.ui.data.nativeDo
 
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
@@ -56,8 +56,6 @@ class WebViewKt : AppCompatActivity() {
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   webView= findViewById(R.id.webviewkt)
-
-
   //Harusnya ambil Context dari punyanya host app
   webView.webViewClient = object : WebViewClient() {
 
@@ -78,7 +76,7 @@ fun setUpWebView(){
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      view.evaluateJavascript("window.localStorage.getItem('client_token')",{
+      view.evaluateJavascript("localStorage.getItem('client_token')",{
         Log.d("test1234", "onPageFinished:$it ")
       })
     }
@@ -86,8 +84,9 @@ fun setUpWebView(){
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
-        val userAccessToken = "window.localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
-        val clientToken = "window.localStorage.setItem('client_token', '${UserAuth.clientToken}');"
+        Log.d("test1234", "onPageStarted: $url")
+        val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+        val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
         webView.evaluateJavascript(clientToken, null)
         webView.evaluateJavascript(userAccessToken, null)
         // if(url.contains("poc")){
@@ -107,7 +106,7 @@ fun setUpWebView(){
     webView.loadUrl(openUrl)
   }
 
-  webView.addJavascriptInterface(JavaScriptInterface(this), "Android")
+  webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
   webView.settings.javaScriptEnabled = true
   webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
     webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
@@ -191,12 +190,19 @@ fun setUpWebView(){
       }
     }
   }
+
+
   override fun onBackPressed(){
-       // webView.evaluateJavascript(
-       //     "nativeBackPressed()",
-       //     {
-       //         Log.d("goback", it)
-       //     })
+       webView.evaluateJavascript(
+           "nativeBackPressed()",
+           {
+               Log.d("goback", it)
+           })
+    // webView.evaluateJavascript(
+    //   "window.nativeBackPress()",
+    //   {
+    //     Log.d("goback", it)
+    //   })
 //     if(webView.canGoBack()){
 //       webView.goBack()
 //     }else{
@@ -210,9 +216,9 @@ fun setUpWebView(){
 
     // Log.d("test1234", webView.url.toString())
     // super.onBackPressed()
-    webView.evaluateJavascript("window.localStorage.getItem('client_token')",{
-      Log.d("test1234", "back:$it ")
-    })
+    // webView.evaluateJavascript("window.localStorage.getItem('client_token')",{
+    //   Log.d("test1234", "back:$it ")
+    // })
 
   }
 }

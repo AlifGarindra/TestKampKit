@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.otto.sdk.shared.kampkit.android.ui.theme.KaMPKitTheme
-import otto.com.sdk.ui.data.JSBridge
 
 class Webview : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +77,7 @@ fun MyWebview(url : String) {
         }
         loadUrl("https://test-communication.netlify.app?phoneNumber=123")
         settings.javaScriptEnabled = true
-        addJavascriptInterface(JSBridge(mContext),"JSBridge")
+        // addJavascriptInterface(JSBridge(mContext),"JSBridge")
 
 
       }.also {  webView = it }

@@ -60,7 +60,7 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
   api(project(":shared"))
-  // api("com.alifg.libraries:kampkitshared:1.0.4")
+  // api("com.alifg.libraries:kampkitshared:1.1.0")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
   implementation(libs.kotlinx.dateTime)
@@ -79,7 +79,7 @@ afterEvaluate{
         afterEvaluate {
           groupId = "com.alifg.libraries"
           artifactId = "testkampkit"
-          version = "1.1.6"
+          version = "1.2.0"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
