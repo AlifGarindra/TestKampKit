@@ -45,8 +45,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   lateinit var clientKey: String
 
-  @JvmName("setTheClientKey")
-  fun setClientKey(clientKey: String): SDKManager {
+  fun clientKey(clientKey: String): SDKManager {
     this.clientKey = clientKey
     return this@SDKManager
   }
@@ -68,6 +67,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun setUserAccessToken(token:String) : SDKManager {
     UserAuth.userAccessToken = token
+    //geUserInfo
     return this@SDKManager
   }
 
@@ -186,7 +186,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
 
   fun clearSDKSession(){
-
+    UserAuth.reset()
   }
 
 

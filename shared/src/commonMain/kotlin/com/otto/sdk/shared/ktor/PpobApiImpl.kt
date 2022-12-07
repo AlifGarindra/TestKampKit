@@ -26,9 +26,11 @@ class PpobApiImpl(
   }
 
   private fun HttpRequestBuilder.endpoint(path: String) = url {
-    takeFrom("https://portal.ottodigital.id/simulator/webhook")
+    takeFrom("https://gateway-dev.ottodigital.id/isimpel/v1")
     encodedPath = path
   }
+
+  //9bfb19b9-10e3-3168-9325-ed7073482160
 
   override suspend fun getUserInfo(timeStamp:String,clientKey:String): UserInfoResult {
     return httpClient.get {

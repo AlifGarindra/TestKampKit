@@ -2,6 +2,7 @@ package com.otto.sdk.shared.kampkit.android
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
       override fun onError(status: GeneralStatus) {
         Log.e("test1234", "onError:${status.state} ", )
         val showError = Toast.makeText(this@MainActivity,"${status.state}",Toast.LENGTH_SHORT)
+        showError.setGravity(Gravity.CENTER,0,0)
         showError.show()
       }
 
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     var outletNameButton : Button = findViewById(R.id.button_set_outlet_name)
     var clientTokenButton : Button = findViewById(R.id.button_set_client_token)
     var userAccessTokenButton : Button = findViewById(R.id.button_set_user_access_token)
+    var resetSessionButton : Button = findViewById(R.id.button_reset_session)
 
     // var clientKeyButton : Button = findViewById(R.id.button_set_client_key)
 
@@ -94,31 +97,61 @@ class MainActivity : AppCompatActivity() {
     phoneNumberButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setPhoneNumber(phoneNumberInput.text.toString())
-        phoneNumberLabel.text = UserAuth.phoneNumber
+        refreshState("phone")
       }
     })
 
     outletNameButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setOutletName(outletNameInput.text.toString())
-        outletNameLabel.text = UserAuth.outletName
+        refreshState("outlet")
       }
     })
 
     clientTokenButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setClientToken("abcdeefajsdbfjabsifasasfasf")
-        clientTokenLabel.text = UserAuth.clientToken
+        refreshState("ct")
       }
     })
 
     userAccessTokenButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setUserAccessToken("osdgfiuasdtbgts8 8wdg f8asgdf9 asdfsa")
-        userAccessTokenLabel.text = UserAuth.userAccessToken
+        refreshState("uat")
       }
     })
 
+    resetSessionButton.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).clearSDKSession()
+        refreshState()
+      }
+    })
+
+  }
+
+
+  fun refreshState(state:String? = null){
+    if(state != null){
+      if(state == "phone"){
+        phoneNumberLabel.text = UserAuth.phoneNumber
+      }
+      if(state == "outlet"){
+        outletNameLabel.text = UserAuth.outletName
+      }
+      if(state == "ct"){
+        clientTokenLabel.text = UserAuth.clientToken
+      }
+      if(state == "uat"){
+        userAccessTokenLabel.text = UserAuth.userAccessToken
+      }
+    }else{
+      phoneNumberLabel.text = UserAuth.phoneNumber
+      outletNameLabel.text = UserAuth.outletName
+      clientTokenLabel.text = UserAuth.clientToken
+      userAccessTokenLabel.text = UserAuth.userAccessToken
+    }
   }
 
   fun onLabelSet(){
