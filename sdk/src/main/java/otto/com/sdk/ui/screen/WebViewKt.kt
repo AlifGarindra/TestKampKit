@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -28,7 +29,6 @@ import otto.com.sdk.ui.data.nativeDo
 
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
-  // var webviewBack : String = JSBridge(this).value
   lateinit var webView : WebView
   private val postRepository : PostRepository by inject()
 
@@ -76,6 +76,7 @@ fun setUpWebView(){
     }
 
     override fun onLoadResource(view: WebView, url: String) {
+
     }
 
     override fun onPageFinished(view: WebView, url: String) {
@@ -88,25 +89,20 @@ fun setUpWebView(){
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
         Log.d("test1234", "onPageStarted: $url")
-        val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
-        val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
-        webView.evaluateJavascript(clientToken, null)
-        webView.evaluateJavascript(userAccessToken, null)
-        // if(url.contains("poc")){
+        setWebviewLocalStorage()
         var posts : Posts = postRepository.fetchFirstPost()
         var status = GeneralStatus
         status.state = "success"
         status.message = ""
         generalListener?.onOpenPPOB(status)
         Log.d("test123", "onPageStarted: $posts")
-        // }
       }
     }
   }
 
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl !== null){
-    webView.loadUrl(Constants.environment.Menu_URL(UserAuth.phoneNumber))
+    webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
   }
 
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
@@ -123,43 +119,6 @@ fun setUpWebView(){
   webView.settings.loadWithOverviewMode = true
 
   webView.settings.pluginState = WebSettings.PluginState.ON
-  // webView.addJavascriptInterface(JSBridge(this),"JSBridge")
-
-//        webView.loadUrl("https://test-communication.netlify.app?phoneNumber=123")
-
-
-
-
-
-  // webView.setDownloadListener(DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-  //   // val i = Intent(Intent.ACTION_VIEW)
-  //   // i.data = Uri.parse(url)
-  //   // startActivity(i)
-  //   Log.d("download data",Uri.parse(url).toString() )
-  //   val request = DownloadManager.Request(Uri.parse(url))
-  //   val cookies = CookieManager.getInstance().getCookie(url)
-  //   request.addRequestHeader("Cookie",cookies)
-  //   request.addRequestHeader("User-Agent",userAgent)
-  //   request.setDescription("Downloading requested file....")
-  //   request.setMimeType(mimetype)
-  //   request.allowScanningByMediaScanner()
-  //   request.setNotificationVisibility(
-  //     DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
-  //   )
-  //   val fileName = URLUtil.guessFileName(url, "contentDescription", mimetype)
-  //   request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-  //   request.setTitle(URLUtil.guessFileName(url, "contentDescription", mimetype));
-  //   request.setAllowedOverMetered(true)
-  //   request.setAllowedOverRoaming(false)
-  //   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-  //     request.setRequiresCharging(false)
-  //     request.setRequiresDeviceIdle(false)
-  //   }
-  //   request.setVisibleInDownloadsUi(true)
-  //   val dManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-  //   dManager.enqueue(request)
-  //
-  // })
 
 }
 
@@ -194,14 +153,28 @@ fun setUpWebView(){
     }
   }
 
+  @SuppressLint("HardwareIds")
+  fun getDeviceId() : String{
+    return Settings.Secure.getString(this.contentResolver,Settings.Secure.ANDROID_ID).toString()
+  }
+
+  fun setWebviewLocalStorage(){
+    val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
+    val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.outletName}');"
+    val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
+    val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
+    val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+    webView.evaluateJavascript(deviceId, null)
+    webView.evaluateJavascript(phoneNumber, null)
+    webView.evaluateJavascript(outletName, null)
+    webView.evaluateJavascript(clientToken, null)
+    webView.evaluateJavascript(userAccessToken, null)
+  }
 
   override fun onBackPressed(){
+    val script = "nativeBackPressed()"
     if(webView.url?.startsWith(Constants.environment.Ppob_Domain) == true){
-      webView.evaluateJavascript(
-        "nativeBackPressed()",
-        {
-          Log.d("goback", it)
-        })
+      webView.evaluateJavascript(script,null)
     }else{
       if(webView.canGoBack()){
         webView.goBack()
@@ -209,27 +182,5 @@ fun setUpWebView(){
         finish()
       }
     }
-    // webView.evaluateJavascript(
-    //   "window.nativeBackPress()",
-    //   {
-    //     Log.d("goback", it)
-    //   })
-    // if(webView.canGoBack()){
-    //   webView.goBack()
-    // }else{
-    //   finish()
-    // }
-//     webView.loadUrl("tel:081324")
-
-      // val intent = Intent(Intent.ACTION_VIEW);
-      // intent.data = Uri.parse("mailto:garindra.alif@gmail.com")
-      // startActivity(intent)
-
-    // Log.d("test1234", webView.url.toString())
-    // super.onBackPressed()
-    // webView.evaluateJavascript("window.localStorage.getItem('client_token')",{
-    //   Log.d("test1234", "back:$it ")
-    // })
-
   }
 }

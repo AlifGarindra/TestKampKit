@@ -7,13 +7,15 @@ object Constants {
  object staging {
     var Base_URL : String = "testStaging"
     var Ppob_Domain : String = "https://phoenix-imkas.ottodigital.id"
-    fun Menu_URL(phone:String) : String = "https://phoenix-imkas.ottodigital.id/ppob?phoneNumber=${phone}"
+   var Ppob_Menu_Slug : String = "/ppob"
+    // fun Menu_URL(phone:String) : String = "https://phoenix-imkas.ottodigital.id/ppob?phoneNumber=${phone}"
   }
 
   object production{
     var Base_URL : String = "testProduction"
     var Ppob_Domain : String = "https://phoenix-imkas.ottodigital.id"
-    fun Menu_URL(phone:String) : String = "https://phoenix-imkas.ottodigital.id/ppob?phoneNumber=${phone}"
+    var Ppob_Menu_Slug : String = "/ppob"
+    // fun Menu_URL(phone:String) : String = "https://phoenix-imkas.ottodigital.id/ppob?phoneNumber=${phone}"
   }
 
   var environment = staging

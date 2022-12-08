@@ -131,7 +131,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try {
       checkFirstAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
+      intent.putExtra("urlPPOB","ppob_activation")
       context.startActivity(intent)
     }catch (e:Exception){
       GeneralStatus.state = e.message.toString()
@@ -144,7 +144,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
+      intent.putExtra("urlPPOB","ppob_menu")
       context.startActivity(intent)
     }catch (e:Exception){
       GeneralStatus.state = e.message.toString()
@@ -152,12 +152,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  fun openProduct(context:Context){
+  fun openProduct(context:Context,product:String){
     try {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB",Constants.environment.Menu_URL(UserAuth.phoneNumber))
+      intent.putExtra("urlPPOB","ppob_menu")
+      intent.putExtra("ppobProduct","${product}")
       context.startActivity(intent)
     }catch (e:Exception){
       GeneralStatus.state = e.message.toString()
