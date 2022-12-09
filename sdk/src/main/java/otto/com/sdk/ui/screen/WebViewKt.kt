@@ -42,9 +42,9 @@ class WebViewKt : AppCompatActivity() {
     }
 
   override fun onDestroy() {
-    webView.evaluateJavascript("window.localStorage.clear()",{
-      Log.d("test1234", "onPageFinished:$it ")
-    })
+    // webView.evaluateJavascript("window.localStorage.clear()",{
+    //   Log.d("test1234", "onPageFinished:$it ")
+    // })
     // var status = GeneralStatus
     // status.state = "destroy"
     // status.message = ""
@@ -160,7 +160,7 @@ fun setUpWebView(){
 
   fun setWebviewLocalStorage(){
     val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
-    val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.outletName}');"
+    val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
     val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
     val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
     val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"

@@ -138,7 +138,7 @@ afterEvaluate{
                 afterEvaluate {
                     groupId = "com.alifg.libraries"
                     artifactId = "kampkitshared"
-                    version = "1.1.0"
+                    version = "1.1.1"
                     // artifact("$projectDir/libs/sharedkampkit.aar"){
                     //   classifier = "sharedkampkit"
                     //   extension = "aar"

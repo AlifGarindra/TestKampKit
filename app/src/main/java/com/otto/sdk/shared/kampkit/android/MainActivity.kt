@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
+import com.otto.sdk.shared.kampkit.android.data.PpobUser
 import com.otto.sdk.shared.kampkit.android.http.PpobApi
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.localData.UserAuth
@@ -23,8 +24,10 @@ class MainActivity : AppCompatActivity() {
 
   val api : PpobApi = PpobApi()
 
-  lateinit var userAccessTokenLabel : TextView
-  lateinit var clientTokenLabel : TextView
+  lateinit var userAccessTokenLabelSDK : TextView
+  lateinit var clientTokenLabelSDK : TextView
+  lateinit var userAccessTokenLabelApp : TextView
+  lateinit var clientTokenLabelApp: TextView
   lateinit var phoneNumberLabel : TextView
   lateinit var outletNameLabel : TextView
   lateinit var phoneNumberInput : EditText
@@ -46,23 +49,40 @@ class MainActivity : AppCompatActivity() {
 
   fun onPressButton(){
 
-    var clientTokenButtonApp : Button = findViewById(R.id.button_get_client_token)
-    var openPPOBButtonSdk : Button = findViewById(R.id.button_open_PPOB)
-    var phoneNumberButtonSdk : Button = findViewById(R.id.button_set_phone_number)
-    var outletNameButtonSdk : Button = findViewById(R.id.button_set_outlet_name)
-    var clientTokenButtonSdk : Button = findViewById(R.id.button_set_client_token)
-    var userAccessTokenButtonSdk : Button = findViewById(R.id.button_set_user_access_token)
-    var resetSessionButtonSdk : Button = findViewById(R.id.button_reset_session)
+    val clientTokenButtonApp : Button = findViewById(R.id.button_get_client_token)
+    val userAccessTokenApp : Button = findViewById(R.id.button_get_user_access_token)
+    val userAccessTokenExpiredApp : Button = findViewById(R.id.button_get_user_access_token_expired)
+    val openPPOBButtonSdk : Button = findViewById(R.id.button_open_PPOB)
+    val openActivationButton: Button = findViewById(R.id.button_open_activation)
+    val phoneNumberButtonSdk : Button = findViewById(R.id.button_set_phone_number)
+    val outletNameButtonSdk : Button = findViewById(R.id.button_set_outlet_name)
+    val clientTokenButtonSdk : Button = findViewById(R.id.button_set_client_token)
+    val userAccessTokenButtonSdk : Button = findViewById(R.id.button_set_user_access_token)
+    val resetSessionButtonSdk : Button = findViewById(R.id.button_reset_session)
 
     clientTokenButtonApp.setOnClickListener(object : View.OnClickListener {
-      @RequiresApi(Build.VERSION_CODES.O)
       override fun onClick(v: View?) {
-        try {
           api.getClientToken()
-        }catch (e:Exception){
-          val showError = Toast.makeText(this@MainActivity,"${e.message}",Toast.LENGTH_SHORT)
-          showError.show()
-        }
+        refreshStateApp("ct")
+      }
+    })
+
+    userAccessTokenApp.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        PpobUser.userAccessToken = "x-user-access-token"
+        refreshStateApp("uat")
+      }
+    })
+    userAccessTokenExpiredApp.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        PpobUser.userAccessToken = "expired-user-access-token"
+        refreshStateApp("uat")
+      }
+    })
+
+    openActivationButton.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
       }
     })
 
@@ -76,45 +96,46 @@ class MainActivity : AppCompatActivity() {
       }
   })
 
+
     phoneNumberButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setPhoneNumber(phoneNumberInput.text.toString())
-        refreshState("phone")
+        refreshStateSDK("phone")
       }
     })
 
     outletNameButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setOutletName(outletNameInput.text.toString())
-        refreshState("outlet")
+        refreshStateSDK("outlet")
       }
     })
 
     clientTokenButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).setClientToken("abcdeefajsdbfjabsifasasfasf")
-        refreshState("ct")
+        SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
+        refreshStateSDK("ct")
       }
     })
 
     userAccessTokenButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).setUserAccessToken("osdgfiuasdtbgts8 8wdg f8asgdf9 asdfsa")
-        refreshState("uat")
+        SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+        refreshStateSDK("uat")
       }
     })
 
     resetSessionButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).clearSDKSession()
-        refreshState()
+        refreshStateSDK()
       }
     })
 
   }
 
 
-  fun refreshState(state:String? = null){
+  fun refreshStateSDK(state:String? = null){
     if(state != null){
       if(state == "phone"){
         phoneNumberLabel.text = UserAuth.phoneNumber
@@ -123,22 +144,37 @@ class MainActivity : AppCompatActivity() {
         outletNameLabel.text = UserAuth.outletName
       }
       if(state == "ct"){
-        clientTokenLabel.text = UserAuth.clientToken
+        clientTokenLabelSDK.text = UserAuth.clientToken
       }
       if(state == "uat"){
-        userAccessTokenLabel.text = UserAuth.userAccessToken
+        userAccessTokenLabelSDK.text = UserAuth.userAccessToken
       }
     }else{
       phoneNumberLabel.text = UserAuth.phoneNumber
       outletNameLabel.text = UserAuth.outletName
-      clientTokenLabel.text = UserAuth.clientToken
-      userAccessTokenLabel.text = UserAuth.userAccessToken
+      clientTokenLabelSDK.text = UserAuth.clientToken
+      userAccessTokenLabelSDK.text = UserAuth.userAccessToken
+    }
+  }
+
+  fun refreshStateApp(state:String? = null){
+    if(state != null){
+      if(state == "ct"){
+        clientTokenLabelApp.text = PpobUser.clientToken
+      }
+      if(state == "uat"){
+        userAccessTokenLabelApp.text = PpobUser.userAccessToken
+      }
+    }else{
+
     }
   }
 
   fun onLabelSet(){
-    userAccessTokenLabel = findViewById(R.id.text_user_access_token_sdk)
-    clientTokenLabel = findViewById(R.id.text_client_token_sdk)
+    userAccessTokenLabelSDK = findViewById(R.id.text_user_access_token_sdk)
+    clientTokenLabelSDK = findViewById(R.id.text_client_token_sdk)
+    userAccessTokenLabelApp = findViewById(R.id.text_user_access_token_app)
+    clientTokenLabelApp = findViewById(R.id.text_client_token_app)
     phoneNumberLabel = findViewById(R.id.text_phone_number)
     outletNameLabel = findViewById(R.id.text_outlet_name)
     phoneNumberInput = findViewById(R.id.input_phone_number)
@@ -162,8 +198,10 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserAccessTokenExpired() {
-        SDKManager.getInstance(this@MainActivity).setOutletName("helo")
-        Log.d("expireduat", "onUserAccessTokenExpired: ${UserAuth.outletName} ")
+        PpobUser.userAccessToken = "x-user-access-token"
+        SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+        refreshStateApp("uat")
+        refreshStateSDK("uat")
       }
     })
   }

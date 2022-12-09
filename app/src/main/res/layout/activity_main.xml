@@ -113,6 +113,13 @@
       android:text="get user access token"
       android:layout_marginVertical="10dp"/>
 
+    <Button
+      android:id="@+id/button_get_user_access_token_expired"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="get user access token (expired dummy)"
+      android:layout_marginVertical="10dp"/>
+
     <!--SDK-->
 
     <TextView
@@ -223,6 +230,14 @@
       android:layout_height="wrap_content"
       android:text="set user access token"
       android:layout_marginVertical="10dp"/>
+
+    <Button
+      android:id="@+id/button_open_activation"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="open Activation"
+      android:layout_marginVertical="10dp"/>
+
 
     <Button
       android:id="@+id/button_open_PPOB"

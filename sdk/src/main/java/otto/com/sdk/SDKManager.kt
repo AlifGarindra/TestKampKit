@@ -127,7 +127,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   // }
 
 
-  fun openActivation(context:Context,product:String?){
+  fun openActivation(context:Context){
     try {
       checkFirstAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)

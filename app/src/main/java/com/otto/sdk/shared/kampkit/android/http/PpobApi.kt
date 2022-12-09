@@ -22,7 +22,6 @@ class PpobApi {
   val mediaType = "application/json; charset=utf-8".toMediaType()
   val rsaPpob = RsaPpob()
 
-  @RequiresApi(Build.VERSION_CODES.O)
   fun getClientToken(){
     val jsonObject = JSONObject()
     jsonObject.put("grant_type", "client_credentials")
