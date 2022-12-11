@@ -22,7 +22,7 @@
       android:textStyle="bold"
       android:textAlignment="center"
       android:textSize="24sp"
-      android:textColor="@color/colorPrimaryDark"
+      android:textColor="@android:color/holo_orange_light"
       android:layout_marginVertical="20dp"
       />
 
@@ -86,6 +86,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="get client token"
+      android:backgroundTint="@android:color/holo_orange_light"
       android:layout_marginVertical="10dp"/>
 
 
@@ -111,6 +112,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="get user access token"
+      android:backgroundTint="@android:color/holo_orange_light"
       android:layout_marginVertical="10dp"/>
 
     <Button
@@ -118,6 +120,15 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="get user access token (expired dummy)"
+      android:backgroundTint="@android:color/holo_orange_light"
+      android:layout_marginVertical="10dp"/>
+
+    <Button
+      android:id="@+id/button_reset_session_app"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="reset session"
+      android:backgroundTint="@android:color/holo_orange_light"
       android:layout_marginVertical="10dp"/>
 
     <!--SDK-->
@@ -247,7 +258,7 @@
       android:layout_marginVertical="10dp"/>
 
     <Button
-      android:id="@+id/button_reset_session"
+      android:id="@+id/button_reset_session_sdk"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="Reset Session"

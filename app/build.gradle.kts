@@ -48,6 +48,7 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.google.code.gson:gson:2.7")
     // implementation("com.alifg.libraries:kampkitshared:1.0.4")
     // implementation("com.google.android.material:material:1.6.1")
     implementation(libs.bundles.app.ui)

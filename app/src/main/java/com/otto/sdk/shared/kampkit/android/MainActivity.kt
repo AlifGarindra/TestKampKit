@@ -58,11 +58,13 @@ class MainActivity : AppCompatActivity() {
     val outletNameButtonSdk : Button = findViewById(R.id.button_set_outlet_name)
     val clientTokenButtonSdk : Button = findViewById(R.id.button_set_client_token)
     val userAccessTokenButtonSdk : Button = findViewById(R.id.button_set_user_access_token)
-    val resetSessionButtonSdk : Button = findViewById(R.id.button_reset_session)
+    val resetSessionButtonSdk : Button = findViewById(R.id.button_reset_session_sdk)
+    val resetsessionButtonApp : Button = findViewById(R.id.button_reset_session_app)
 
     clientTokenButtonApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
           api.getClientToken()
+        PpobUser.clientToken = "1fb21301-89a8-3114-b58e-6babc2ab48f2"
         refreshStateApp("ct")
       }
     })
@@ -77,6 +79,13 @@ class MainActivity : AppCompatActivity() {
       override fun onClick(v: View?) {
         PpobUser.userAccessToken = "expired-user-access-token"
         refreshStateApp("uat")
+      }
+    })
+
+    resetsessionButtonApp.setOnClickListener(object : View.OnClickListener {
+      override fun onClick(v: View?) {
+        PpobUser.reset()
+        refreshStateApp()
       }
     })
 
@@ -136,6 +145,8 @@ class MainActivity : AppCompatActivity() {
 
 
   fun refreshStateSDK(state:String? = null){
+
+    //perlukah dibuat private untuk object userAuth?
     if(state != null){
       if(state == "phone"){
         phoneNumberLabel.text = UserAuth.phoneNumber
@@ -166,7 +177,10 @@ class MainActivity : AppCompatActivity() {
         userAccessTokenLabelApp.text = PpobUser.userAccessToken
       }
     }else{
-
+      clientTokenLabelApp.text = PpobUser.clientToken
+      userAccessTokenLabelApp.text = PpobUser.userAccessToken
+      phoneNumberInput.text.clear()
+      outletNameInput.text.clear()
     }
   }
 
@@ -188,7 +202,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
-        // TODO rewrite SDK BALANCE
+
       }
 
       override fun onError(status: GeneralStatus) {
@@ -198,6 +212,8 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserAccessTokenExpired() {
+        val showError = Toast.makeText(this@MainActivity,"token expired!",Toast.LENGTH_SHORT)
+        showError.show()
         PpobUser.userAccessToken = "x-user-access-token"
         SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
         refreshStateApp("uat")
