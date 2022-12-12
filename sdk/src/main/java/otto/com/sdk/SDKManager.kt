@@ -112,14 +112,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   //   return "10000"
   // }
 
-  fun getPosts(resp:(Any)->(Unit)){
-    try{
-      var test = postRepository.fetchFirstPost()
-      resp(test)
-    }catch(e:Exception){
-      resp(e)
-    }
-  }
 
   // @SuppressLint("HardwareIds")
   // fun getDeviceId() : String{

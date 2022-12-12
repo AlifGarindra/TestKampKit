@@ -60,7 +60,8 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
   // api(project(":shared"))
-  api("com.alifg.libraries:kampkitshared:1.1.1")
+  api("com.alifg.libraries:kampkitshared:1.1.2")
+  // api("com.github.AlifGarindra:KampkitShared:0.0.2")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
   implementation(libs.kotlinx.dateTime)
@@ -95,7 +96,7 @@ afterEvaluate{
             url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
             credentials {
               username = "AlifGarindra"
-              password = "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"
+              password = "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"
             }
           }
         }

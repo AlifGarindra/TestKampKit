@@ -37,10 +37,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    //
-    // SDKManager.getInstance(this).getPosts{
-    //   Log.d("test123", "$it")
-    // }
     setGeneralListener()
     onLabelSet()
     onPressButton()
@@ -211,6 +207,10 @@ class MainActivity : AppCompatActivity() {
         showError.show()
       }
 
+      override fun onClientTokenExpired() {
+
+      }
+
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity,"token expired!",Toast.LENGTH_SHORT)
         showError.show()
@@ -218,6 +218,10 @@ class MainActivity : AppCompatActivity() {
         SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
         refreshStateApp("uat")
         refreshStateSDK("uat")
+      }
+
+      override fun onAuthCode() {
+
       }
     })
   }
