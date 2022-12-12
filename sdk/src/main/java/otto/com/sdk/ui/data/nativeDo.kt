@@ -31,11 +31,30 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
   }
   @JavascriptInterface
   fun exitWebview(causeString : String?){
-    Log.d("test1234", "exitWebview:$causeString ")
-    var cause : JSONObject = JSONObject(causeString)
-    if(cause.has("http") && cause.has("meta")){
+    // Log.d("test1234", "exitWebview:$causeString")
+    // var cause : JSONObject = JSONObject(causeString)
+    // if(cause.has("http") && cause.has("meta"  )){
       generalListener?.onUserAccessTokenExpired()
-    }
+    // }
+    (context as Activity).finish()
+  }
+
+  @JavascriptInterface
+  fun onUserAccessTokenExpired(){
+      generalListener?.onUserAccessTokenExpired()
+    (context as Activity).finish()
+  }
+
+  @JavascriptInterface
+  fun onClientTokenExpired() {
+    generalListener?.onClientTokenExpired()
+    (context as Activity).finish()
+  }
+
+  @JavascriptInterface
+  fun onAuthCode(authCode:String){
+    Log.d("test1234", "onAuthCode:$authCode ")
+    generalListener?.onAuthCode(authCode)
     (context as Activity).finish()
   }
 }

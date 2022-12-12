@@ -17,13 +17,9 @@ fun onUserAccessTokenEmpty(status : GeneralStatus){
     // misalnya gaperlu di implement
   }
 
-  fun onClientTokenExpired(){
-    // misalnya gaperlu di implement
-  }
+  fun onClientTokenExpired()
   fun onUserAccessTokenExpired()
-  fun onAuthCode(){
-    // misalnya gaperlu di implement
-  }
+  fun onAuthCode(authCode:String)
   fun onUserProfile(){
     // misalnya gaperlu di implement
   }

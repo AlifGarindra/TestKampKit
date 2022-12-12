@@ -211,9 +211,20 @@ class MainActivity : AppCompatActivity() {
         showError.show()
       }
 
+      override fun onClientTokenExpired() {
+
+      }
+
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity,"token expired!",Toast.LENGTH_SHORT)
         showError.show()
+        PpobUser.userAccessToken = "x-user-access-token"
+        SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+        refreshStateApp("uat")
+        refreshStateSDK("uat")
+      }
+
+      override fun onAuthCode(authCode:String) {
         PpobUser.userAccessToken = "x-user-access-token"
         SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
         refreshStateApp("uat")
