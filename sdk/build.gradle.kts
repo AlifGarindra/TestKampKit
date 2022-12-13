@@ -59,8 +59,8 @@ dependencies {
   androidTestImplementation("androidx.test.ext:junit:1.1.3")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
-  api(project(":shared"))
-  // api("com.alifg.libraries:kampkitshared:1.1.0")
+  // api(project(":shared"))
+  api("com.alifg.libraries:kampkitshared:1.1.3")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
   implementation(libs.kotlinx.dateTime)
@@ -79,7 +79,7 @@ afterEvaluate{
         afterEvaluate {
           groupId = "com.alifg.libraries"
           artifactId = "testkampkit"
-          version = "1.2.0"
+          version = "1.2.4"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
@@ -95,7 +95,7 @@ afterEvaluate{
             url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
             credentials {
               username = "AlifGarindra"
-              password = "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"
+              password = "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"
             }
           }
         }

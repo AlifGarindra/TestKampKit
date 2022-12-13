@@ -31,7 +31,7 @@ allprojects {
       url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
       credentials {
         username = "AlifGarindra"
-        password = "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"
+        password = "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"
       }
     }
   }
