@@ -42,9 +42,9 @@ class WebViewKt : AppCompatActivity() {
     }
 
   override fun onDestroy() {
-    // webView.evaluateJavascript("window.localStorage.clear()",{
-    //   Log.d("test1234", "onPageFinished:$it ")
-    // })
+    webView.evaluateJavascript("window.localStorage.clear()",{
+      Log.d("test1234", "onPageFinished:$it ")
+    })
     // var status = GeneralStatus
     // status.state = "destroy"
     // status.message = ""
@@ -80,7 +80,7 @@ fun setUpWebView(){
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      view.evaluateJavascript("localStorage.getItem('client_token')",{
+      view.evaluateJavascript("localStorage.getItem('device_id')",{
         Log.d("test1234", "onPageFinished:$it ")
       })
     }
