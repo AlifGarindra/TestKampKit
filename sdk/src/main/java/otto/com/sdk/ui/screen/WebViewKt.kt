@@ -9,6 +9,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -42,22 +45,40 @@ class WebViewKt : AppCompatActivity() {
     }
 
   override fun onDestroy() {
-    webView.evaluateJavascript("window.localStorage.clear()",{
+    webView.evaluateJavascript("localStorage.clear()",{
       Log.d("test1234", "onPageFinished:$it ")
     })
+    super.onDestroy()
     // var status = GeneralStatus
     // status.state = "destroy"
     // status.message = ""
     // generalListener?.onClosePPOB(status)
     // Log.d("test123", "onPageStarted: $generalListener")
-    super.onDestroy()
   }
 
 
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   webView= findViewById(R.id.webviewkt)
+  webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+  var webSettings : WebSettings = webView.settings
+  webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
+  webSettings.javaScriptEnabled = true
+  webSettings.setSupportZoom(true)
+  webSettings.setAppCachePath(this.cacheDir.absolutePath)
+  webSettings.cacheMode = WebSettings.LOAD_DEFAULT
+  webSettings.databaseEnabled = true
+  webSettings.domStorageEnabled = true
+  webSettings.allowContentAccess=true
+  webSettings.useWideViewPort = true
+  webSettings.loadWithOverviewMode = true
+
+  webView.settings.pluginState = WebSettings.PluginState.ON
+  webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+    webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
+  }
   //Harusnya ambil Context dari punyanya host app
+
   webView.webViewClient = object : WebViewClient() {
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -76,11 +97,16 @@ fun setUpWebView(){
     }
 
     override fun onLoadResource(view: WebView, url: String) {
-
+      if(url.startsWith(Constants.environment.Ppob_Domain)){
+        setWebviewLocalStorage(view!!)
+      }
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      view.evaluateJavascript("localStorage.getItem('device_id')",{
+      if(url.startsWith(Constants.environment.Ppob_Domain)){
+        setWebviewLocalStorage(view!!)
+      }
+      view.evaluateJavascript("localStorage.getItem('phone_number')",{
         Log.d("test1234", "onPageFinished:$it ")
       })
     }
@@ -88,8 +114,10 @@ fun setUpWebView(){
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
+        if(url.startsWith(Constants.environment.Ppob_Domain)){
+          setWebviewLocalStorage(view!!)
+        }
         Log.d("test1234", "onPageStarted: $url")
-        setWebviewLocalStorage()
         var posts : Posts = postRepository.fetchFirstPost()
         var status = GeneralStatus
         status.state = "success"
@@ -104,22 +132,6 @@ fun setUpWebView(){
   if(openUrl !== null){
     webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
   }
-
-  webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
-  webView.settings.javaScriptEnabled = true
-  webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
-    webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
-  }
-  webView.settings.setSupportZoom(true)
-  webView.settings.setAppCachePath(this.cacheDir.absolutePath)
-  webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
-  webView.settings.databaseEnabled = true
-  webView.settings.domStorageEnabled = true
-  webView.settings.useWideViewPort = true
-  webView.settings.loadWithOverviewMode = true
-
-  webView.settings.pluginState = WebSettings.PluginState.ON
-
 }
 
   private fun requestPhonePermissions() {
@@ -158,17 +170,34 @@ fun setUpWebView(){
     return Settings.Secure.getString(this.contentResolver,Settings.Secure.ANDROID_ID).toString()
   }
 
-  fun setWebviewLocalStorage(){
-    val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
-    val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
-    val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
-    val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
-    val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
-    webView.evaluateJavascript(deviceId, null)
-    webView.evaluateJavascript(phoneNumber, null)
-    webView.evaluateJavascript(outletName, null)
-    webView.evaluateJavascript(clientToken, null)
-    webView.evaluateJavascript(userAccessToken, null)
+  @JavascriptInterface
+  fun setWebviewLocalStorage(view:WebView){
+    val setWVStorage = "localStorage.setItem('device_id', '${getDeviceId()}');" +
+      "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
+      "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
+      "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
+      "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+    // val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
+    // val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
+    // val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
+    // val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
+    // val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+
+      view.evaluateJavascript(setWVStorage, {
+        Log.d("test1234", "setWebviewLocalStorage:$it ")
+      })
+      // webView.evaluateJavascript(phoneNumber,  {
+      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
+      // })
+      // webView.evaluateJavascript(outletName,  {
+      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
+      // })
+      // webView.evaluateJavascript(clientToken,  {
+      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
+      // })
+      // webView.evaluateJavascript(userAccessToken,  {
+      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
+      // })
   }
 
   override fun onBackPressed(){

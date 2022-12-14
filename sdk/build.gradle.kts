@@ -6,9 +6,12 @@ plugins {
 }
 
 android {
+  defaultConfig {
+    multiDexEnabled =  true
+  }
   compileSdk = libs.versions.compileSdk.get().toInt()
   defaultConfig {
-    minSdk = libs.versions.minSdk.get().toInt()
+    minSdk = 19
     targetSdk = libs.versions.targetSdk.get().toInt()
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -59,8 +62,8 @@ dependencies {
   androidTestImplementation("androidx.test.ext:junit:1.1.3")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
-  // api(project(":shared"))
-  api("com.alifg.libraries:kampkitshared:1.1.3")
+  api(project(":shared"))
+  // api("com.alifg.libraries:kampkitshared:1.1.3")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
   implementation(libs.kotlinx.dateTime)
