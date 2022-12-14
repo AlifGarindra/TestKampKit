@@ -33,8 +33,6 @@ compose-activity = { module = "androidx.activity:activity-compose", version = "1
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
-google-accompanist-swipeRefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version = "0.23.1" }
-
 gradlePlugin-android = "com.android.tools.build:gradle:7.0.3"
 gradlePlugin-kotlinSerialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 gradlePlugin-ktlint = { module = "org.jlleitschuh.gradle:ktlint-gradle", version = "10.2.1" }
@@ -88,7 +86,6 @@ app-ui = [
     "compose-foundation",
     "compose-material",
     "compose-activity",
-    "google-accompanist-swipeRefresh"
 ]
 gradlePlugins = [
     "gradlePlugin-android",

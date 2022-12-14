@@ -6,8 +6,9 @@ plugins {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
+        multiDexEnabled=true
         applicationId = "com.otto.sdk.shared.kampkit"
-        minSdk = 21
+        minSdk = 19
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"

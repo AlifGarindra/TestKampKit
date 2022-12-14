@@ -5,13 +5,14 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
-import android.webkit.WebChromeClient
+import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -88,6 +89,10 @@ fun setUpWebView(){
       return false
     }
 
+    @SuppressLint("WebViewClientOnReceivedSslError")
+    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler, error: SslError?) {
+      handler.proceed()
+    }
     @Deprecated("Deprecated in Java")
     @SuppressWarnings("deprecation")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {

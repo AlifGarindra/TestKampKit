@@ -10,7 +10,10 @@
   <uses-permission android:name="android.permission.START_VIEW_PERMISSION_USAGE"
     tools:ignore="ProtectedPermissions" />
   <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
-
+  <uses-sdk
+    android:minSdkVersion="19"
+    tools:overrideLibrary="org.koin.androidx.compose,com.example.widget, androidx.compose.ui.platform, androidx.compose.material.icons, androidx.activity.compose, androidx.compose.ui.tooling, androidx.compose.ui.tooling.data, androidx.compose.material.ripple, androidx.compose.foundation, androidx.compose.animation, androidx.compose.foundation.layout, androidx.compose.ui.text, androidx.compose.ui.graphics, androidx.compose.ui.unit, androidx.compose.ui.util, androidx.compose.ui.geometry, androidx.compose.runtime.saveable, androidx.compose.animation.core,androidx.lifecycle.viewmodel.compose,androidx.compose.ui.tooling.preview"
+    />
   <application
     android:requestLegacyExternalStorage="true"
     >
@@ -35,9 +38,7 @@
  Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
        We recommend adjusting this value in production.
         -->
-    <meta-data
-      android:name="io.sentry.traces.sample-rate"
-      android:value="1.0" /> <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
+   <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
     <meta-data
       android:name="io.sentry.traces.user-interaction.enable"
       android:value="true" /> <!-- Performance Monitoring -->
