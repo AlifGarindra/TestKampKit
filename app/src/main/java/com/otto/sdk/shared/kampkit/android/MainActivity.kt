@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onError(status: GeneralStatus) {
-        Log.e("test1234", "onError:${status.state} ", )
+        Log.e("test1234", "onError:${status.message} ", )
         val showError = Toast.makeText(this@MainActivity,"${status.state}",Toast.LENGTH_SHORT)
         showError.show()
       }

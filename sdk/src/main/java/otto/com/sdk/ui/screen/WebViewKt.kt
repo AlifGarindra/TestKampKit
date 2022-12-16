@@ -13,13 +13,17 @@ import android.util.Log
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.localData.GeneralStatus
@@ -74,6 +78,7 @@ fun setUpWebView(){
   webSettings.useWideViewPort = true
   webSettings.loadWithOverviewMode = true
 
+
   webView.settings.pluginState = WebSettings.PluginState.ON
   webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
     webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
@@ -81,6 +86,7 @@ fun setUpWebView(){
   //Harusnya ambil Context dari punyanya host app
 
   webView.webViewClient = object : WebViewClient() {
+
 
     @TargetApi(Build.VERSION_CODES.N)
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -91,6 +97,7 @@ fun setUpWebView(){
 
     @SuppressLint("WebViewClientOnReceivedSslError")
     override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler, error: SslError?) {
+      Log.d("test1234", "onReceivedSslError:${error!!} ")
       handler.proceed()
     }
     @Deprecated("Deprecated in Java")
@@ -138,6 +145,7 @@ fun setUpWebView(){
     webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
   }
 }
+
 
   private fun requestPhonePermissions() {
     if (ContextCompat.checkSelfPermission(this,
@@ -187,7 +195,6 @@ fun setUpWebView(){
     // val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
     // val clientToken = "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
     // val userAccessToken = "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
-
       view.evaluateJavascript(setWVStorage, {
         Log.d("test1234", "setWebviewLocalStorage:$it ")
       })
