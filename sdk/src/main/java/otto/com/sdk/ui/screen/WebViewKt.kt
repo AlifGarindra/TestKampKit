@@ -38,10 +38,10 @@ import otto.com.sdk.ui.data.nativeDo
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
   lateinit var webView : WebView
-  private val postRepository : PostRepository by inject()
+  // private val postRepository : PostRepository by inject()
 
 
-  var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListener()
+  var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListeners()
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)
@@ -53,12 +53,12 @@ class WebViewKt : AppCompatActivity() {
     webView.evaluateJavascript("localStorage.clear()",{
       Log.d("test1234", "onPageFinished:$it ")
     })
+    var status = GeneralStatus
+    status.state = "destroy"
+    status.message = ""
+    generalListener?.onClosePPOB(status)
+    Log.d("test123", "onPageStarted: $generalListener")
     super.onDestroy()
-    // var status = GeneralStatus
-    // status.state = "destroy"
-    // status.message = ""
-    // generalListener?.onClosePPOB(status)
-    // Log.d("test123", "onPageStarted: $generalListener")
   }
 
 
@@ -130,18 +130,20 @@ fun setUpWebView(){
           setWebviewLocalStorage(view!!)
         }
         Log.d("test1234", "onPageStarted: $url")
-        var posts : Posts = postRepository.fetchFirstPost()
+        // var posts : Posts = postRepository.fetchFirstPost()
         var status = GeneralStatus
         status.state = "success"
         status.message = ""
         generalListener?.onOpenPPOB(status)
-        Log.d("test123", "onPageStarted: $posts")
+        // Log.d("test123", "onPageStarted: $posts")
       }
     }
   }
 
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl !== null){
+    webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug+'/'+openUrl)
+  }else{
     webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
   }
 }
@@ -198,6 +200,7 @@ fun setUpWebView(){
       view.evaluateJavascript(setWVStorage, {
         Log.d("test1234", "setWebviewLocalStorage:$it ")
       })
+
       // webView.evaluateJavascript(phoneNumber,  {
       //   Log.d("test1234", "setWebviewLocalStorage:$it ")
       // })

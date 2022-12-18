@@ -10,6 +10,7 @@ import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.TransactionListener
+import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileViewModel
@@ -23,7 +24,7 @@ import org.koin.android.ext.android.inject
 
 data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) : AppCompatActivity()  {
-  private val postRepository : PostRepository by inject()
+  // private val postRepository : PostRepository by inject()
 
   companion object : SingletonHolder<SDKManager, Context>(::SDKManager)
 
@@ -71,38 +72,38 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     return this@SDKManager
   }
 
-  @JvmName("setTheGeneralListener")
-  fun setGeneralListener(listener : GeneralListener){
+  // @JvmName("setTheGeneralListener")
+  fun setGeneralListeners(listener : GeneralListener){
     this.generalListener = listener
   }
 
-  @JvmName("getTheGeneralListener")
-  fun getGeneralListener() : GeneralListener? {
+  // @JvmName("getTheGeneralListener")
+  fun getGeneralListeners() : GeneralListener? {
     return this.generalListener;
   }
 
-  @JvmName("setTheTransactionListener")
-  fun setTransactionListener(listener : TransactionListener){
+  // @JvmName("setTheTransactionListener")
+  fun setTransactionListeners(listener : TransactionListener){
     this.transactionListener = listener
   }
 
-  @JvmName("getTheTransactionListener")
-  fun getTransactionListener() : TransactionListener? {
+  // @JvmName("getTheTransactionListener")
+  fun getTransactionListeners() : TransactionListener? {
     return this.transactionListener;
   }
 
-  fun trySentry(){
-    var status = object{
-      val helloWorld = "hellow"
-      val helloWorld2 = "hellow"
-    }
-    try {
-      // throw Exception()
-      val data = 20 / 0
-    } catch (e: Exception) {
-      Sentry.captureException(e)
-    }
-  }
+  // fun trySentry(){
+  //   var status = object{
+  //     val helloWorld = "hellow"
+  //     val helloWorld2 = "hellow"
+  //   }
+  //   try {
+  //     // throw Exception()
+  //     val data = 20 / 0
+  //   } catch (e: Exception) {
+  //     Sentry.captureException(e)
+  //   }
+  // }
 
   // fun testingHOC(integer: (Int) -> Unit){
   //   integer(10)
@@ -112,14 +113,14 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   //   return "10000"
   // }
 
-  fun getPosts(resp:(Any)->(Unit)){
-    try{
-      var test = postRepository.fetchFirstPost()
-      resp(test)
-    }catch(e:Exception){
-      resp(e)
-    }
-  }
+  // fun getPosts(resp:(Any)->(Unit)){
+  //   try{
+  //     var test = postRepository.fetchFirstPost()
+  //     resp(test)
+  //   }catch(e:Exception){
+  //     resp(e)
+  //   }
+  // }
 
   // @SuppressLint("HardwareIds")
   // fun getDeviceId() : String{
@@ -131,11 +132,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try {
       checkFirstAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB","ppob_activation")
+      // intent.putExtra("urlPPOB","ppob_activation")
       context.startActivity(intent)
     }catch (e:Exception){
-      GeneralStatus.state = e.message.toString()
-      generalListener?.onError(GeneralStatus)
+      ErrorStatus.type = "sdk"
+      ErrorStatus.code = e.message.toString()
+      ErrorStatus.message = e.message.toString()
+      generalListener?.onError(ErrorStatus)
     }
   }
 
@@ -144,11 +147,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB","ppob_menu")
+      // intent.putExtra("urlPPOB","ppob_menu")
       context.startActivity(intent)
     }catch (e:Exception){
-      GeneralStatus.state = e.message.toString()
-      generalListener?.onError(GeneralStatus)
+      ErrorStatus.type = "sdk"
+      ErrorStatus.code = e.message.toString()
+      ErrorStatus.message = e.message.toString()
+      generalListener?.onError(ErrorStatus)
     }
   }
 
@@ -157,12 +162,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("urlPPOB","ppob_menu")
-      intent.putExtra("ppobProduct","${product}")
+      intent.putExtra("urlPPOB","${product}")
       context.startActivity(intent)
     }catch (e:Exception){
-      GeneralStatus.state = e.message.toString()
-      generalListener?.onError(GeneralStatus)
+      ErrorStatus.type = "sdk"
+      ErrorStatus.code = e.message.toString()
+      ErrorStatus.message = e.message.toString()
+      generalListener?.onError(ErrorStatus)
     }
   }
 
@@ -193,14 +199,14 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun build(): SDKManager {
 
-    Sentry.init { options ->
-      options.dsn = "https://03b330c4b8da43d0801e3afcbc6f3983@o4504072784773120.ingest.sentry.io/4504073112387584"
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0
-      // When first trying Sentry it's good to see what the SDK is doing:
-      options.isDebug = true
-    }
+    // Sentry.init { options ->
+    //   options.dsn = "https://03b330c4b8da43d0801e3afcbc6f3983@o4504072784773120.ingest.sentry.io/4504073112387584"
+    //   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+    //   // We recommend adjusting this value in production.
+    //   options.tracesSampleRate = 1.0
+    //   // When first trying Sentry it's good to see what the SDK is doing:
+    //   options.isDebug = true
+    // }
 
     initKoin(
       module {

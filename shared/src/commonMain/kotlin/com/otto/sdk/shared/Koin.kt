@@ -3,16 +3,10 @@ package com.otto.sdk.shared
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import co.touchlab.kermit.platformLogWriter
-import com.otto.sdk.shared.ktor.DogApi
-import com.otto.sdk.shared.ktor.DogApiImpl
-import com.otto.sdk.shared.ktor.PostApi
-import com.otto.sdk.shared.ktor.PostsApiImpl
 import com.otto.sdk.shared.ktor.PpobApi
 import com.otto.sdk.shared.ktor.PpobApiImpl
 import com.otto.sdk.shared.ktor.ProfileApi
 import com.otto.sdk.shared.ktor.ProfileApiImpl
-import com.otto.sdk.shared.models.BreedRepository
-import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.PpobRepository
 import com.otto.sdk.shared.models.ProfileRepository
 import io.ktor.client.HttpClient
@@ -88,9 +82,7 @@ private val coreModule = module {
     }
   }
 
-  single<DogApi> { DogApiImpl(getWith("DogApiImpl"), get()) }
   single<ProfileApi> { ProfileApiImpl(getWith("UserProfileApiImpl"), get()) }
-  single<PostApi> { PostsApiImpl(getWith("PostsApiImpl"),get()) }
   single<PpobApi> {PpobApiImpl(getWith("PpobApiImpl"),get())}
   single<Clock> { Clock.System }
 
@@ -101,12 +93,7 @@ private val coreModule = module {
   val baseLogger =
     Logger(config = StaticConfig(logWriterList = listOf(platformLogWriter())), "KampKit")
   factory { (tag: String?) -> if (tag != null) baseLogger.withTag(tag) else baseLogger }
-
-  single<BreedRepository> {
-    BreedRepository(get(), get(), get(), getWith("BreedRepository"), get())
-  }
   single { ProfileRepository(get(), get(), get(), getWith("ProfileRepository"), get()) }
-  single { PostRepository(get()) }
   single { PpobRepository(get()) }
 }
 

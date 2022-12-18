@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.kampkit.android.data.PpobUser
 import com.otto.sdk.shared.kampkit.android.http.PpobApi
+import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.localData.UserAuth
 import okhttp3.OkHttpClient
@@ -36,15 +37,9 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-
-    //
-    // SDKManager.getInstance(this).getPosts{
-    //   Log.d("test123", "$it")
-    // }
     setGeneralListener()
     onLabelSet()
     onPressButton()
-
   }
 
   fun onPressButton(){
@@ -196,7 +191,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun setGeneralListener(){
-    SDKManager.getInstance(this).setGeneralListener(object : GeneralListener {
+    SDKManager.getInstance(this).setGeneralListeners(object : GeneralListener {
       override fun onOpenPPOB(status: GeneralStatus) {
         Log.d("test1234", "onPageStarted: ${status.state}")
       }
@@ -205,9 +200,8 @@ class MainActivity : AppCompatActivity() {
 
       }
 
-      override fun onError(status: GeneralStatus) {
-        Log.e("test1234", "onError:${status.message} ", )
-        val showError = Toast.makeText(this@MainActivity,"${status.state}",Toast.LENGTH_SHORT)
+      override fun onError(status:ErrorStatus) {
+        val showError = Toast.makeText(this@MainActivity,status.message,Toast.LENGTH_SHORT)
         showError.show()
       }
 
