@@ -62,5 +62,10 @@ class PpobApi {
     })
 
   }
+  fun getUserAccessToken(){
 
+  }
+  fun generateUserAccessToken(){
+
+  }
 }

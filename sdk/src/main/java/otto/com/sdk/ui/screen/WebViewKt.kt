@@ -41,7 +41,7 @@ class WebViewKt : AppCompatActivity() {
   // private val postRepository : PostRepository by inject()
 
 
-  var generalListener : GeneralListener? = SDKManager.getInstance(this).getGeneralListeners()
+  var generalListener : GeneralListener? = SDKManager.getInstance(this).generalListener
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)

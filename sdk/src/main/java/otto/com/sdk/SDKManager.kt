@@ -10,11 +10,13 @@ import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.initKoin
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.TransactionListener
+import com.otto.sdk.shared.interfaces.UserInfoListener
 import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.localData.UserAuth
+import com.otto.sdk.shared.localData.UserInfoStatus
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -72,25 +74,26 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     return this@SDKManager
   }
 
-  // @JvmName("setTheGeneralListener")
-  fun setGeneralListeners(listener : GeneralListener){
-    this.generalListener = listener
-  }
+  // // @JvmName("setTheGeneralListener")
+  // fun setGeneralListeners(listener : GeneralListener){
+  //   this.generalListener = listener
+  // }
+  //
+  // // @JvmName("getTheGeneralListener")
+  // fun getGeneralListeners() : GeneralListener? {
+  //   return this.generalListener;
+  // }
 
-  // @JvmName("getTheGeneralListener")
-  fun getGeneralListeners() : GeneralListener? {
-    return this.generalListener;
-  }
+  // // @JvmName("setTheTransactionListener")
+  // fun setTransactionListeners(listener : TransactionListener){
+  //   this.transactionListener = listener
+  // }
+  //
+  // // @JvmName("getTheTransactionListener")
+  // fun getTransactionListeners() : TransactionListener? {
+  //   return this.transactionListener;
+  // }
 
-  // @JvmName("setTheTransactionListener")
-  fun setTransactionListeners(listener : TransactionListener){
-    this.transactionListener = listener
-  }
-
-  // @JvmName("getTheTransactionListener")
-  fun getTransactionListeners() : TransactionListener? {
-    return this.transactionListener;
-  }
 
   // fun trySentry(){
   //   var status = object{
@@ -187,8 +190,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
-  fun getUserInfo(){
-
+  fun userInfoListener(listener : UserInfoListener){
+    // setUserInfoListeners(listener)
+    UserInfoStatus.phoneNumber = "9829361287934"
+    UserInfoStatus.balance = "10000"
+    listener?.onUserInfo(UserInfoStatus)
   }
 
 

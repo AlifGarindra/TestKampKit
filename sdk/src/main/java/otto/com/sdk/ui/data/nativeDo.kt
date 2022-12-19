@@ -14,7 +14,7 @@ import otto.com.sdk.SDKManager
 
 class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() {
   var value : String = ""
-  var generalListener : GeneralListener? = SDKManager.getInstance(context).getGeneralListeners()
+  var generalListener = SDKManager.getInstance(context).generalListener
   @JavascriptInterface
   fun showMessageInNative(message:String){
     //Received message from webview in native, process data
@@ -61,20 +61,21 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
   }
 
   @JavascriptInterface
-  fun onError(error: String){
+  fun onError(error: String?){
+    ErrorStatus.reset()
     var cause : JSONObject = JSONObject(error)
     ErrorStatus.type = "http"
-    if(cause.has("code")){
-      val code : JSONObject = cause.getJSONObject("code")
-      ErrorStatus.code = code.toString()
-    }else{
-      ErrorStatus.code = ""
-    }
-    if(cause.has("message")){
-      val message : JSONObject = cause.getJSONObject("message")
-      ErrorStatus.message = message.toString()
-    }else{
-      ErrorStatus.message = ""
+    try{
+      if(cause.has("code")){
+        var code : String = cause.getString("code")
+        ErrorStatus.code = code
+      }
+      if(cause.has("message")){
+        var message : String = cause.getString("message")
+        ErrorStatus.message = message
+      }
+    }catch (e:Exception){
+      Log.d("test1234", "onErrorCatch:${e.cause} ${e.message}")
     }
     generalListener?.onError(ErrorStatus)
   }
