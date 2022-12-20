@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
   fun setGeneralListener() {
     SDKManager.getInstance(this).generalListener = object : GeneralListener {
       override fun onOpenPPOB(status: GeneralStatus) {
-        Log.d("test1234", "onPageStarted: ${status.state}")
+        Log.d("test1234", "isopen?: ${status.state}")
       }
 
       override fun onClosePPOB(status: GeneralStatus) {

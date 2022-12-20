@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
 import com.otto.sdk.shared.Constants
@@ -134,6 +135,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun openActivation(context:Context){
     try {
       checkFirstAuthLayer()
+      networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       // intent.putExtra("urlPPOB","ppob_activation")
       context.startActivity(intent)
@@ -149,6 +151,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
+      networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       // intent.putExtra("urlPPOB","ppob_menu")
       context.startActivity(intent)
@@ -164,6 +167,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
+      networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       intent.putExtra("urlPPOB","${product}")
       context.startActivity(intent)
@@ -188,6 +192,12 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     if(UserAuth.userAccessToken == ""){
       throw Exception("need_user_access_token")
     }
+  }
+
+   fun networkChecking(){
+      if(!NetworkCheck.checkForInternet(mContext)){
+        throw Exception("need_internet_access")
+      }
   }
 
   fun userInfoListener(listener : UserInfoListener){
