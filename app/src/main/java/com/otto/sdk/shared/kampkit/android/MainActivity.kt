@@ -64,9 +64,10 @@ class MainActivity : AppCompatActivity() {
 
     clientTokenButtonApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        api.getClientToken()
-        PpobUser.clientToken = "aea709c5-90e8-3bcd-a3e3-e952f3f31558"
-        refreshStateApp("ct")
+        api.getClientToken{
+          PpobUser.clientToken = it
+          refreshStateApp("ct")
+        }
       }
     })
 

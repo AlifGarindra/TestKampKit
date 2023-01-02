@@ -22,7 +22,7 @@ class PpobApi {
   val mediaType = "application/json; charset=utf-8".toMediaType()
   val rsaPpob = RsaPpob()
 
-  fun getClientToken(){
+  fun getClientToken(accessToken:(String)->Unit){
     val jsonObject = JSONObject()
     jsonObject.put("grant_type", "client_credentials")
     jsonObject.put("scope", "PPOB-client")
@@ -33,6 +33,8 @@ class PpobApi {
     request = Request.Builder()
       .url(url+"/token")
       // .header("Authorization","Bearer 530d990e-12a0-3540-9eee-cac07233cf50")
+      // .header("Authorization","Basic ej0q9anMD2xThWZH2s9EEcVbBg8a:H67QPXbzIb7eEVhLg0PHHaTOwr8a")
+      .header("Authorization","Basic ZWowcTlhbk1EMnhUaFdaSDJzOUVFY1ZiQmc4YTpINjdRUFhiekliN2VFVmhMZzBQSEhhVE93cjhh")
       .header("X-TRACE-ID","40223460-1f34-4603-bf9f-7a6175cc602c")
       .header("X-TIMESTAMP","$nowdate")
       .header("X-SIGNATURE","${rsaPpob.getSignature(nowdate)}")
@@ -54,7 +56,8 @@ class PpobApi {
           if (Jobject.has("token")) {
             val token : JSONObject = Jobject.getJSONObject("token")
             if(token.has("access_token")){
-              val clientToken : JSONObject = token.getJSONObject("access_token")
+              val clientToken : String = token.getString("access_token")
+              accessToken(clientToken)
             }
           }
         }
