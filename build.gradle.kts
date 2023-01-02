@@ -5,6 +5,7 @@ buildscript {
     google()
     mavenCentral()
     maven("https://plugins.gradle.org/m2/")
+    maven("https://jitpack.io")
   }
   dependencies {
     val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -34,6 +35,7 @@ allprojects {
         password = "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"
       }
     }
+    maven("https://jitpack.io")
   }
 }
 

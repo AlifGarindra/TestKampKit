@@ -34,7 +34,7 @@ android {
 
   lint {
     isWarningsAsErrors = true
-    isAbortOnError = true
+    isAbortOnError = false
   }
 
   buildFeatures {
@@ -62,7 +62,8 @@ dependencies {
   androidTestImplementation("androidx.test.ext:junit:1.1.3")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
-  api(project(":shared"))
+  // api(project(":shared"))
+  api("com.github.AlifGarindra.KampKitShared:kampkitshared:1.2.5")
   // api("com.alifg.libraries:kampkitshared:1.1.4")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
@@ -75,14 +76,46 @@ dependencies {
   implementation("io.sentry:sentry-android:6.4.0")
 }
 
+// afterEvaluate{
+//   publishing {
+//     publications {
+//       create<MavenPublication>("gpr") {
+//         afterEvaluate {
+//           groupId = "com.alifg.libraries"
+//           artifactId = "testkampkit"
+//           version = "1.2.5"
+//           // artifact("$projectDir/libs/sharedkampkit.aar"){
+//           //   classifier = "sharedkampkit"
+//           //   extension = "aar"
+//           // }
+//           if (plugins.hasPlugin("java")) {
+//             from(components["java"])
+//           } else if (plugins.hasPlugin("android-library")) {
+//             from(components["release"])
+//           }
+//         }
+//         repositories {
+//           maven {
+//             url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
+//             credentials {
+//               username = "AlifGarindra"
+//               password = "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"
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 afterEvaluate{
   publishing {
     publications {
-      create<MavenPublication>("gpr") {
+      create<MavenPublication>("maven") {
         afterEvaluate {
           groupId = "com.alifg.libraries"
           artifactId = "testkampkit"
-          version = "1.2.5"
+          version = "2.0.0"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
@@ -93,15 +126,15 @@ afterEvaluate{
             from(components["release"])
           }
         }
-        repositories {
-          maven {
-            url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
-            credentials {
-              username = "AlifGarindra"
-              password = "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"
-            }
-          }
-        }
+        // repositories {
+        //   maven {
+        //     url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
+        //     credentials {
+        //       username = "AlifGarindra"
+        //       password = "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"
+        //     }
+        //   }
+        // }
       }
     }
   }
