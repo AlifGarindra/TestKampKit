@@ -6,6 +6,7 @@ import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
@@ -64,6 +65,9 @@ fun setUpWebView(){
   webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
   var webSettings : WebSettings = webView.settings
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
+  webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+    webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
+  }
   webSettings.javaScriptEnabled = true
   webSettings.setSupportZoom(true)
   webSettings.setAppCachePath(this.cacheDir.absolutePath)
@@ -76,9 +80,8 @@ fun setUpWebView(){
 
 
   webView.settings.pluginState = WebSettings.PluginState.ON
-  webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
-    webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
-  }
+  webView.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
+
   //Harusnya ambil Context dari punyanya host app
 
   webView.webViewClient = object : WebViewClient() {
@@ -103,6 +106,20 @@ fun setUpWebView(){
       //kalau sudah ada implementasi :tel, :mailto baru return true ya
       return false
     }
+    // override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+    //
+    //   return if (url.startsWith("tel:") || url.startsWith("mailto:")) {
+    //     view.context.startActivity(
+    //       Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    //     )
+    //     true
+    //   } else {
+    //     view.loadUrl(url)
+    //     true
+    //   }
+    // }
+
+
 
     override fun onLoadResource(view: WebView, url: String) {
       if(url.startsWith(Constants.environment.Ppob_Domain)){
@@ -148,6 +165,7 @@ fun setUpWebView(){
   if(openUrl !== null){
     webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug+'/'+openUrl)
   }else{
+    // webView.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0895611439571")
     webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
   }
 }

@@ -18,6 +18,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
@@ -29,7 +30,6 @@ import java.util.Date;
 
 public class JavaScriptInterface {
   private Context context;
-
   public JavaScriptInterface(Context context) {
     this.context = context;
   }
@@ -38,12 +38,10 @@ public class JavaScriptInterface {
   public void getBase64FromBlobData(String base64Data) throws IOException {
     convertBase64StringToPdfAndStoreIt(base64Data);
   }
-
   public static String getBase64StringFromBlobUrl(String blobUrl) {
-    if (blobUrl.startsWith("blob")) {
-      Log.d("blob", blobUrl);
+    if(blobUrl.startsWith("blob")){
       return "javascript: var xhr = new XMLHttpRequest();" +
-          "xhr.open('GET', '" + blobUrl + "', true);" +
+          "xhr.open('GET', '"+ blobUrl +"', true);" +
           "xhr.setRequestHeader('Content-type','image/png');" +
           "xhr.responseType = 'blob';" +
           "xhr.onload = function(e) {" +
@@ -61,11 +59,11 @@ public class JavaScriptInterface {
     }
     return "javascript: console.log('It is not a Blob URL');";
   }
-
+  @SuppressLint("UnspecifiedImmutableFlag")
   private void convertBase64StringToPdfAndStoreIt(String base64PDf) throws IOException {
     Log.e("BASE 64", base64PDf);
     final int notificationId = 1;
-    String currentDateTime = System.currentTimeMillis() + "";
+    String currentDateTime = System.currentTimeMillis() +"";
     final File dwldsPath = new File(Environment.getExternalStoragePublicDirectory(
         Environment.DIRECTORY_DOWNLOADS) + "/YourFileName_" + currentDateTime + "_.png");
     byte[] pdfAsBytes = Base64.decode(base64PDf.replaceFirst("^data:image/png;base64,", ""), 0);
@@ -73,20 +71,31 @@ public class JavaScriptInterface {
     os = new FileOutputStream(dwldsPath, false);
     os.write(pdfAsBytes);
     os.flush();
-
     if (dwldsPath.exists()) {
       Intent intent = new Intent();
       intent.setAction(android.content.Intent.ACTION_VIEW);
-      Uri apkURI = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", dwldsPath);
+      Uri apkURI = FileProvider.getUriForFile(context,context.getApplicationContext().getPackageName() + ".provider", dwldsPath);
       intent.setDataAndType(apkURI, MimeTypeMap.getSingleton().getMimeTypeFromExtension("png"));
       intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-      @SuppressLint("UnspecifiedImmutableFlag") PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+      PendingIntent pendingIntent = null;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        pendingIntent = PendingIntent.getActivity(context,
+            1, intent, PendingIntent.FLAG_IMMUTABLE);
+
+      }else {
+        pendingIntent = PendingIntent.getActivity(context,
+            1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+      }
+//      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+//        pendingIntent = PendingIntent.getActivity(context,1, intent, PendingIntent.FLAG_MUTABLE);
+//      }
       String CHANNEL_ID = "MYCHANNEL";
       final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "name", NotificationManager.IMPORTANCE_LOW);
-        Notification notification = new Notification.Builder(context, CHANNEL_ID)
+        NotificationChannel notificationChannel= new NotificationChannel(CHANNEL_ID,"name", NotificationManager.IMPORTANCE_LOW);
+        Notification notification = new Notification.Builder(context,CHANNEL_ID)
             .setContentText("You have got something new!")
             .setContentTitle("File downloaded")
             .setContentIntent(pendingIntent)
@@ -122,4 +131,3 @@ public class JavaScriptInterface {
     Toast.makeText(context, "IMAGE FILE DOWNLOADED!", Toast.LENGTH_SHORT).show();
   }
 }
-

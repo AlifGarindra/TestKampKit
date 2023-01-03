@@ -63,7 +63,7 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
   // api(project(":shared"))
-  api("com.github.AlifGarindra.KampKitShared:kampkitshared:1.2.5")
+  api("com.github.AlifGarindra.KampKitShared:kampkitshared:1.3.1")
   // api("com.alifg.libraries:kampkitshared:1.1.4")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)
