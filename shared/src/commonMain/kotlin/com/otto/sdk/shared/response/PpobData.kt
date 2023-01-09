@@ -7,9 +7,9 @@ object PpobData {
 
   @Serializable
   data class UserInfo(
-    val app : String?,
-    val phone_number : String?,
-    val balance : String?,
+    val account_id : String?,
+    val mobile_phone_number : String?,
+    val balance_amount : Int?,
   )
 
   @Serializable

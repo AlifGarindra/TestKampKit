@@ -36,7 +36,7 @@ android {
     }
 }
 
-version = "1.2.2"
+version = "1.3.2"
 
 android {
     configurations {
@@ -50,6 +50,7 @@ android {
 }
 
 kotlin {
+    // jvm()
     android()
     // ios()
     // Note: iosSimulatorArm64 target requires that all dependencies have M1 support
@@ -180,7 +181,7 @@ afterEvaluate{
                 afterEvaluate {
                     groupId = "com.alifg.libraries"
                     artifactId = "kampkitshared"
-                    version = "1.2.5"
+                    version = "1.3.3"
                     // artifact("$projectDir/libs/sharedkampkit.aar"){
                     //   classifier = "sharedkampkit"
                     //   extension = "aar"

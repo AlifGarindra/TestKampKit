@@ -17,6 +17,7 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
+import kotlinx.serialization.json.Json
 import org.koin.core.KoinApplication
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -60,9 +61,12 @@ private val coreModule = module {
 
   single<HttpClient> {
     HttpClient(get()) {
-      expectSuccess = true
+      // expectSuccess = true
       install(ContentNegotiation) {
-        json()
+        json(Json{
+          isLenient= true
+          ignoreUnknownKeys = true
+        })
       }
       install(Logging) {
         logger = object : io.ktor.client.plugins.logging.Logger {

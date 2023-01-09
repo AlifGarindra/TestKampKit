@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'shared'
-    spec.version                  = '1.2.5'
+    spec.version                  = '1.3.3'
     spec.homepage                 = 'https://github.com/touchlab/KaMPKit'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
