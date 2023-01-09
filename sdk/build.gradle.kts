@@ -113,9 +113,12 @@ afterEvaluate{
     publications {
       create<MavenPublication>("maven") {
         afterEvaluate {
-          groupId = "com.alifg.libraries"
-          artifactId = "testkampkit"
-          version = "2.0.1"
+          groupId = "id.ottodigital.sdk"
+          artifactId = "ppobsdk"
+          version = "0.0.1"
+          // groupId = "com.alifg.libraries"
+          // artifactId = "testkampkit"
+          // version = "2.0.1"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
