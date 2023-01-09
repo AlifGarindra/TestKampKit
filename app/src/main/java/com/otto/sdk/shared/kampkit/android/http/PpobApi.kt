@@ -14,6 +14,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.time.Instant
+import java.util.UUID
 
 class PpobApi {
   val url : String = "https://gateway-dev.ottodigital.id/isimpel/v1"
@@ -27,7 +28,7 @@ class PpobApi {
     jsonObject.put("grant_type", "client_credentials")
     jsonObject.put("scope", "PPOB-client")
     val body = jsonObject.toString().toRequestBody(mediaType)
-
+    var uuid = UUID.randomUUID().toString()
     val nowdate : Long = Instant.now().epochSecond
 
     request = Request.Builder()
@@ -35,7 +36,7 @@ class PpobApi {
       // .header("Authorization","Bearer 530d990e-12a0-3540-9eee-cac07233cf50")
       // .header("Authorization","Basic ej0q9anMD2xThWZH2s9EEcVbBg8a:H67QPXbzIb7eEVhLg0PHHaTOwr8a")
       .header("Authorization","Basic ZWowcTlhbk1EMnhUaFdaSDJzOUVFY1ZiQmc4YTpINjdRUFhiekliN2VFVmhMZzBQSEhhVE93cjhh")
-      .header("X-TRACE-ID","40223460-1f34-4603-bf9f-7a6175cc602c")
+      .header("X-TRACE-ID",uuid)
       .header("X-TIMESTAMP","$nowdate")
       .header("X-SIGNATURE","${rsaPpob.getSignature(nowdate)}")
       .post(body)
@@ -68,7 +69,48 @@ class PpobApi {
   fun getUserAccessToken(){
 
   }
-  fun generateUserAccessToken(){
 
+  fun generateUserAccessToken(clientToken:String,phoneNumber: String,authCode:String,accessToken: (userToken:String,refreshToken:String) -> Unit){
+    val jsonObject = JSONObject()
+    jsonObject.put("auth_code", authCode)
+    val body = jsonObject.toString().toRequestBody(mediaType)
+    var uuid = UUID.randomUUID().toString()
+    val nowdate : Long = Instant.now().epochSecond
+
+    request = Request.Builder()
+      .url(url+"/accounts/${phoneNumber}/auth-code/validation")
+      .header("Authorization","Bearer $clientToken")
+      .header("X-TRACE-ID",uuid)
+      .header("X-TIMESTAMP","$nowdate")
+      .post(body)
+      .build()
+
+    okHttpClient.newCall(request).enqueue(object : Callback {
+      override fun onFailure(call: Call, e: IOException) {
+        Log.e("okhttpError", "onFailure:${e.message} ")
+      }
+
+      override fun onResponse(call: Call, response: Response) {
+        if(!response.isSuccessful){
+          Log.d("okhttp!success", "onResponse:${response} ")
+        }else{
+          var userToken : String = ""
+          var refreshToken : String = ""
+          val jsonData: String? = response?.body?.string()
+          Log.d("okhttpSuccess", "onResponse:${jsonData} ")
+          val Jobject = JSONObject(jsonData)
+          if (Jobject.has("token")) {
+            val token : JSONObject = Jobject.getJSONObject("token")
+            if(token.has("access_token")){
+               userToken = token.getString("access_token")
+            }
+            if(token.has("refresh_token")){
+             refreshToken = token.getString("refresh_token")
+            }
+            accessToken(userToken,refreshToken)
+          }
+        }
+      }
+    })
   }
 }

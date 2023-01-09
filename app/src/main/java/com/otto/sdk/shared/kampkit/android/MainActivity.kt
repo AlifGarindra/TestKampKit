@@ -8,9 +8,12 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.UserInfoListener
+import com.otto.sdk.shared.kampkit.android.data.LocalUserToken
 import com.otto.sdk.shared.kampkit.android.data.PpobUser
+import com.otto.sdk.shared.kampkit.android.data.SharedPref
 import com.otto.sdk.shared.kampkit.android.http.PpobApi
 import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
@@ -21,7 +24,8 @@ import otto.com.sdk.SDKManager
 class MainActivity : AppCompatActivity() {
 
   val api: PpobApi = PpobApi()
-
+  val gson = Gson()
+  var sharedPref: SharedPref? = null
   lateinit var userAccessTokenLabelSDK: TextView
   lateinit var clientTokenLabelSDK: TextView
   lateinit var userAccessTokenLabelApp: TextView
@@ -37,7 +41,14 @@ class MainActivity : AppCompatActivity() {
     setGeneralListener()
     onLabelSet()
     onPressButton()
-    getUserInfo()
+    sharedPref = SharedPref(this@MainActivity)
+    // getUserInfo()
+  }
+
+  override fun onResume() {
+    // refreshStateApp()
+    // refreshStateSDK()
+    super.onResume()
   }
 
   fun getUserInfo() {
@@ -73,7 +84,14 @@ class MainActivity : AppCompatActivity() {
 
     userAccessTokenApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        PpobUser.userAccessToken = "x-user-access-token"
+        var savedUserToken = sharedPref!!.retrieveValue(phoneNumberInput.text.toString())
+        var localUserToken : LocalUserToken
+        if(savedUserToken != ""){
+          localUserToken = gson.fromJson(savedUserToken,LocalUserToken::class.java)
+          PpobUser.userAccessToken = localUserToken.userAccessToken
+        }else{
+          PpobUser.userAccessToken = savedUserToken
+        }
         refreshStateApp("uat")
       }
     })
@@ -100,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).getUserInfo()
         // SDKManager.getInstance(this@MainActivity).testingHOC { Log.d("hoc", "$it") }
 //                SDKManager.getInstance(this@MainActivity).trySentry();
 //               var hello =  SDKManager.getInstance(this@MainActivity).getBalancePPOB()
@@ -209,6 +228,12 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClientTokenExpired() {
+        api.getClientToken{
+          PpobUser.clientToken = it
+          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
+          refreshStateApp("ct")
+          refreshStateSDK("ct")
+        }
       }
 
       override fun onUserAccessTokenExpired() {
@@ -221,14 +246,28 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onAuthCode(authCode: String) {
-        PpobUser.userAccessToken = "x-user-access-token"
-        SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
-        refreshStateApp("uat")
-        refreshStateSDK("uat")
+        api.generateUserAccessToken(clientToken = PpobUser.clientToken, phoneNumber = phoneNumberInput.text.toString(),authCode= authCode){
+          userToken, refreshToken ->
+          var localUserToken = LocalUserToken(userToken,refreshToken)
+          val jsonString = gson.toJson(localUserToken)
+          sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
+          PpobUser.userAccessToken = userToken
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+          refreshStateApp("uat")
+          refreshStateSDK("uat")
+        }
+
+
+        // PpobUser.userAccessToken = "x-user-access-token"
+        // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+        // refreshStateApp("uat")
+        // refreshStateSDK("uat")
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
-        //isi
+        // val showBalance = Toast.makeText(this@MainActivity, "account id : ${userInfo.accountId} & balance: ${userInfo.balance}", Toast.LENGTH_SHORT)
+        // showBalance.show()
+        Log.d("test1234", "onUserProfile: ${userInfo.balance}")
       }
     }
   }

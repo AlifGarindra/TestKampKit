@@ -14,10 +14,12 @@ import com.otto.sdk.shared.interfaces.TransactionListener
 import com.otto.sdk.shared.interfaces.UserInfoListener
 import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
-import com.otto.sdk.shared.models.PostRepository
+// import com.otto.sdk.shared.models.PostRepository
 import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.localData.UserAuth
 import com.otto.sdk.shared.localData.UserInfoStatus
+import com.otto.sdk.shared.models.PpobRepository
+import com.otto.sdk.shared.response.UserInfoResult
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -27,7 +29,7 @@ import org.koin.android.ext.android.inject
 
 data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) : AppCompatActivity()  {
-  // private val postRepository : PostRepository by inject()
+  private val ppobRepository : PpobRepository by inject()
 
   companion object : SingletonHolder<SDKManager, Context>(::SDKManager)
 
@@ -71,6 +73,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun setUserAccessToken(token:String) : SDKManager {
     UserAuth.userAccessToken = token
+    getUserInfo()
     //geUserInfo
     return this@SDKManager
   }
@@ -131,6 +134,31 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   //   return Settings.Secure.getString( mContext.contentResolver,Settings.Secure.ANDROID_ID).toString()
   // }
 
+
+  fun getUserInfo(){
+    // var userInfo : Unit
+    try{
+      // checkFirstAuthLayer()
+      // checkSecondAuthLayer()
+      ppobRepository.fetchUserInfo("",UserAuth.userAccessToken,UserAuth.phoneNumber,
+      onResponse = {
+       status,userInfo ->
+        if(userInfo.account !== null){
+          UserInfoStatus.accountId = userInfo.account!!.account_id!!
+          UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
+          UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+        }
+        generalListener?.onUserProfile(UserInfoStatus)
+      })
+      // Log.d("test1234", "$userInfo")
+    }catch(e:Exception){
+      ErrorStatus.type = "sdk"
+      ErrorStatus.code = e.message.toString()
+      ErrorStatus.message = e.message.toString()
+      Log.d("test1234", "getUserInfo:${e.localizedMessage} ${e.stackTrace} ${e}",e)
+      generalListener?.onError(ErrorStatus)
+    }
+  }
 
   fun openActivation(context:Context){
     try {

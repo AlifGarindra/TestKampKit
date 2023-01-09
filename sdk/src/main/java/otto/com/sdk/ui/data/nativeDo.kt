@@ -54,9 +54,9 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
   }
 
   @JavascriptInterface
-  fun onAuthCode(authCode:String){
-    Log.d("test1234", "onAuthCode:$authCode ")
-    generalListener?.onAuthCode(authCode)
+  fun onAuthCode(authCode:String?){
+    Log.d("test1234", "onAuthCode:${authCode!!}")
+    generalListener?.onAuthCode(authCode!!)
     (webview.context!! as Activity).finish()
   }
 

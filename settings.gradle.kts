@@ -11,7 +11,7 @@ include(":app")
 include(":sdk")
 include(":app-java")
 include(":shared")
-// project(":shared").projectDir = File("../kmm-shared/shared")
+project(":shared").projectDir = File("../kmm-shared/shared")
 
 
 //release sdk
