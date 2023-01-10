@@ -140,7 +140,8 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try{
       // checkFirstAuthLayer()
       // checkSecondAuthLayer()
-      ppobRepository.fetchUserInfo("",UserAuth.userAccessToken,UserAuth.phoneNumber,
+      val nowdate : Long = System.currentTimeMillis() / 1000
+      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
       onResponse = {
        status,userInfo ->
         if(userInfo.account !== null){

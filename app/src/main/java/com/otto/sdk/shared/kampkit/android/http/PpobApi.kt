@@ -29,7 +29,7 @@ class PpobApi {
     jsonObject.put("scope", "PPOB-client")
     val body = jsonObject.toString().toRequestBody(mediaType)
     var uuid = UUID.randomUUID().toString()
-    val nowdate : Long = Instant.now().epochSecond
+    val nowdate : Long = System.currentTimeMillis() / 1000
 
     request = Request.Builder()
       .url(url+"/token")
@@ -75,7 +75,7 @@ class PpobApi {
     jsonObject.put("auth_code", authCode)
     val body = jsonObject.toString().toRequestBody(mediaType)
     var uuid = UUID.randomUUID().toString()
-    val nowdate : Long = Instant.now().epochSecond
+    val nowdate : Long = System.currentTimeMillis() / 1000
 
     request = Request.Builder()
       .url(url+"/accounts/${phoneNumber}/auth-code/validation")
