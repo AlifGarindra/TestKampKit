@@ -150,8 +150,8 @@ afterEvaluate{
       create<MavenPublication>("maven") {
         afterEvaluate {
           groupId = "id.ottodigital.sdk"
-          artifactId = "ppobsdk"
-          version = "0.0.2"
+          artifactId = "ppob"
+          version = "0.0.1"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
