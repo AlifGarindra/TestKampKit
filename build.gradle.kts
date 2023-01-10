@@ -35,7 +35,7 @@ allprojects {
     //     password = "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"
     //   }
     // }
-    maven("https://jitpack.io")
+    // maven("https://jitpack.io")
     maven {
       url = uri("https://gitlab.pede.id/api/v4/projects/821/packages/maven")
       name = "GitLab"
