@@ -27,15 +27,26 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+    // maven {
+    //   name = "GitHubPackages"
+    //   url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
+    //   credentials {
+    //     username = "AlifGarindra"
+    //     password = "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"
+    //   }
+    // }
+    maven("https://jitpack.io")
     maven {
-      name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
-      credentials {
-        username = "AlifGarindra"
-        password = "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"
+      url = uri("https://gitlab.pede.id/api/v4/projects/821/packages/maven")
+      name = "GitLab"
+      credentials(HttpHeaderCredentials::class) {
+        name = "Deploy-Token"
+        value = "r2yKiEbXmhQUfiijHXLU"
+      }
+      authentication {
+        create<HttpHeaderAuthentication>("header")
       }
     }
-    maven("https://jitpack.io")
   }
 }
 

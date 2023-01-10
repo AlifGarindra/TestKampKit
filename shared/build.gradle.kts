@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.name.StandardClassIds.Annotations.ParameterNames.value
 
 plugins {
     kotlin("multiplatform")
@@ -174,34 +175,66 @@ sqldelight {
 
 
 
-afterEvaluate{
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                afterEvaluate {
-                    groupId = "com.alifg.libraries"
-                    artifactId = "kampkitshared"
-                    version = "1.3.3"
-                    // artifact("$projectDir/libs/sharedkampkit.aar"){
-                    //   classifier = "sharedkampkit"
-                    //   extension = "aar"
-                    // }
-                    if (plugins.hasPlugin("java")) {
-                        from(components["java"])
-                    } else if (plugins.hasPlugin("android-library")) {
-                        from(components["release"])
-                    }
-                }
-                // repositories {
-                //     maven {
-                //         url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
-                //         credentials {
-                //             username = "AlifGarindra"
-                //             password = "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"
-                //         }
-                //     }
-                // }
-            }
-        }
-    }
-}
+// afterEvaluate{
+//     publishing {
+//         publications {
+//             create<MavenPublication>("maven") {
+//                 afterEvaluate {
+//                     groupId = "id.ottodigital.sdk"
+//                     artifactId = "ppobsdk"
+//                     version = "0.0.1"
+//                     // artifact("$projectDir/libs/sharedkampkit.aar"){
+//                     //   classifier = "sharedkampkit"
+//                     //   extension = "aar"
+//                     // }
+//                     if (plugins.hasPlugin("java")) {
+//                         from(components["java"])
+//                     } else if (plugins.hasPlugin("android-library")) {
+//                         from(components["release"])
+//                     }
+//                 }
+//                 repositories {
+//                     maven {
+//                         url = uri("https://gitlab.pede.id/api/v4/projects/821/packages/maven")
+//                         name = "GitLab"
+//                         credentials(HttpHeaderCredentials::class) {
+//                             name = "Deploy-Token"
+//                             value = "wMGh2iqairzRZsGzvqbK"
+//                         }
+//                         authentication {
+//                             create<HttpHeaderAuthentication>("header")
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
+
+
+// afterEvaluate {
+//     publishing {
+//         publications {
+//             release(MavenPublication) {
+//                 from components.$build_variant//variant want to use
+//                 groupId = $projectname
+//                 artifactId = "$project.name"
+//                 version = "$vercode"
+//             }
+//         }
+//
+//         repositories {
+//             maven {
+//                 url "https://gitlab.pede.id/api/v4/projects/{projectid}/packages/maven"
+//                 credentials(HttpHeaderCredentials) {
+//                     name = "Deploy-Token"
+//                     value = $deploy_token
+//                 }
+//                 authentication {
+//                     header(HttpHeaderAuthentication)
+//                 }
+//             }
+//         }
+//     }
+// }

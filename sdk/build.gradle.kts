@@ -108,6 +108,42 @@ dependencies {
 //   }
 // }
 
+// afterEvaluate{
+//   publishing {
+//     publications {
+//       create<MavenPublication>("maven") {
+//         afterEvaluate {
+//           groupId = "id.ottodigital.sdk"
+//           artifactId = "ppobsdk"
+//           version = "0.0.1"
+//           // groupId = "com.alifg.libraries"
+//           // artifactId = "testkampkit"
+//           // version = "2.0.1"
+//           // artifact("$projectDir/libs/sharedkampkit.aar"){
+//           //   classifier = "sharedkampkit"
+//           //   extension = "aar"
+//           // }
+//           if (plugins.hasPlugin("java")) {
+//             from(components["java"])
+//           } else if (plugins.hasPlugin("android-library")) {
+//             from(components["release"])
+//           }
+//         }
+//         // repositories {
+//         //   maven {
+//         //     url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
+//         //     credentials {
+//         //       username = "AlifGarindra"
+//         //       password = "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"
+//         //     }
+//         //   }
+//         // }
+//       }
+//     }
+//   }
+// }
+
+
 afterEvaluate{
   publishing {
     publications {
@@ -115,10 +151,7 @@ afterEvaluate{
         afterEvaluate {
           groupId = "id.ottodigital.sdk"
           artifactId = "ppobsdk"
-          version = "0.0.1"
-          // groupId = "com.alifg.libraries"
-          // artifactId = "testkampkit"
-          // version = "2.0.1"
+          version = "0.0.2"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
@@ -129,15 +162,19 @@ afterEvaluate{
             from(components["release"])
           }
         }
-        // repositories {
-        //   maven {
-        //     url = uri("https://maven.pkg.github.com/AlifGarindra/TestKampKit")
-        //     credentials {
-        //       username = "AlifGarindra"
-        //       password = "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"
-        //     }
-        //   }
-        // }
+        repositories {
+          maven {
+            url = uri("https://gitlab.pede.id/api/v4/projects/821/packages/maven")
+            name = "GitLab"
+            credentials(HttpHeaderCredentials::class) {
+              name = "Deploy-Token"
+              value = "wMGh2iqairzRZsGzvqbK"
+            }
+            authentication {
+              create<HttpHeaderAuthentication>("header")
+            }
+          }
+        }
       }
     }
   }
