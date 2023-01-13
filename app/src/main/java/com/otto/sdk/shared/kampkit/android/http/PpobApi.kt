@@ -38,7 +38,7 @@ class PpobApi {
       .header("Authorization","Basic ZWowcTlhbk1EMnhUaFdaSDJzOUVFY1ZiQmc4YTpINjdRUFhiekliN2VFVmhMZzBQSEhhVE93cjhh")
       .header("X-TRACE-ID",uuid)
       .header("X-TIMESTAMP","$nowdate")
-      .header("X-SIGNATURE","${rsaPpob.getSignature(nowdate)}")
+      .header("X-SIGNATURE","${rsaPpob.getSignature(nowdate, "{\"grant_type\":\"client_credentials\",\"scope\":\"PPOB-client\"}")}")
       .post(body)
       .build()
 
@@ -106,6 +106,53 @@ class PpobApi {
             }
             if(token.has("refresh_token")){
              refreshToken = token.getString("refresh_token")
+            }
+            accessToken(userToken,refreshToken)
+          }
+        }
+      }
+    })
+  }
+
+
+  fun refreshUserAccessToken(clientToken:String,refreshToken: String,accessToken: (userToken:String,refreshToken:String) -> Unit){
+    val jsonObject = JSONObject()
+    jsonObject.put("grant_type","refresh_token")
+    jsonObject.put("refresh_token", refreshToken)
+    val body = jsonObject.toString().toRequestBody(mediaType)
+    var uuid = UUID.randomUUID().toString()
+    val nowdate : Long = System.currentTimeMillis() / 1000
+
+    request = Request.Builder()
+      .url(url+"/token")
+      .header("Authorization","Bearer $clientToken")
+      .header("X-TRACE-ID",uuid)
+      .header("X-TIMESTAMP","$nowdate")
+      .header("X-SIGNATURE","${rsaPpob.getSignature(nowdate, "{\"grant_type\":\"refresh_token\",\"refresh_token\":\"${refreshToken}\"}")}")
+      .post(body)
+      .build()
+
+    okHttpClient.newCall(request).enqueue(object : Callback {
+      override fun onFailure(call: Call, e: IOException) {
+        Log.e("okhttpError", "onFailure:${e.message} ")
+      }
+
+      override fun onResponse(call: Call, response: Response) {
+        if(!response.isSuccessful){
+          Log.d("okhttp!success", "onResponse:${response} ")
+        }else{
+          var userToken : String = ""
+          var refreshToken : String = ""
+          val jsonData: String? = response?.body?.string()
+          Log.d("okhttpSuccess", "onResponse:${jsonData} ")
+          val Jobject = JSONObject(jsonData)
+          if (Jobject.has("token")) {
+            val token : JSONObject = Jobject.getJSONObject("token")
+            if(token.has("access_token")){
+              userToken = token.getString("access_token")
+            }
+            if(token.has("refresh_token")){
+              refreshToken = token.getString("refresh_token")
             }
             accessToken(userToken,refreshToken)
           }

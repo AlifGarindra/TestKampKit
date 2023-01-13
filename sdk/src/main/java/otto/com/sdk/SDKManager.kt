@@ -134,12 +134,26 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   //   return Settings.Secure.getString( mContext.contentResolver,Settings.Secure.ANDROID_ID).toString()
   // }
 
+  fun useSandbox() : SDKManager{
+    Constants.isSandbox = true
+    Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL} ")
+    return this@SDKManager
+  }
+
 
   fun getUserInfo(){
     // var userInfo : Unit
+    // try{
+    //   checkFirstAuthLayer()
+    //   checkSecondAuthLayer()
+    // }catch(e:Exception){
+    //   ErrorStatus.type = "sdk"
+    //   ErrorStatus.code = e.message.toString()
+    //   ErrorStatus.message = e.message.toString()
+    //   generalListener?.onError(ErrorStatus)
+    // }
+
     try{
-      // checkFirstAuthLayer()
-      // checkSecondAuthLayer()
       val nowdate : Long = System.currentTimeMillis() / 1000
       ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
       onResponse = {
@@ -151,7 +165,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
         }
         generalListener?.onUserProfile(UserInfoStatus)
       })
-      // Log.d("test1234", "$userInfo")
     }catch(e:Exception){
       ErrorStatus.type = "sdk"
       ErrorStatus.code = e.message.toString()
@@ -256,8 +269,8 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     initKoin(
       module {
         single<Context> { mContext }
-        single<Config> { Config(clientKey) }
-        viewModel { ProfileViewModel(get(), get { parametersOf("ProfileViewModel") }) }
+        // single<Config> { Config(clientKey) }
+        // viewModel { ProfileViewModel(get(), get { parametersOf("ProfileViewModel") }) }
         single<SharedPreferences> {
           get<Context>().getSharedPreferences(
             "STARTER_SETTINGS",

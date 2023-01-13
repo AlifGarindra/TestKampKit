@@ -64,7 +64,7 @@ dependencies {
   // implementation("io.sentry:sentry:6.6.0")
   // api(project(":shared"))
   // api("com.github.AlifGarindra.KampKitShared:kampkitshared:1.3.3")
-  api("id.ottodigital.sdk:ppob.shared:0.0.2")
+  api("id.ottodigital.sdk:ppob.shared:0.0.3")
   // api("com.alifg.libraries:kampkitshared:1.1.4")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)

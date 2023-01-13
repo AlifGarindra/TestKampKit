@@ -89,16 +89,26 @@ class MainActivity : AppCompatActivity() {
         if(savedUserToken != ""){
           localUserToken = gson.fromJson(savedUserToken,LocalUserToken::class.java)
           PpobUser.userAccessToken = localUserToken.userAccessToken
+          PpobUser.refreshToken = localUserToken.refreshToken
         }else{
-          PpobUser.userAccessToken = savedUserToken
+          PpobUser.userAccessToken = ""
+          PpobUser.refreshToken = ""
         }
         refreshStateApp("uat")
       }
     })
     userAccessTokenExpiredApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        PpobUser.userAccessToken = "expired-user-access-token"
-        refreshStateApp("uat")
+        api.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
+          userToken, refreshToken ->
+          var localUserToken = LocalUserToken(userToken,refreshToken)
+          val jsonString = gson.toJson(localUserToken)
+          sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
+          PpobUser.userAccessToken = userToken
+          PpobUser.refreshToken = refreshToken
+          refreshStateApp("uat")
+        })
+
       }
     })
 
@@ -252,6 +262,7 @@ class MainActivity : AppCompatActivity() {
           val jsonString = gson.toJson(localUserToken)
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
           PpobUser.userAccessToken = userToken
+          PpobUser.refreshToken = refreshToken
           SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")

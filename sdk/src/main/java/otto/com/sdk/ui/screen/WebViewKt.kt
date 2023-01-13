@@ -122,7 +122,7 @@ fun setUpWebView(){
 
 
     override fun onLoadResource(view: WebView, url: String) {
-      if(url.startsWith(Constants.environment.Ppob_Domain)){
+      if(url.startsWith(Constants.environtment.Ppob_Domain)){
         setWebviewLocalStorage(view!!)
       }
       // view.evaluateJavascript("localStorage.getItem('phone_number')",{
@@ -142,7 +142,7 @@ fun setUpWebView(){
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      if(url.startsWith(Constants.environment.Ppob_Domain)){
+      if(url.startsWith(Constants.environtment.Ppob_Domain)){
         setWebviewLocalStorage(view!!)
       }
       Log.d("test1234", "onPageFinished: $url")
@@ -162,7 +162,7 @@ fun setUpWebView(){
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
-        if(url.startsWith(Constants.environment.Ppob_Domain)){
+        if(url.startsWith(Constants.environtment.Ppob_Domain)){
           setWebviewLocalStorage(view!!)
         }
         // view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
@@ -178,10 +178,10 @@ fun setUpWebView(){
 
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl !== null){
-    webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug+'/'+openUrl)
+    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl)
   }else{
     // webView.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0895611439571")
-    webView.loadUrl(Constants.environment.Ppob_Domain+Constants.environment.Ppob_Menu_Slug)
+    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug)
   }
 }
 
@@ -256,7 +256,7 @@ fun setUpWebView(){
 
   override fun onBackPressed(){
     val script = "nativeBackPressed()"
-    if(webView.url?.startsWith(Constants.environment.Ppob_Domain) == true){
+    if(webView.url?.startsWith(Constants.environtment.Ppob_Domain) == true){
       webView.evaluateJavascript(script,null)
     }else{
       if(webView.canGoBack()){

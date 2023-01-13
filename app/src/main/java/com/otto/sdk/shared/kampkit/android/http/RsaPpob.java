@@ -13,11 +13,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 public class RsaPpob {
-  public String getSignature (long dateTimestamp) {
+  public String getSignature (long dateTimestamp,String requestbody) {
     String PRIVATE_KEY = getPrivateKey();
     String PUBLIC_KEY = getPublicKey();
 
-    String requestBody = "{\"grant_type\":\"client_credentials\",\"scope\":\"PPOB-client\"}";
+    String requestBody = requestbody;
     // Instant timestamp = Instant.now().truncatedTo(ChronoUnit.SECONDS);
     // ZonedDateTime dateTimestamp = timestamp.atZone(ZoneId.of("Asia/Jakarta"));
 //    OffsetDateTime timestamp = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS);

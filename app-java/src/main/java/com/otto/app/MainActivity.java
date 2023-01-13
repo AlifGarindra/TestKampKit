@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         Log.e("NNNNN", SDKManager.Companion.getInstance(this).getX());
 
         SDKManager.Companion.getInstance(this).userInfoListener(new UserInfoListener() {
