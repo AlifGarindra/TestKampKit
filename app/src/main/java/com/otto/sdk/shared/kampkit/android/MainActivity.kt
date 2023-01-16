@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         refreshStateApp("uat")
       }
     })
+
     userAccessTokenExpiredApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         api.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
@@ -249,10 +250,17 @@ class MainActivity : AppCompatActivity() {
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity, "token expired!", Toast.LENGTH_SHORT)
         showError.show()
-        PpobUser.userAccessToken = "x-user-access-token"
-        SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
-        refreshStateApp("uat")
-        refreshStateSDK("uat")
+        api.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
+            userToken, refreshToken ->
+          var localUserToken = LocalUserToken(userToken,refreshToken)
+          val jsonString = gson.toJson(localUserToken)
+          sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
+          PpobUser.userAccessToken = userToken
+          PpobUser.refreshToken = refreshToken
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
+          refreshStateApp("uat")
+          refreshStateSDK("uat")
+        })
       }
 
       override fun onAuthCode(authCode: String) {
@@ -267,17 +275,9 @@ class MainActivity : AppCompatActivity() {
           refreshStateApp("uat")
           refreshStateSDK("uat")
         }
-
-
-        // PpobUser.userAccessToken = "x-user-access-token"
-        // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
-        // refreshStateApp("uat")
-        // refreshStateSDK("uat")
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
-        // val showBalance = Toast.makeText(this@MainActivity, "account id : ${userInfo.accountId} & balance: ${userInfo.balance}", Toast.LENGTH_SHORT)
-        // showBalance.show()
         Log.d("test1234", "onUserProfile: ${userInfo.balance}")
       }
     }

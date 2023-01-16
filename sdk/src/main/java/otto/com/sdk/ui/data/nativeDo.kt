@@ -1,10 +1,15 @@
 package otto.com.sdk.ui.data
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.localData.ErrorStatus
@@ -26,6 +31,20 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
     Log.d("see", message)
     value = message
   }
+
+  @JavascriptInterface
+  fun copyToClipBoard(text:String?){
+    Log.d("test1234", "copyToClipBoard:$text ")
+    try{
+      var clipBoard : ClipboardManager = webview.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+      var clip : ClipData = ClipData.newPlainText("fromwebview",text!!)
+      clipBoard.setPrimaryClip(clip)
+      Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+    }catch (e:Exception){
+      Log.d("test1234", "copyToClipBoard:$e ")
+    }
+  }
+
   @JavascriptInterface
   fun closeWebview(){
     Log.d("test1234", "logdulu: ")

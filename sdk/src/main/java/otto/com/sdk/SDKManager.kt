@@ -19,6 +19,7 @@ import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.localData.UserAuth
 import com.otto.sdk.shared.localData.UserInfoStatus
 import com.otto.sdk.shared.models.PpobRepository
+import com.otto.sdk.shared.response.Meta
 import com.otto.sdk.shared.response.UserInfoResult
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.parameter.parametersOf
@@ -27,7 +28,7 @@ import otto.com.sdk.ui.screen.WebViewKt
 import io.sentry.Sentry
 import org.koin.android.ext.android.inject
 
-data class Config(val clientKey: String)
+// data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   private val ppobRepository : PpobRepository by inject()
 
@@ -135,7 +136,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   // }
 
   fun useSandbox() : SDKManager{
-    Constants.isSandbox = true
+    Constants.isSandbox = false
     Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL} ")
     return this@SDKManager
   }
@@ -143,34 +144,47 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun getUserInfo(){
     // var userInfo : Unit
-    // try{
-    //   checkFirstAuthLayer()
-    //   checkSecondAuthLayer()
-    // }catch(e:Exception){
-    //   ErrorStatus.type = "sdk"
-    //   ErrorStatus.code = e.message.toString()
-    //   ErrorStatus.message = e.message.toString()
-    //   generalListener?.onError(ErrorStatus)
-    // }
-
+    try{
+      checkFirstAuthLayer()
+      checkSecondAuthLayer()
+    }catch(e:Exception){
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
+    }
     try{
       val nowdate : Long = System.currentTimeMillis() / 1000
+      var meta : Meta? = null
       ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
       onResponse = {
        status,userInfo ->
-        if(userInfo.account !== null){
-          UserInfoStatus.accountId = userInfo.account!!.account_id!!
-          UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
-          UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+        if(userInfo.meta!== null){
+          meta = userInfo.meta!!
         }
-        generalListener?.onUserProfile(UserInfoStatus)
+        when(status){
+         200 ->{
+           if(userInfo.account !== null){
+             UserInfoStatus.accountId = userInfo.account!!.account_id!!
+             UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
+             UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+             generalListener?.onUserProfile(UserInfoStatus)
+           }
+         }
+         401->{
+           if(meta?.code!= null){
+             if(meta?.code == "01"){
+               generalListener?.onUserAccessTokenExpired()
+             }
+             else{
+               onErrorHandler("http", meta!!.code!!, meta!!.message!!)
+             }
+           }
+         }
+         else->{
+           onErrorHandler("http",meta!!.code!!,meta!!.message!!)
+         }
+       }
       })
     }catch(e:Exception){
-      ErrorStatus.type = "sdk"
-      ErrorStatus.code = e.message.toString()
-      ErrorStatus.message = e.message.toString()
-      Log.d("test1234", "getUserInfo:${e.localizedMessage} ${e.stackTrace} ${e}",e)
-      generalListener?.onError(ErrorStatus)
+      onErrorHandler("http",e.message.toString(),e.message.toString())
     }
   }
 
@@ -182,10 +196,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       // intent.putExtra("urlPPOB","ppob_activation")
       context.startActivity(intent)
     }catch (e:Exception){
-      ErrorStatus.type = "sdk"
-      ErrorStatus.code = e.message.toString()
-      ErrorStatus.message = e.message.toString()
-      generalListener?.onError(ErrorStatus)
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
   }
 
@@ -198,10 +209,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       // intent.putExtra("urlPPOB","ppob_menu")
       context.startActivity(intent)
     }catch (e:Exception){
-      ErrorStatus.type = "sdk"
-      ErrorStatus.code = e.message.toString()
-      ErrorStatus.message = e.message.toString()
-      generalListener?.onError(ErrorStatus)
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
   }
 
@@ -214,10 +222,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       intent.putExtra("urlPPOB","${product}")
       context.startActivity(intent)
     }catch (e:Exception){
-      ErrorStatus.type = "sdk"
-      ErrorStatus.code = e.message.toString()
-      ErrorStatus.message = e.message.toString()
-      generalListener?.onError(ErrorStatus)
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
   }
 
@@ -236,6 +241,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
+  private fun onErrorHandler(type:String,code:String,message:String){
+    ErrorStatus.type = type
+    ErrorStatus.code = code
+    ErrorStatus.message = message
+    generalListener?.onError(ErrorStatus)
+  }
+
    fun networkChecking(){
       if(!NetworkCheck.checkForInternet(mContext)){
         throw Exception("need_internet_access")
@@ -243,10 +255,48 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun userInfoListener(listener : UserInfoListener){
-    // setUserInfoListeners(listener)
-    UserInfoStatus.phoneNumber = "9829361287934"
-    UserInfoStatus.balance = "10000"
-    listener?.onUserInfo(UserInfoStatus)
+    try{
+      checkFirstAuthLayer()
+      checkSecondAuthLayer()
+    }catch(e:Exception){
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
+    }
+    try{
+      val nowdate : Long = System.currentTimeMillis() / 1000
+      var meta : Meta? = null
+      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
+        onResponse = {
+            status,userInfo ->
+          if(userInfo.meta!== null){
+            meta = userInfo.meta!!
+          }
+          when(status){
+            200 ->{
+              if(userInfo.account !== null){
+                UserInfoStatus.accountId = userInfo.account!!.account_id!!
+                UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
+                UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+                listener?.onUserInfo(UserInfoStatus)
+              }
+            }
+            401->{
+              if(meta?.code!= null){
+                if(meta?.code == "01"){
+                  generalListener?.onUserAccessTokenExpired()
+                }
+                else{
+                  onErrorHandler("http", meta!!.code!!, meta!!.message!!)
+                }
+              }
+            }
+            else->{
+              onErrorHandler("http",meta!!.code!!,meta!!.message!!)
+            }
+          }
+        })
+    }catch(e:Exception){
+      onErrorHandler("http",e.message.toString(),e.message.toString())
+    }
   }
 
 
