@@ -47,7 +47,7 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
 
   @JavascriptInterface
   fun closeWebview(){
-    Log.d("test1234", "logdulu: ")
+    Log.d("test1234", "close webview triggered")
     (context as Activity).finish()
   }
   @JavascriptInterface
@@ -70,6 +70,16 @@ class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() 
   fun onClientTokenExpired() {
     generalListener?.onClientTokenExpired()
     (webview.context!! as Activity).finish()
+  }
+
+  @JavascriptInterface
+  fun showToast(text: String?){
+    try {
+      Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
+    catch (e:Exception){
+
+    }
   }
 
   @JavascriptInterface

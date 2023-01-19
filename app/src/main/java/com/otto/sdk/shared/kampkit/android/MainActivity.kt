@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
   }
 
   fun refreshStateSDK(state: String? = null) {
-
+    runOnUiThread {
     if (state != null) {
       if (state == "phone") {
         phoneNumberLabel.text = UserAuth.phoneNumber
@@ -195,21 +195,24 @@ class MainActivity : AppCompatActivity() {
       clientTokenLabelSDK.text = UserAuth.clientToken
       userAccessTokenLabelSDK.text = UserAuth.userAccessToken
     }
+    }
   }
 
   fun refreshStateApp(state: String? = null) {
-    if (state != null) {
-      if (state == "ct") {
+    runOnUiThread {
+      if (state != null) {
+        if (state == "ct") {
+          clientTokenLabelApp.text = PpobUser.clientToken
+        }
+        if (state == "uat") {
+          userAccessTokenLabelApp.text = PpobUser.userAccessToken
+        }
+      } else {
         clientTokenLabelApp.text = PpobUser.clientToken
-      }
-      if (state == "uat") {
         userAccessTokenLabelApp.text = PpobUser.userAccessToken
+        phoneNumberInput.text.clear()
+        outletNameInput.text.clear()
       }
-    } else {
-      clientTokenLabelApp.text = PpobUser.clientToken
-      userAccessTokenLabelApp.text = PpobUser.userAccessToken
-      phoneNumberInput.text.clear()
-      outletNameInput.text.clear()
     }
   }
 

@@ -147,6 +147,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try{
       checkFirstAuthLayer()
       checkSecondAuthLayer()
+      networkChecking()
     }catch(e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }

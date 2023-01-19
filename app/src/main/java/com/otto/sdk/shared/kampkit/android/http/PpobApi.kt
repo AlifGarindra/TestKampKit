@@ -32,7 +32,7 @@ class PpobApi {
     val nowdate : Long = System.currentTimeMillis() / 1000
 
     request = Request.Builder()
-      .url(url+"/token")
+      .url(url+"/tokens/client-token")
       // .header("Authorization","Bearer 530d990e-12a0-3540-9eee-cac07233cf50")
       // .header("Authorization","Basic ej0q9anMD2xThWZH2s9EEcVbBg8a:H67QPXbzIb7eEVhLg0PHHaTOwr8a")
       .header("Authorization","Basic ZWowcTlhbk1EMnhUaFdaSDJzOUVFY1ZiQmc4YTpINjdRUFhiekliN2VFVmhMZzBQSEhhVE93cjhh")
@@ -124,7 +124,7 @@ class PpobApi {
     val nowdate : Long = System.currentTimeMillis() / 1000
 
     request = Request.Builder()
-      .url(url+"/token")
+      .url(url+"/tokens/refresh-token")
       .header("Authorization","Bearer $clientToken")
       .header("X-TRACE-ID",uuid)
       .header("X-TIMESTAMP","$nowdate")

@@ -3,10 +3,8 @@ package otto.com.sdk.ui.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +25,6 @@ import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.localData.ErrorStatus
 import com.otto.sdk.shared.localData.GeneralStatus
 import com.otto.sdk.shared.localData.UserAuth
-import otto.com.sdk.NetworkCheck
 import otto.com.sdk.R
 import otto.com.sdk.SDKManager
 import otto.com.sdk.ui.data.nativeDo
@@ -62,27 +59,13 @@ class WebViewKt : AppCompatActivity() {
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   webView= findViewById(R.id.webviewkt)
-  webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+  // webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
   var webSettings : WebSettings = webView.settings
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
   webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
     webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
   }
-  webSettings.javaScriptEnabled = true
-  webSettings.setSupportZoom(true)
-  webSettings.setAppCachePath(this.cacheDir.absolutePath)
-  webSettings.cacheMode = WebSettings.LOAD_DEFAULT
-  webSettings.databaseEnabled = true
-  webSettings.domStorageEnabled = true
-  webSettings.allowContentAccess=true
-  webSettings.useWideViewPort = true
-  webSettings.loadWithOverviewMode = true
 
-
-  webView.settings.pluginState = WebSettings.PluginState.ON
-  webView.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
-
-  //Harusnya ambil Context dari punyanya host app
 
   webView.webViewClient = object : WebViewClient() {
 
@@ -125,12 +108,15 @@ fun setUpWebView(){
       if(url.startsWith(Constants.environtment.Ppob_Domain)){
         setWebviewLocalStorage(view!!)
       }
-      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
-      //   Log.d("test1234", "loadresource:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('client_token')",{
-      //   Log.d("test1234", "pagestarted:$it ")
-      // })
+      view.evaluateJavascript("localStorage.getItem('device_id')",{
+        Log.d("test1234", "loadresource:$it ")
+      })
+      view.evaluateJavascript("localStorage.getItem('phone_number')",{
+        Log.d("test1234", "loadresource:$it ")
+      })
+      view.evaluateJavascript("localStorage.getItem('client_token')",{
+        Log.d("test1234", "loadresource:$it ")
+      })
       try {
         SDKManager.getInstance(this@WebViewKt).networkChecking()
       }catch (e:Exception){
@@ -151,12 +137,15 @@ fun setUpWebView(){
       status.state = "success"
       status.message = ""
       generalListener?.onOpenPPOB(status)
-      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
-      //   Log.d("test1234", "onPageFinished:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('client_token')",{
-      //   Log.d("test1234", "pagestarted:$it ")
-      // })
+      view.evaluateJavascript("localStorage.getItem('phone_number')",{
+        Log.d("test1234", "onPageFinished:$it ")
+      })
+      view.evaluateJavascript("localStorage.getItem('client_token')",{
+        Log.d("test1234", "onPageFinished:$it ")
+      })
+      view.evaluateJavascript("localStorage.getItem('device_id')",{
+        Log.d("test1234", "onPageFinished:$it ")
+      })
     }
 
 
@@ -165,16 +154,34 @@ fun setUpWebView(){
         if(url.startsWith(Constants.environtment.Ppob_Domain)){
           setWebviewLocalStorage(view!!)
         }
-        // view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
-        //   Log.d("test1234", "pagestarted:$it ")
-        // })
-        // view!!.evaluateJavascript("localStorage.getItem('client_token')",{
-        //   Log.d("test1234", "pagestarted:$it ")
-        // })
+        view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
+          Log.d("test1234", "pagestarted:$it ")
+        })
+        view!!.evaluateJavascript("localStorage.getItem('client_token')",{
+          Log.d("test1234", "pagestarted:$it ")
+        })
         // Log.d("test123", "onPageStarted: $posts")
       }
     }
   }
+
+  val userAgent = System.getProperty("http.agent")
+  webSettings.userAgentString = userAgent
+  webSettings.javaScriptEnabled = true
+  webSettings.setSupportZoom(true)
+  webSettings.setAppCachePath(this.cacheDir.absolutePath)
+  webSettings.cacheMode = WebSettings.LOAD_DEFAULT
+  webSettings.databaseEnabled = true
+  webSettings.domStorageEnabled = true
+  webSettings.allowContentAccess=true
+  webSettings.useWideViewPort = true
+  webSettings.loadWithOverviewMode = true
+  webSettings.javaScriptCanOpenWindowsAutomatically = true
+
+  webView.settings.pluginState = WebSettings.PluginState.ON
+  webView.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
+
+  //Harusnya ambil Context dari punyanya host app
 
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl !== null){
