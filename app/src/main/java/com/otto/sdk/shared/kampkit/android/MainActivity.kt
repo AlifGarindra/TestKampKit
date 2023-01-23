@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
   fun getUserInfo() {
     SDKManager.getInstance(this@MainActivity).userInfoListener(object : UserInfoListener {
       override fun onUserInfo(userInfo: UserInfoStatus) {
-        Log.d("userInfoList", "onUserInfo:${userInfo.balance} ")
+        Log.d("userinfo", "dariuserinfo:${userInfo.balance} ")
       }
     })
   }
@@ -108,6 +108,13 @@ class MainActivity : AppCompatActivity() {
           PpobUser.userAccessToken = userToken
           PpobUser.refreshToken = refreshToken
           refreshStateApp("uat")
+        },{
+          sharedPref!!.clearValue(phoneNumberInput.text.toString())
+          PpobUser.userAccessToken = ""
+          PpobUser.refreshToken = ""
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken()
+          refreshStateApp("uat")
+          refreshStateSDK("uat")
         })
 
       }
@@ -129,11 +136,6 @@ class MainActivity : AppCompatActivity() {
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
-        // SDKManager.getInstance(this@MainActivity).getUserInfo()
-        // SDKManager.getInstance(this@MainActivity).testingHOC { Log.d("hoc", "$it") }
-//                SDKManager.getInstance(this@MainActivity).trySentry();
-//               var hello =  SDKManager.getInstance(this@MainActivity).getBalancePPOB()
-//                Log.e("error", "onClick: $hello", )
       }
     })
 
@@ -142,6 +144,7 @@ class MainActivity : AppCompatActivity() {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setPhoneNumber(phoneNumberInput.text.toString())
         refreshStateSDK("phone")
+        refreshStateSDK("uat")
       }
     })
 
@@ -162,6 +165,7 @@ class MainActivity : AppCompatActivity() {
     userAccessTokenButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
+        // getUserInfo()
         refreshStateSDK("uat")
       }
     })
@@ -263,6 +267,13 @@ class MainActivity : AppCompatActivity() {
           SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
+        },{
+          sharedPref!!.clearValue(phoneNumberInput.text.toString())
+          PpobUser.userAccessToken = ""
+          PpobUser.refreshToken = ""
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken()
+          refreshStateApp("uat")
+          refreshStateSDK("uat")
         })
       }
 
@@ -281,7 +292,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
-        Log.d("test1234", "onUserProfile: ${userInfo.balance}")
+        Log.d("userinfo", "onUserProfile: ${userInfo.balance}")
       }
     }
   }

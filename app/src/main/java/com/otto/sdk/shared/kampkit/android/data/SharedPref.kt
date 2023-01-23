@@ -18,6 +18,13 @@ class SharedPref(val mContext:Context){
     Log.d("test1234", "retrieveValue:$value ")
     return value
   }
+
+  fun clearValue(key:String){
+    val editor = sharedPreferences.edit()
+    editor.remove("access_token_"+key)
+    editor.apply()
+  }
+
   fun clearSharedPref(){
     val editor = sharedPreferences.edit()
     editor.clear()

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.otto.sdk.shared.AppInfo
 import com.otto.sdk.shared.Constants
@@ -13,16 +12,10 @@ import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.TransactionListener
 import com.otto.sdk.shared.interfaces.UserInfoListener
 import com.otto.sdk.shared.localData.ErrorStatus
-import com.otto.sdk.shared.localData.GeneralStatus
-// import com.otto.sdk.shared.models.PostRepository
-import com.otto.sdk.shared.models.ProfileViewModel
 import com.otto.sdk.shared.localData.UserAuth
 import com.otto.sdk.shared.localData.UserInfoStatus
 import com.otto.sdk.shared.models.PpobRepository
 import com.otto.sdk.shared.response.Meta
-import com.otto.sdk.shared.response.UserInfoResult
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 import io.sentry.Sentry
@@ -58,9 +51,18 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun setPhoneNumber(phone:String) : SDKManager {
-    UserAuth.phoneNumber = phone
+    var onlyNumber = phone.replace("+","")
+    if(onlyNumber.startsWith("62")){
+      onlyNumber = onlyNumber.replaceRange(0..1, "0")
+    }
+    if(onlyNumber != UserAuth.phoneNumber){
+      UserAuth.userAccessToken = ""
+    }
+    UserAuth.phoneNumber = onlyNumber
     return this@SDKManager
   }
+
+
 
   fun setOutletName(name:String) : SDKManager {
     UserAuth.outletName = name
@@ -72,32 +74,17 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     return this@SDKManager
   }
 
-  fun setUserAccessToken(token:String) : SDKManager {
-    UserAuth.userAccessToken = token
-    getUserInfo()
-    //geUserInfo
+  fun setUserAccessToken(token:String? = null) : SDKManager {
+    if(token != null){
+      UserAuth.userAccessToken = token
+      getUserInfo{
+        generalListener?.onUserProfile(it)
+      }
+    }else{
+      UserAuth.userAccessToken = ""
+    }
     return this@SDKManager
   }
-
-  // // @JvmName("setTheGeneralListener")
-  // fun setGeneralListeners(listener : GeneralListener){
-  //   this.generalListener = listener
-  // }
-  //
-  // // @JvmName("getTheGeneralListener")
-  // fun getGeneralListeners() : GeneralListener? {
-  //   return this.generalListener;
-  // }
-
-  // // @JvmName("setTheTransactionListener")
-  // fun setTransactionListeners(listener : TransactionListener){
-  //   this.transactionListener = listener
-  // }
-  //
-  // // @JvmName("getTheTransactionListener")
-  // fun getTransactionListeners() : TransactionListener? {
-  //   return this.transactionListener;
-  // }
 
 
   // fun trySentry(){
@@ -142,7 +129,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
 
-  fun getUserInfo(){
+  private fun getUserInfo(onSuccess:(UserInfoStatus)->Unit){
     // var userInfo : Unit
     try{
       checkFirstAuthLayer()
@@ -166,7 +153,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
              UserInfoStatus.accountId = userInfo.account!!.account_id!!
              UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
              UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
-             generalListener?.onUserProfile(UserInfoStatus)
+             onSuccess(UserInfoStatus)
            }
          }
          401->{
@@ -194,7 +181,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
-      // intent.putExtra("urlPPOB","ppob_activation")
       context.startActivity(intent)
     }catch (e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
@@ -256,47 +242,8 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun userInfoListener(listener : UserInfoListener){
-    try{
-      checkFirstAuthLayer()
-      checkSecondAuthLayer()
-    }catch(e:Exception){
-      onErrorHandler("sdk",e.message.toString(),e.message.toString())
-    }
-    try{
-      val nowdate : Long = System.currentTimeMillis() / 1000
-      var meta : Meta? = null
-      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
-        onResponse = {
-            status,userInfo ->
-          if(userInfo.meta!== null){
-            meta = userInfo.meta!!
-          }
-          when(status){
-            200 ->{
-              if(userInfo.account !== null){
-                UserInfoStatus.accountId = userInfo.account!!.account_id!!
-                UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
-                UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
-                listener?.onUserInfo(UserInfoStatus)
-              }
-            }
-            401->{
-              if(meta?.code!= null){
-                if(meta?.code == "01"){
-                  generalListener?.onUserAccessTokenExpired()
-                }
-                else{
-                  onErrorHandler("http", meta!!.code!!, meta!!.message!!)
-                }
-              }
-            }
-            else->{
-              onErrorHandler("http",meta!!.code!!,meta!!.message!!)
-            }
-          }
-        })
-    }catch(e:Exception){
-      onErrorHandler("http",e.message.toString(),e.message.toString())
+    getUserInfo {
+      listener?.onUserInfo(it)
     }
   }
 

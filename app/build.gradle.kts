@@ -6,9 +6,9 @@ plugins {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        // multiDexEnabled=true
+        multiDexEnabled=true
         applicationId = "com.otto.sdk.shared.kampkit"
-        minSdk = 24
+        minSdk = 19
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"
@@ -26,6 +26,16 @@ android {
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
+
+    // productFlavors {
+    //     create("minSdk19") {
+    //         minSdk = 19
+    //     }
+    //     create("minSdk21") {
+    //         minSdk = 24
+    //     }
+    // }
+
 
     lint {
         isWarningsAsErrors = true

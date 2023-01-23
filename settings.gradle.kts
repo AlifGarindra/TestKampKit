@@ -9,7 +9,7 @@ enableFeaturePreview("VERSION_CATALOGS")
 //development
 include(":app")
 include(":sdk")
-include(":app-java")
+// include(":app-java")
 include(":shared")
 // project(":shared").projectDir = File("../kmm-shared/shared")
 

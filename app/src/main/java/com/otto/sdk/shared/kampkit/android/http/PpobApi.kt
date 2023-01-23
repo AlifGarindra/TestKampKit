@@ -115,7 +115,7 @@ class PpobApi {
   }
 
 
-  fun refreshUserAccessToken(clientToken:String,refreshToken: String,accessToken: (userToken:String,refreshToken:String) -> Unit){
+  fun refreshUserAccessToken(clientToken:String,refreshToken: String,accessToken: (userToken:String,refreshToken:String) -> Unit,onFail:()->Unit){
     val jsonObject = JSONObject()
     jsonObject.put("grant_type","refresh_token")
     jsonObject.put("refresh_token", refreshToken)
@@ -134,11 +134,13 @@ class PpobApi {
 
     okHttpClient.newCall(request).enqueue(object : Callback {
       override fun onFailure(call: Call, e: IOException) {
+        onFail()
         Log.e("okhttpError", "onFailure:${e.message} ")
       }
 
       override fun onResponse(call: Call, response: Response) {
         if(!response.isSuccessful){
+          onFail()
           Log.d("okhttp!success", "onResponse:${response} ")
         }else{
           var userToken : String = ""

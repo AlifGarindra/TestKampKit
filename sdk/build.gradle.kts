@@ -6,9 +6,9 @@ plugins {
 }
 
 android {
-  // defaultConfig {
-  //   multiDexEnabled =  true
-  // }
+  defaultConfig {
+    multiDexEnabled =  true
+  }
   compileSdk = libs.versions.compileSdk.get().toInt()
   defaultConfig {
     minSdk = libs.versions.minSdk.get().toInt()
