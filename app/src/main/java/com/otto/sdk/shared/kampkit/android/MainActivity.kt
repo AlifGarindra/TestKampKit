@@ -1,5 +1,6 @@
 package com.otto.sdk.shared.kampkit.android
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,7 +24,7 @@ import otto.com.sdk.SDKManager
 
 class MainActivity : AppCompatActivity() {
 
-  val api: PpobApi = PpobApi()
+  val api: PpobApi? = if(Build.VERSION.SDK_INT > 19) PpobApi() else null
   val gson = Gson()
   var sharedPref: SharedPref? = null
   lateinit var userAccessTokenLabelSDK: TextView
@@ -38,10 +39,12 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    setGeneralListener()
-    onLabelSet()
-    onPressButton()
-    sharedPref = SharedPref(this@MainActivity)
+    if(Build.VERSION.SDK_INT > 19 ){
+      setGeneralListener()
+      onLabelSet()
+      onPressButton()
+      sharedPref = SharedPref(this@MainActivity)
+    }
     // getUserInfo()
   }
 
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     clientTokenButtonApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        api.getClientToken{
+        api!!.getClientToken{
           PpobUser.clientToken = it
           refreshStateApp("ct")
         }
@@ -100,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
     userAccessTokenExpiredApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        api.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
+        api!!.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
           userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
           val jsonString = gson.toJson(localUserToken)
@@ -246,7 +249,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClientTokenExpired() {
-        api.getClientToken{
+        api!!.getClientToken{
           PpobUser.clientToken = it
           SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
           refreshStateApp("ct")
@@ -257,7 +260,7 @@ class MainActivity : AppCompatActivity() {
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity, "token expired!", Toast.LENGTH_SHORT)
         showError.show()
-        api.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
+        api!!.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
             userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
           val jsonString = gson.toJson(localUserToken)
@@ -278,7 +281,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onAuthCode(authCode: String) {
-        api.generateUserAccessToken(clientToken = PpobUser.clientToken, phoneNumber = phoneNumberInput.text.toString(),authCode= authCode){
+        api!!.generateUserAccessToken(clientToken = PpobUser.clientToken, phoneNumber = phoneNumberInput.text.toString(),authCode= authCode){
           userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
           val jsonString = gson.toJson(localUserToken)

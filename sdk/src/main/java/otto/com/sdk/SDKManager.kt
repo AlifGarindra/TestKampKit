@@ -18,7 +18,7 @@ import com.otto.sdk.shared.models.PpobRepository
 import com.otto.sdk.shared.response.Meta
 import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
-import io.sentry.Sentry
+// import io.sentry.Sentry
 import org.koin.android.ext.android.inject
 
 // data class Config(val clientKey: String)
