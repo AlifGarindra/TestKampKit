@@ -108,15 +108,15 @@ fun setUpWebView(){
       if(url.startsWith(Constants.environtment.Ppob_Domain)){
         setWebviewLocalStorage(view!!)
       }
-      view.evaluateJavascript("localStorage.getItem('device_id')",{
-        Log.d("test1234", "loadresource:$it ")
-      })
-      view.evaluateJavascript("localStorage.getItem('phone_number')",{
-        Log.d("test1234", "loadresource:$it ")
-      })
-      view.evaluateJavascript("localStorage.getItem('client_token')",{
-        Log.d("test1234", "loadresource:$it ")
-      })
+      // view.evaluateJavascript("localStorage.getItem('device_id')",{
+      //   Log.d("test1234", "loadresource:$it ")
+      // })
+      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
+      //   Log.d("test1234", "loadresource:$it ")
+      // })
+      // view.evaluateJavascript("localStorage.getItem('client_token')",{
+      //   Log.d("test1234", "loadresource:$it ")
+      // })
       try {
         SDKManager.getInstance(this@WebViewKt).networkChecking()
       }catch (e:Exception){
@@ -137,15 +137,15 @@ fun setUpWebView(){
       status.state = "success"
       status.message = ""
       generalListener?.onOpenPPOB(status)
-      view.evaluateJavascript("localStorage.getItem('phone_number')",{
-        Log.d("test1234", "onPageFinished:$it ")
-      })
-      view.evaluateJavascript("localStorage.getItem('client_token')",{
-        Log.d("test1234", "onPageFinished:$it ")
-      })
-      view.evaluateJavascript("localStorage.getItem('device_id')",{
-        Log.d("test1234", "onPageFinished:$it ")
-      })
+      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
+      //   Log.d("test1234", "onPageFinished:$it ")
+      // })
+      // view.evaluateJavascript("localStorage.getItem('client_token')",{
+      //   Log.d("test1234", "onPageFinished:$it ")
+      // })
+      // view.evaluateJavascript("localStorage.getItem('device_id')",{
+      //   Log.d("test1234", "onPageFinished:$it ")
+      // })
     }
 
 
@@ -154,12 +154,12 @@ fun setUpWebView(){
         if(url.startsWith(Constants.environtment.Ppob_Domain)){
           setWebviewLocalStorage(view!!)
         }
-        view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
-          Log.d("test1234", "pagestarted:$it ")
-        })
-        view!!.evaluateJavascript("localStorage.getItem('client_token')",{
-          Log.d("test1234", "pagestarted:$it ")
-        })
+        // view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
+        //   Log.d("test1234", "pagestarted:$it ")
+        // })
+        // view!!.evaluateJavascript("localStorage.getItem('client_token')",{
+        //   Log.d("test1234", "pagestarted:$it ")
+        // })
         // Log.d("test123", "onPageStarted: $posts")
       }
     }
