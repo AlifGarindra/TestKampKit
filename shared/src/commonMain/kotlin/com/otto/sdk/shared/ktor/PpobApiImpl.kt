@@ -2,6 +2,7 @@ package com.otto.sdk.shared.ktor
 
 import co.touchlab.kermit.Logger
 import co.touchlab.stately.ensureNeverFrozen
+import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.response.UserInfoResult
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -28,7 +29,7 @@ class PpobApiImpl(
   }
 
   private fun HttpRequestBuilder.endpoint(path: String) = url {
-    takeFrom("https://gateway-dev.ottodigital.id")
+    takeFrom(Constants.environtment.Ppob_Service_URL)
     encodedPath = path
   }
 

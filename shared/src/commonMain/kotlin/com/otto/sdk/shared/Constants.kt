@@ -21,6 +21,7 @@ object Constants {
  //  }
 
   object environtment {
+    var Ppob_Service_URL : String =  if (isSandbox == true) "https://gateway-dev.ottodigital.id" else "https://gateway-dev.ottodigital.id"
     var Base_URL : String = if (isSandbox == true) "testStaging" else "testProduction"
     var Ppob_Domain : String = if (isSandbox == true) "https://phoenix-imkas.ottodigital.id" else "https://phoenix-imkas.ottodigital.id"
     var Ppob_Menu_Slug : String = if (isSandbox == true) "/ppob" else "/ppob"
