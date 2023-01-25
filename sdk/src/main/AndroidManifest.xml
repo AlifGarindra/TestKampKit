@@ -14,10 +14,10 @@
   <uses-permission android:name="android.permission.READ_CLIPBOARD" />
   <uses-permission android:name="android.permission.WRITE_CLIPBOARD" />
   <uses-permission android:name="android.webkit.PermissionRequest" />
-  <uses-sdk
-    android:minSdkVersion="19"
-    tools:overrideLibrary="org.koin.androidx.compose,com.example.widget, androidx.compose.ui.platform, androidx.compose.material.icons, androidx.activity.compose, androidx.compose.ui.tooling, androidx.compose.ui.tooling.data, androidx.compose.material.ripple, androidx.compose.foundation, androidx.compose.animation, androidx.compose.foundation.layout, androidx.compose.ui.text, androidx.compose.ui.graphics, androidx.compose.ui.unit, androidx.compose.ui.util, androidx.compose.ui.geometry, androidx.compose.runtime.saveable, androidx.compose.animation.core,androidx.lifecycle.viewmodel.compose,androidx.compose.ui.tooling.preview"
-    />
+<!--  <uses-sdk-->
+<!--    android:minSdkVersion="19"-->
+<!--    tools:overrideLibrary="org.koin.androidx.compose,com.example.widget, androidx.compose.ui.platform, androidx.compose.material.icons, androidx.activity.compose, androidx.compose.ui.tooling, androidx.compose.ui.tooling.data, androidx.compose.material.ripple, androidx.compose.foundation, androidx.compose.animation, androidx.compose.foundation.layout, androidx.compose.ui.text, androidx.compose.ui.graphics, androidx.compose.ui.unit, androidx.compose.ui.util, androidx.compose.ui.geometry, androidx.compose.runtime.saveable, androidx.compose.animation.core,androidx.lifecycle.viewmodel.compose,androidx.compose.ui.tooling.preview"-->
+<!--    />-->
   <application
     android:requestLegacyExternalStorage="true"
     >
@@ -35,20 +35,20 @@
       android:windowSoftInputMode="adjustPan"
       android:exported="false" />
 
-    <meta-data
-      android:name="io.sentry.dsn"
-      android:value="https://d25da3ad698c486c9117bcb036c0c30a@o339163.ingest.sentry.io/6688736" />
+<!--    <meta-data-->
+<!--      android:name="io.sentry.dsn"-->
+<!--      android:value="https://d25da3ad698c486c9117bcb036c0c30a@o339163.ingest.sentry.io/6688736" />-->
     <!--
  Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
        We recommend adjusting this value in production.
         -->
    <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
-    <meta-data
-      android:name="io.sentry.traces.user-interaction.enable"
-      android:value="true" /> <!-- Performance Monitoring -->
-    <meta-data
-      android:name="io.sentry.traces.sample-rate"
-      android:value="1.0" />
+<!--    <meta-data-->
+<!--      android:name="io.sentry.traces.user-interaction.enable"-->
+<!--      android:value="true" /> &lt;!&ndash; Performance Monitoring &ndash;&gt;-->
+<!--    <meta-data-->
+<!--      android:name="io.sentry.traces.sample-rate"-->
+<!--      android:value="1.0" />-->
   </application>
 
 </manifest>
