@@ -1,6 +1,6 @@
 [versions]
 ## SDK Versions
-minSdk = "19"
+minSdk = "21"
 targetSdk = "32"
 compileSdk = "32"
 
