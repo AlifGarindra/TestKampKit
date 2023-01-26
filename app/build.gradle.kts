@@ -6,9 +6,9 @@ plugins {
 android {
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        // multiDexEnabled=true
+        multiDexEnabled=true
         applicationId = "com.otto.sdk.shared.kampkit"
-        minSdk = 21
+        minSdk = 19
         targetSdk = 31
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation ("com.google.code.gson:gson:2.7")
+    implementation("androidx.multidex:multidex:2.0.1")
     // implementation("id.ottodigital.sdk:ppob:0.0.5")
     // implementation("com.alifg.libraries:kampkitshared:1.0.4")
     // implementation("com.google.android.material:material:1.6.1")
