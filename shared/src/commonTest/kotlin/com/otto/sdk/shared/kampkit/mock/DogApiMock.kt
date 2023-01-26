@@ -1,6 +1,5 @@
 package com.otto.sdk.shared.kampkit.mock
 
-import com.otto.sdk.shared.ktor.DogApi
 import com.otto.sdk.shared.response.BreedResult
 
 // TODO convert this to use Ktor's MockEngine

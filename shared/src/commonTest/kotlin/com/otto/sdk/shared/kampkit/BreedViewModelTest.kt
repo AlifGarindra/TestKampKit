@@ -5,7 +5,6 @@ import app.cash.turbine.test
 import com.otto.sdk.shared.kampkit.db.Breed
 import com.otto.sdk.shared.kampkit.mock.ClockMock
 import com.otto.sdk.shared.kampkit.mock.DogApiMock
-import com.otto.sdk.shared.models.BreedRepository
 import com.otto.sdk.shared.models.BreedViewModel
 import com.otto.sdk.shared.models.BreedViewState
 import com.otto.sdk.shared.response.BreedResult

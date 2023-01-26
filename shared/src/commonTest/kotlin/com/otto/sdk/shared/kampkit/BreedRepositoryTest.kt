@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.otto.sdk.shared.kampkit.db.Breed
 import com.otto.sdk.shared.kampkit.mock.ClockMock
 import com.otto.sdk.shared.kampkit.mock.DogApiMock
-import com.otto.sdk.shared.models.BreedRepository
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.StaticConfig
 import com.otto.sdk.shared.DatabaseHelper

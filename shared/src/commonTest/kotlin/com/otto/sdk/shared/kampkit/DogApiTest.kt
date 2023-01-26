@@ -1,6 +1,5 @@
 package com.otto.sdk.shared.kampkit
 
-import com.otto.sdk.shared.ktor.DogApiImpl
 import com.otto.sdk.shared.response.BreedResult
 import co.touchlab.kermit.LogWriter
 import co.touchlab.kermit.Logger
