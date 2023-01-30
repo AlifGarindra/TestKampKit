@@ -184,7 +184,7 @@ fun setUpWebView(){
   //Harusnya ambil Context dari punyanya host app
 
   var openUrl =  intent.getStringExtra("urlPPOB")
-  if(openUrl !== null){
+  if(openUrl != null){
     webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl)
   }else{
     // webView.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0895611439571")
@@ -231,11 +231,20 @@ fun setUpWebView(){
 
   @JavascriptInterface
   fun setWebviewLocalStorage(view:WebView){
-    val setWVStorage = "localStorage.setItem('device_id', '${getDeviceId()}');" +
-      "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
-      "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
-      "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
-      "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+    var openType =  intent.getStringExtra("type");
+    var setWVStorage:String;
+    if(openType == "openActivation"){
+      setWVStorage= "localStorage.setItem('device_id', '${getDeviceId()}');" +
+        "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
+        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
+        "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
+    }else {
+      setWVStorage = "localStorage.setItem('device_id', '${getDeviceId()}');" +
+        "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
+        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
+        "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
+        "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+    }
     // val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
     // val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
     // val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"

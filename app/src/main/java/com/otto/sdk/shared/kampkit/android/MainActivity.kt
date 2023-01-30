@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
     openActivationButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+        refreshStateSDK("uat")
       }
     })
 
@@ -296,8 +297,13 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
-        Log.d("userinfo", "onUserProfile: ${userInfo.balance}")
+        runOnUiThread{
+          val showError = Toast.makeText(this@MainActivity, UserInfoStatus.balance, Toast.LENGTH_SHORT)
+          showError.show()
+        }
+        Log.d("test1234", "onUserProfile: ${userInfo.balance}")
       }
+
     }
   }
 }
