@@ -35,13 +35,13 @@ class PpobApiImpl(
 
   //9bfb19b9-10e3-3168-9325-ed7073482160
 
-  override suspend fun getUserInfo(timeStamp:String,userToken:String,phoneNumber:String): HttpResponse {
+  override suspend fun getUserInfo(timeStamp:String,userToken:String,phoneNumber:String,xtrace:String): HttpResponse {
     return httpClient.get {
     headers{
       append(HttpHeaders.Authorization,"Bearer $userToken")
       append(HttpHeaders.ContentType,"application/json")
       append("X-TIMESTAMP",timeStamp)
-      append("X-TRACE-ID","531e427d-2c99-4305-8cbb-5fcfa323d2f4")
+      append("X-TRACE-ID",xtrace)
     }
       endpoint("/isimpel/v1/accounts/$phoneNumber")
     }

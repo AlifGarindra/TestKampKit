@@ -39,6 +39,7 @@ public class JavaScriptInterface {
     convertBase64StringToPdfAndStoreIt(base64Data);
   }
   public static String getBase64StringFromBlobUrl(String blobUrl) {
+    Log.d("test1234", "getBase64StringFromBlobUrl: "+ blobUrl);
     if(blobUrl.startsWith("blob")){
       return "javascript: var xhr = new XMLHttpRequest();" +
           "xhr.open('GET', '"+ blobUrl +"', true);" +
@@ -65,7 +66,7 @@ public class JavaScriptInterface {
     final int notificationId = 1;
     String currentDateTime = System.currentTimeMillis() +"";
     final File dwldsPath = new File(Environment.getExternalStoragePublicDirectory(
-        Environment.DIRECTORY_DOWNLOADS) + "/YourFileName_" + currentDateTime + "_.png");
+        Environment.DIRECTORY_DOWNLOADS) + "/PPOB-Receipt_" + currentDateTime + "_.png");
     byte[] pdfAsBytes = Base64.decode(base64PDf.replaceFirst("^data:image/png;base64,", ""), 0);
     FileOutputStream os;
     os = new FileOutputStream(dwldsPath, false);

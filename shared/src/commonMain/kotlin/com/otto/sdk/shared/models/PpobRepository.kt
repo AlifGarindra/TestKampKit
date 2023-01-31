@@ -27,10 +27,10 @@ class PpobRepository(
   //   return asyncUserInfo
   // }
 
-  fun fetchUserInfo(timeStamp:String,userToken:String,phoneNumber:String,onResponse:(Int,UserInfoResult)->Unit){
+  fun fetchUserInfo(timeStamp:String,userToken:String,phoneNumber:String,xtrace:String,onResponse:(Int,UserInfoResult)->Unit){
     val userInfoResponse : HttpResponse =  runBlocking {
       var userInfo = async {
-        ppobApi.getUserInfo(timeStamp,userToken,phoneNumber)
+        ppobApi.getUserInfo(timeStamp,userToken,phoneNumber,xtrace)
       }
       userInfo.await()
     }

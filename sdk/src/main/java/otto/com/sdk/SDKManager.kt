@@ -20,6 +20,7 @@ import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 // import io.sentry.Sentry
 import org.koin.android.ext.android.inject
+import java.util.UUID
 
 // data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) : AppCompatActivity()  {
@@ -124,13 +125,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
 
   fun useSandbox() : SDKManager{
     Constants.isSandbox = false
-    Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL} ")
+    Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL}")
     return this@SDKManager
   }
 
 
   private fun getUserInfo(onSuccess:(UserInfoStatus)->Unit){
-    // var userInfo : Unit
+    var xtrace :String = UUID.randomUUID().toString()
     try{
       checkFirstAuthLayer()
       checkSecondAuthLayer()
@@ -141,7 +142,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     try{
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
-      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,
+      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,xtrace,
       onResponse = {
        status,userInfo ->
         if(userInfo.meta!== null){
