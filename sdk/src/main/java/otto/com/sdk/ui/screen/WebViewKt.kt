@@ -62,7 +62,7 @@ fun setUpWebView(){
   webView= findViewById(R.id.webviewkt)
   // var userAgent = webView.settings.userAgentString
   // Log.d("useragent", "setUpWebView:$userAgent ")
-  webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+  // webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
   var webSettings : WebSettings = webView.settings
   webView.addJavascriptInterface(JavaScriptInterface(this), "Android")
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
