@@ -53,9 +53,9 @@ android {
 kotlin {
     // jvm()
     android()
-    ios()
+    // ios()
     // Note: iosSimulatorArm64 target requires that all dependencies have M1 support
-    iosSimulatorArm64()
+    // iosSimulatorArm64()
 
     sourceSets {
         all {
@@ -182,7 +182,7 @@ afterEvaluate{
                 afterEvaluate {
                     groupId = "id.ottodigital.sdk"
                     artifactId = "ppob.shared"
-                    version = "0.0.5"
+                    version = "0.0.6"
                     // artifact("$projectDir/libs/sharedkampkit.aar"){
                     //   classifier = "sharedkampkit"
                     //   extension = "aar"
