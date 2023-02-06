@@ -18,6 +18,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
@@ -39,7 +40,6 @@ public class JavaScriptInterface {
     convertBase64StringToPdfAndStoreIt(base64Data);
   }
   public static String getBase64StringFromBlobUrl(String blobUrl) {
-    Log.d("test1234", "getBase64StringFromBlobUrl: "+ blobUrl);
     if(blobUrl.startsWith("blob")){
       return "javascript: var xhr = new XMLHttpRequest();" +
           "xhr.open('GET', '"+ blobUrl +"', true);" +
@@ -60,9 +60,9 @@ public class JavaScriptInterface {
     }
     return "javascript: console.log('It is not a Blob URL');";
   }
+
   @SuppressLint("UnspecifiedImmutableFlag")
   private void convertBase64StringToPdfAndStoreIt(String base64PDf) throws IOException {
-    Log.e("BASE 64", base64PDf);
     final int notificationId = 1;
     String currentDateTime = System.currentTimeMillis() +"";
     final File dwldsPath = new File(Environment.getExternalStoragePublicDirectory(
@@ -86,7 +86,6 @@ public class JavaScriptInterface {
       }else {
         pendingIntent = PendingIntent.getActivity(context,
             1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
       }
 //      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
 //        pendingIntent = PendingIntent.getActivity(context,1, intent, PendingIntent.FLAG_MUTABLE);
@@ -109,23 +108,21 @@ public class JavaScriptInterface {
         }
 
       } else {
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder b = new NotificationCompat.Builder(context,CHANNEL_ID)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setWhen(System.currentTimeMillis())
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setSmallIcon(android.R.drawable.sym_action_chat)
-            //.setContentIntent(pendingIntent)
+//            .setContentIntent(pendingIntent)
             .setContentTitle("MY TITLE")
             .setContentText("MY TEXT CONTENT");
 
         if (notificationManager != null) {
+          b.setContentIntent(pendingIntent);
           notificationManager.notify(notificationId, b.build());
           Handler h = new Handler();
-          long delayInMilliseconds = 1000;
-          h.postDelayed(new Runnable() {
-            public void run() {
-              notificationManager.cancel(notificationId);
-            }
-          }, delayInMilliseconds);
+          long delayInMilliseconds = 500;
+          h.postDelayed(() -> notificationManager.cancel(notificationId), delayInMilliseconds);
         }
       }
     }

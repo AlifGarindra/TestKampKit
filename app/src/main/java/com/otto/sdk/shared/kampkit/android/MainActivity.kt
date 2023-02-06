@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.otto.sdk.shared.Constants
 import com.otto.sdk.shared.interfaces.GeneralListener
 import com.otto.sdk.shared.interfaces.UserInfoListener
 import com.otto.sdk.shared.kampkit.android.data.LocalUserToken
@@ -246,8 +247,8 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onError(status: ErrorStatus) {
-        val showError = Toast.makeText(this@MainActivity, status.message, Toast.LENGTH_SHORT)
-        showError.show()
+        // val showError = Toast.makeText(this@MainActivity, status.message, Toast.LENGTH_SHORT)
+        // showError.show()
       }
 
       override fun onClientTokenExpired() {

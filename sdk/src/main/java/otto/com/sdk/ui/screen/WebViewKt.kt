@@ -32,6 +32,7 @@ import otto.com.sdk.ui.data.nativeDo
 class WebViewKt : AppCompatActivity() {
   private val readStoragePermission = 11
   lateinit var webView : WebView
+  // lateinit var chromeV : String
   // private val postRepository : PostRepository by inject()
 
 
@@ -59,17 +60,17 @@ class WebViewKt : AppCompatActivity() {
 @SuppressLint("SetJavaScriptEnabled")
 fun setUpWebView(){
   webView= findViewById(R.id.webviewkt)
-  // webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+  // var userAgent = webView.settings.userAgentString
+  // Log.d("useragent", "setUpWebView:$userAgent ")
+  webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
   var webSettings : WebSettings = webView.settings
+  webView.addJavascriptInterface(JavaScriptInterface(this), "Android")
   webView.addJavascriptInterface(nativeDo(this,webView), "nativeDo")
   webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, contentLength ->
+    Log.d("blob", "setUpWebView: downloader called ")
     webView.loadUrl(JavaScriptInterface.getBase64StringFromBlobUrl(url))
   }
-
-
   webView.webViewClient = object : WebViewClient() {
-
-
     @TargetApi(Build.VERSION_CODES.N)
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
       Log.d("test1234", "shouldOverrideUrlLoading1: ")
@@ -131,6 +132,7 @@ fun setUpWebView(){
       if(url.startsWith(Constants.environtment.Ppob_Domain)){
         setWebviewLocalStorage(view!!)
       }
+      // Toast.makeText(this@WebViewKt,chromeV, Toast.LENGTH_SHORT).show()
       Log.d("test1234", "onPageFinished: $url")
       // var posts : Posts = postRepository.fetchFirstPost()
       var status = GeneralStatus
@@ -164,9 +166,7 @@ fun setUpWebView(){
       }
     }
   }
-
-  val userAgent = System.getProperty("http.agent")
-  webSettings.userAgentString = userAgent
+  webSettings.defaultTextEncodingName="utf-8"
   webSettings.javaScriptEnabled = true
   webSettings.setSupportZoom(true)
   webSettings.setAppCachePath(this.cacheDir.absolutePath)
@@ -179,8 +179,6 @@ fun setUpWebView(){
   webSettings.javaScriptCanOpenWindowsAutomatically = true
 
   webView.settings.pluginState = WebSettings.PluginState.ON
-  webView.addJavascriptInterface(JavaScriptInterface(applicationContext), "Android")
-
   //Harusnya ambil Context dari punyanya host app
 
   var openUrl =  intent.getStringExtra("urlPPOB")
@@ -231,20 +229,12 @@ fun setUpWebView(){
 
   @JavascriptInterface
   fun setWebviewLocalStorage(view:WebView){
-    var openType =  intent.getStringExtra("type");
-    var setWVStorage:String;
-    if(openType == "openActivation"){
-      setWVStorage= "localStorage.setItem('device_id', '${getDeviceId()}');" +
-        "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
-        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
-        "localStorage.setItem('client_token', '${UserAuth.clientToken}');"
-    }else {
-      setWVStorage = "localStorage.setItem('device_id', '${getDeviceId()}');" +
+    var setWVStorage:String = "localStorage.setItem('device_id', '${getDeviceId()}');" +
         "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
         "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
         "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
         "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
-    }
+
     // val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
     // val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
     // val outletName = "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"

@@ -124,7 +124,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   // }
 
   fun useSandbox() : SDKManager{
-    Constants.isSandbox = false
+    Constants.isSandbox = true
     Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL}")
     return this@SDKManager
   }
@@ -183,7 +183,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       networkChecking()
       UserAuth.userAccessToken = ""
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("type","openActivation")
+      // intent.putExtra("type","openActivation")
       context.startActivity(intent)
     }catch (e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
@@ -196,7 +196,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkSecondAuthLayer()
       networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
-      intent.putExtra("type","openPpob")
+      // intent.putExtra("type","openPpob")
       context.startActivity(intent)
     }catch (e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
@@ -210,7 +210,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       intent.putExtra("urlPPOB","${product}")
-      intent.putExtra("type","openPpob")
+      // intent.putExtra("type","openPpob")
       context.startActivity(intent)
     }catch (e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
