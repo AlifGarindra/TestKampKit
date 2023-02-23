@@ -14,7 +14,7 @@ class MainApp : Application() {
     super.onCreate()
     if(Build.VERSION.SDK_INT > 19 ){
       SDKManager.getInstance(this)
-
+        .useSandbox()
         .build()
     }
   }

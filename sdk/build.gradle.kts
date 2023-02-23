@@ -65,6 +65,8 @@ dependencies {
   // api(project(":shared"))
   // api("com.github.AlifGarindra.KampKitShared:kampkitshared:1.3.3")
   api("id.ottodigital.sdk:ppob.shared:0.0.6")
+  implementation ("com.google.code.gson:gson:2.10.1")
+  implementation("com.github.anggastudio:Printama:0.9.7")
   // api("com.alifg.libraries:kampkitshared:1.1.4")
   implementation(libs.bundles.app.ui)
   implementation(libs.multiplatformSettings.common)

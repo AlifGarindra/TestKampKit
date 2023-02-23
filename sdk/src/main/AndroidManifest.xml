@@ -14,6 +14,9 @@
   <uses-permission android:name="android.permission.READ_CLIPBOARD" />
   <uses-permission android:name="android.permission.WRITE_CLIPBOARD" />
   <uses-permission android:name="android.webkit.PermissionRequest" />
+  <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+  <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
   <uses-sdk
     android:minSdkVersion="19"
     tools:overrideLibrary="org.koin.androidx.compose,com.example.widget, androidx.compose.ui.platform, androidx.compose.material.icons, androidx.activity.compose, androidx.compose.ui.tooling, androidx.compose.ui.tooling.data, androidx.compose.material.ripple, androidx.compose.foundation, androidx.compose.animation, androidx.compose.foundation.layout, androidx.compose.ui.text, androidx.compose.ui.graphics, androidx.compose.ui.unit, androidx.compose.ui.util, androidx.compose.ui.geometry, androidx.compose.runtime.saveable, androidx.compose.animation.core,androidx.lifecycle.viewmodel.compose,androidx.compose.ui.tooling.preview"

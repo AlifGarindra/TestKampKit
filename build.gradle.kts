@@ -27,6 +27,7 @@ allprojects {
   repositories {
     google()
     mavenCentral()
+    maven { url = uri( "https://jitpack.io" )}
     // maven {
     //   name = "GitHubPackages"
     //   url = uri("https://maven.pkg.github.com/AlifGarindra/KampKitShared")
