@@ -40,7 +40,7 @@ private fun checkBluetooth(){
   val REQUEST_ENABLE_BT = 1 // Any integer value
 
 // Create a BluetoothAdapter object
-  val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+  val bluetoothManager = webview.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
 
 // Get a reference to the BluetoothAdapter
   val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
@@ -55,7 +55,7 @@ private fun checkBluetooth(){
       // Bluetooth is not enabled
       // Ask the user to turn it on
       val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-      startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+      (webview.context!! as Activity).startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
     } else {
       // Bluetooth is already enabled
       // Do whatever you want to do with Bluetooth
@@ -119,64 +119,21 @@ private fun checkBluetooth(){
   @RequiresApi(Build.VERSION_CODES.M)
   @JavascriptInterface
   fun onPrintHistory(data:String?,hargaJual:String? = "0"){
-    var customer_number : String = ""
-    var customer_name : String = ""
-    var customer_server : String = ""
-    var product : String = ""
-    var transaction_time : String = ""
-
-    var jElm: JsonElement = JsonParser.parseString(data)
-    var jObj : JsonObject = jElm.asJsonObject
 
     checkBluetooth()
-
-    for (i in jObj.entrySet()){
-      Log.d("test1234", "onPrintHistory:${i.key} ${i.value}")
-      when(i.key.toString()){
-        "product"->{
-          if(i.value.isJsonObject){
-             var productObj = i.value.asJsonObject
-            product = productObj.get("denom_name").asString
-          }
-        }
-        "transaction_attributes" ->{
-          if(i.value.isJsonObject){
-            var transAtt = i.value.asJsonObject
-            customer_number = transAtt.get("customer_number").asString
-            customer_name = transAtt.get("customer_name").asString
-            if(transAtt.has("server_id")){
-              customer_server = transAtt.get("server_id").asString
-            }
-
-          }
-        }
-        "transaction_confirmed_at" ->{
-          val dateString ="2023-02-22T15:58:26+07:00"
-          val formatter = DateTimeFormatterBuilder()
-            .appendPattern("d MMM yyyy - HH:mm")
-            .toFormatter(Locale.ENGLISH)
-          val dateTime = OffsetDateTime.parse(dateString).atZoneSameInstant(ZoneId.systemDefault()).format(formatter)
-          transaction_time = dateTime
-        }
-      }
-    }
+    var jElm: JsonElement = JsonParser.parseString(data)
+    var jObj : JsonObject = jElm.asJsonObject
+    var transArray = jObj.getAsJsonArray("transaction_array")
+    var translist = transArray.asList()
 
     Printama.showPrinterList(webview.context!! as FragmentActivity,{
       Printama.with(context,{printama ->
         printama.connect({
-          printama.printTextJustify("Nomor Pelanggan : ", customer_number)
-          if(customer_name!=""){
-            printama.printTextJustify("Nama Pelanggan : ", customer_name)
-          }
-          if(customer_server!=""){
-            printama.printTextJustify("Server ID : ", customer_server)
-          }
-          printama.printTextJustify("Produk : ", product)
-          printama.addNewLine()
-          printama.printTextJustify("Waktu : ", transaction_time)
-          if(hargaJual != ""){
-            printama.addNewLine(2)
-            printama.printTextJustify("Total Harga : ", "Rp "+ hargaJual)
+          for(i in translist){
+            var iObj = i.asJsonObject
+            var title = iObj.get("title").asString
+            var value = iObj.get("value").asString
+            printama.printTextJustify("$title : ",value)
           }
           printama.setNormalText()
           printama.feedPaper()
@@ -185,6 +142,112 @@ private fun checkBluetooth(){
         })
       })
     })
+
+
+    // OLD CODES
+    // var customer_number : String = ""
+    // var customer_name : String = ""
+    // var customer_server : String = ""
+    // var period : String = ""
+    // var member_total = ""
+    // var product : String = ""
+    // var transaction_time : String = ""
+    //
+    // var jElm: JsonElement = JsonParser.parseString(data)
+    // var jObj : JsonObject = jElm.asJsonObject
+
+    // for (i in jObj.entrySet()){
+    //   Log.d("test1234", "onPrintHistory:${i.key} ${i.value}")
+    //   when(i.key.toString()){
+    //     "product"->{
+    //       if(i.value.isJsonObject){
+    //          var productObj = i.value.asJsonObject
+    //         product = productObj.get("denom_name").asString
+    //       }
+    //     }
+    //     "transaction_attributes" ->{
+    //       if(i.value.isJsonObject){
+    //         var transAtt = i.value.asJsonObject
+    //         customer_number = transAtt.get("customer_number").asString
+    //         customer_name = transAtt.get("customer_name").asString
+    //         if(transAtt.has("server_id")){
+    //           customer_server = transAtt.get("server_id").asString
+    //         }
+    //         if(transAtt.has("period")){
+    //           period = transAtt.get("period").asString
+    //         }
+    //         if(transAtt.has("member_total")){
+    //           member_total = transAtt.get("member_total").asString
+    //         }
+    //
+    //       }
+    //     }
+    //     "transaction_confirmed_at" ->{
+    //       val dateString = i.value.asString
+    //       val formatter = DateTimeFormatterBuilder()
+    //         .appendPattern("d MMM yyyy - HH:mm")
+    //         .toFormatter(Locale.ENGLISH)
+    //       val dateTime = OffsetDateTime.parse(dateString).atZoneSameInstant(ZoneId.systemDefault()).format(formatter)
+    //       transaction_time = dateTime
+    //     }
+    //   }
+    // }
+
+
+
+    // Printama.showPrinterList(webview.context!! as FragmentActivity,{
+    //   Printama.with(context,{printama ->
+    //     printama.connect({
+    //       if(customer_number!=""){
+    //         var chunkedNumber = customer_number.chunked(20)
+    //         printama.printTextJustify("Nomor : ", chunkedNumber[0])
+    //         for(i in chunkedNumber){
+    //           if(chunkedNumber.indexOf(i) != 0){
+    //             printama.addNewLine()
+    //             printama.printText(i,Printama.RIGHT)
+    //           }
+    //       }
+    //         printama.addNewLine()
+    //       }
+    //
+    //       if(customer_name!=""){
+    //         var chunkedName = customer_name.chunked(20)
+    //         printama.printTextJustify("Nama : ",chunkedName[0])
+    //         for(i in chunkedName){
+    //           if(chunkedName.indexOf(i) != 0){
+    //             printama.addNewLine()
+    //             printama.printText(i,Printama.RIGHT)
+    //           }
+    //         }
+    //         printama.addNewLine()
+    //       }
+    //
+    //       if(customer_server!=""){
+    //         printama.printTextJustify("Server ID : ", customer_server)
+    //       }
+    //       if(period!=""){
+    //         printama.printTextJustify("Jml Bulan : ", period)
+    //       }
+    //       if(member_total!=""){
+    //         printama.printTextJustify("Jml Peserta : ", member_total)
+    //       }
+    //       if(product != ""){
+    //         printama.printTextJustify("Produk : ", product)
+    //       }
+    //       if(transaction_time!= ""){
+    //         printama.printTextJustify("Waktu : ", transaction_time)
+    //       }
+    //       if(hargaJual != ""){
+    //         printama.addNewLine(2)
+    //         printama.printTextJustify("Total Harga : ", "Rp "+ hargaJual)
+    //       }
+    //       printama.setNormalText()
+    //       printama.feedPaper()
+    //       printama.close()
+    //     },{
+    //     })
+    //   })
+    // })
 
 
 

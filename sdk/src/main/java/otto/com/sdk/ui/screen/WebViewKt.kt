@@ -10,13 +10,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -41,6 +41,9 @@ class WebViewKt : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_webview_kt)
     requestPhonePermissions()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      bluetoothPhonePermissions()
+    }
     setUpWebView()
     }
 
@@ -190,6 +193,20 @@ fun setUpWebView(){
   }
 }
 
+
+  @RequiresApi(Build.VERSION_CODES.S)
+  private fun bluetoothPhonePermissions(){
+    val permission2 = ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+    if (permission2 != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(
+        this,
+        arrayOf( Manifest.permission.BLUETOOTH_SCAN,
+          Manifest.permission.BLUETOOTH_CONNECT,
+          Manifest.permission.BLUETOOTH_PRIVILEGED),
+        1
+      )
+    }
+  }
 
   private fun requestPhonePermissions() {
     if (ContextCompat.checkSelfPermission(this,
