@@ -278,7 +278,8 @@ fun setUpWebView(){
   }
 
   override fun onBackPressed(){
-    val script = "nativeBackPressed()"
+    val script = "if ( nativeBackPressed() !== undefined || nativeBackPressed() !== null  ){ nativeBackPressed() }else{ nativeDo.closeWebview()}"
+    // val script = "nativeDo.onUserAccessTokenExpired()"
     if(webView.url?.startsWith(Constants.environtment.Ppob_Domain) == true){
       webView.evaluateJavascript(script,null)
     }else{

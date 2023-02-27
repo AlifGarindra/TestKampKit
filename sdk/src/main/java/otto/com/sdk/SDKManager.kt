@@ -78,8 +78,10 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun setUserAccessToken(token:String? = null) : SDKManager {
     if(token != null){
       UserAuth.userAccessToken = token
-      getUserInfo{
-        generalListener?.onUserProfile(it)
+      if(token != ""){
+        getUserInfo{
+          generalListener?.onUserProfile(it)
+        }
       }
     }else{
       UserAuth.userAccessToken = ""

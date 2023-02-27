@@ -273,6 +273,7 @@ class MainActivity : AppCompatActivity() {
           SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
+          SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
         },{
           sharedPref!!.clearValue(phoneNumberInput.text.toString())
           PpobUser.userAccessToken = ""
