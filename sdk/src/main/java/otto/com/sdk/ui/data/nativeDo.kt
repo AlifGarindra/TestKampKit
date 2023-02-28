@@ -134,6 +134,7 @@ private fun checkBluetooth(){
             var title = iObj.get("title").asString
             var value = iObj.get("value").asString
             printama.printTextJustify("$title : ",value)
+            printama.addNewLine()
           }
           printama.setNormalText()
           printama.feedPaper()

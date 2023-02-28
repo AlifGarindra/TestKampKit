@@ -78,11 +78,9 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun setUserAccessToken(token:String? = null) : SDKManager {
     if(token != null){
       UserAuth.userAccessToken = token
-      if(token != ""){
         getUserInfo{
           generalListener?.onUserProfile(it)
         }
-      }
     }else{
       UserAuth.userAccessToken = ""
     }
@@ -138,44 +136,40 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       networkChecking()
-    }catch(e:Exception){
-      onErrorHandler("sdk",e.message.toString(),e.message.toString())
-    }
-    try{
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
       ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,xtrace,
-      onResponse = {
-       status,userInfo ->
-        if(userInfo.meta!== null){
-          meta = userInfo.meta!!
-        }
-        when(status){
-         200 ->{
-           if(userInfo.account !== null){
-             UserInfoStatus.accountId = userInfo.account!!.account_id!!
-             UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
-             UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
-             onSuccess(UserInfoStatus)
-           }
-         }
-         401->{
-           if(meta?.code!= null){
-             if(meta?.code == "01"){
-               generalListener?.onUserAccessTokenExpired()
-             }
-             else{
-               onErrorHandler("http", meta!!.code!!, meta!!.message!!)
-             }
-           }
-         }
-         else->{
-           onErrorHandler("http",meta!!.code!!,meta!!.message!!)
-         }
-       }
-      })
+        onResponse = {
+            status,userInfo ->
+          if(userInfo.meta!== null){
+            meta = userInfo.meta!!
+          }
+          when(status){
+            200 ->{
+              if(userInfo.account !== null){
+                UserInfoStatus.accountId = userInfo.account!!.account_id!!
+                UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
+                UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+                onSuccess(UserInfoStatus)
+              }
+            }
+            401->{
+              if(meta?.code!= null){
+                if(meta?.code == "01"){
+                  generalListener?.onUserAccessTokenExpired()
+                }
+                else{
+                  onErrorHandler("http", meta!!.code!!, meta!!.message!!)
+                }
+              }
+            }
+            else->{
+              onErrorHandler("http",meta!!.code!!,meta!!.message!!)
+            }
+          }
+        })
     }catch(e:Exception){
-      onErrorHandler("http",e.message.toString(),e.message.toString())
+      onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
   }
 
