@@ -34,7 +34,8 @@
         android:resource="@xml/provider_paths"/>
     </provider>
     <activity
-        android:name=".ui.screen.WebViewKt"
+      android:launchMode="singleTask"
+      android:name=".ui.screen.WebViewKt"
       android:windowSoftInputMode="adjustPan"
       android:exported="false" />
 

@@ -184,12 +184,20 @@ fun setUpWebView(){
   webView.settings.pluginState = WebSettings.PluginState.ON
   //Harusnya ambil Context dari punyanya host app
 
+  var headers: MutableMap<String, String> = HashMap()
+  headers["PHONE-NUMBER"] = UserAuth.phoneNumber
+  headers["DEVICE-ID"] = getDeviceId()
+  headers["OUTLET-NAME"] = UserAuth.outletName
+  headers["CLIENT-TOKEN"] = UserAuth.clientToken
+  headers["USER-ACCESS-TOKEN"] = UserAuth.userAccessToken
+
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl != null){
-    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl)
+    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl,headers)
   }else{
     // webView.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0895611439571")
-    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug)
+    webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug,headers)
+
   }
 }
 
@@ -247,10 +255,10 @@ fun setUpWebView(){
   @JavascriptInterface
   fun setWebviewLocalStorage(view:WebView){
     var setWVStorage:String = "localStorage.setItem('device_id', '${getDeviceId()}');" +
-        "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
-        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
-        "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
-        "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
+        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
+        // "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
+        // "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
+        // "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
 
     // val deviceId = "localStorage.setItem('device_id', '${getDeviceId()}');"
     // val phoneNumber = "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');"
@@ -278,16 +286,22 @@ fun setUpWebView(){
   }
 
   override fun onBackPressed(){
-    val script = "if ( nativeBackPressed() !== undefined || nativeBackPressed() !== null  ){ nativeBackPressed() }else{ nativeDo.closeWebview()}"
+    // val script = "if ( nativeBackPressed !== undefined || nativeBackPressed !== null ){ nativeBackPressed() }else{ nativeDo.closeWebview()}"
+    val script = "try{nativeBackPressed()}catch(err){nativeDo.closeWebview()}"
     // val script = "nativeDo.onUserAccessTokenExpired()"
-    if(webView.url?.startsWith(Constants.environtment.Ppob_Domain) == true){
-      webView.evaluateJavascript(script,null)
-    }else{
-      if(webView.canGoBack()){
-        webView.goBack()
-      }else{
-        finish()
+    try {
+      SDKManager.getInstance(this@WebViewKt).networkChecking()
+      if(webView.url?.startsWith(Constants.environtment.Ppob_Domain) == true){
+        webView.evaluateJavascript(script,null)
+      }else {
+        if (webView.canGoBack()) {
+          webView.goBack()
+        } else {
+          finish()
+        }
       }
+    }catch (e:Exception){
+      finish()
     }
   }
 }

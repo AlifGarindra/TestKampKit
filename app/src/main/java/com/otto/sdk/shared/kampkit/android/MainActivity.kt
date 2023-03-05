@@ -59,7 +59,10 @@ class MainActivity : AppCompatActivity() {
   fun getUserInfo() {
     SDKManager.getInstance(this@MainActivity).userInfoListener(object : UserInfoListener {
       override fun onUserInfo(userInfo: UserInfoStatus) {
-        Log.d("userinfo", "dariuserinfo:${userInfo.balance} ")
+        runOnUiThread{
+          val showError = Toast.makeText(this@MainActivity, userInfo.balance, Toast.LENGTH_SHORT)
+          showError.show()
+        }
       }
     })
   }
@@ -135,12 +138,19 @@ class MainActivity : AppCompatActivity() {
     openActivationButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
         refreshStateSDK("uat")
       }
     })
 
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
         SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
       }
     })
@@ -244,9 +254,11 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
+        getUserInfo()
       }
 
       override fun onError(status: ErrorStatus) {
+        Log.d("error1234", "${status.message} ${status.code}")
         // val showError = Toast.makeText(this@MainActivity, status.message, Toast.LENGTH_SHORT)
         // showError.show()
       }
@@ -254,7 +266,9 @@ class MainActivity : AppCompatActivity() {
       override fun onClientTokenExpired() {
         api!!.getClientToken{
           PpobUser.clientToken = it
-          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
+          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
+          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
+          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
           refreshStateApp("ct")
           refreshStateSDK("ct")
         }
@@ -270,14 +284,22 @@ class MainActivity : AppCompatActivity() {
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
           PpobUser.userAccessToken = userToken
           PpobUser.refreshToken = refreshToken
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
+          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
+          Log.d("test1234", "onUserAccessTokenExpired: openppob1 ")
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          Log.d("test1234", "onUserAccessTokenExpired: openppob2 ")
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          Log.d("test1234", "onUserAccessTokenExpired: openppob3 ")
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+
         },{
           sharedPref!!.clearValue(phoneNumberInput.text.toString())
           PpobUser.userAccessToken = ""
           PpobUser.refreshToken = ""
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken()
+          SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
           refreshStateApp("uat")
           refreshStateSDK("uat")
         })
@@ -291,9 +313,9 @@ class MainActivity : AppCompatActivity() {
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
           PpobUser.userAccessToken = userToken
           PpobUser.refreshToken = refreshToken
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
+          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
         }
       }
 
