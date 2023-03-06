@@ -139,7 +139,17 @@ private fun checkBluetooth(){
           }
           if(trans.has("transaction_state")){
             var transState = trans.get("transaction_state").asString
-            printama.printTextJustify("Status : ", transState)
+            var actualState = ""
+            if(transState == "PENDING"){
+              actualState = "Tertunda"
+            }
+            if(transState == "SUCCESS"){
+              actualState = "Berhasil"
+            }
+            if(transState == "FAILED"){
+              actualState = "Gagal"
+            }
+            printama.printTextJustify("Status : ", actualState)
             printama.addNewLine()
           }
           if(hargaJual != ""){
