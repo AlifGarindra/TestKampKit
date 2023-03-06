@@ -109,18 +109,9 @@ fun setUpWebView(){
 
 
     override fun onLoadResource(view: WebView, url: String) {
-      if(url.startsWith(Constants.environtment.Ppob_Domain)){
-        setWebviewLocalStorage(view!!)
-      }
-      // view.evaluateJavascript("localStorage.getItem('device_id')",{
-      //   Log.d("test1234", "loadresource:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
-      //   Log.d("test1234", "loadresource:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('client_token')",{
-      //   Log.d("test1234", "loadresource:$it ")
-      // })
+      // if(url.startsWith(Constants.environtment.Ppob_Domain)){
+      //   setWebviewLocalStorage(view!!)
+      // }
       try {
         SDKManager.getInstance(this@WebViewKt).networkChecking()
       }catch (e:Exception){
@@ -132,9 +123,9 @@ fun setUpWebView(){
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      if(url.startsWith(Constants.environtment.Ppob_Domain)){
-        setWebviewLocalStorage(view!!)
-      }
+      // if(url.startsWith(Constants.environtment.Ppob_Domain)){
+      //   setWebviewLocalStorage(view!!)
+      // }
       // Toast.makeText(this@WebViewKt,chromeV, Toast.LENGTH_SHORT).show()
       Log.d("test1234", "onPageFinished: $url")
       // var posts : Posts = postRepository.fetchFirstPost()
@@ -142,30 +133,14 @@ fun setUpWebView(){
       status.state = "success"
       status.message = ""
       generalListener?.onOpenPPOB(status)
-      // view.evaluateJavascript("localStorage.getItem('phone_number')",{
-      //   Log.d("test1234", "onPageFinished:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('client_token')",{
-      //   Log.d("test1234", "onPageFinished:$it ")
-      // })
-      // view.evaluateJavascript("localStorage.getItem('device_id')",{
-      //   Log.d("test1234", "onPageFinished:$it ")
-      // })
     }
 
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
       if (url != null) {
-        if(url.startsWith(Constants.environtment.Ppob_Domain)){
-          setWebviewLocalStorage(view!!)
-        }
-        // view!!.evaluateJavascript("localStorage.getItem('phone_number')",{
-        //   Log.d("test1234", "pagestarted:$it ")
-        // })
-        // view!!.evaluateJavascript("localStorage.getItem('client_token')",{
-        //   Log.d("test1234", "pagestarted:$it ")
-        // })
-        // Log.d("test123", "onPageStarted: $posts")
+        // if(url.startsWith(Constants.environtment.Ppob_Domain)){
+        //   setWebviewLocalStorage(view!!)
+        // }
       }
     }
   }
@@ -254,8 +229,8 @@ fun setUpWebView(){
 
   @JavascriptInterface
   fun setWebviewLocalStorage(view:WebView){
-    var setWVStorage:String = "localStorage.setItem('device_id', '${getDeviceId()}');" +
-        "localStorage.setItem('outlet_name', '${UserAuth.outletName}');"
+    // var setWVStorage:String = "localStorage.setItem('device_id', '${getDeviceId()}');" +
+    //     "localStorage.setItem('outlet_name', '${UserAuth.outletName}');" +
         // "localStorage.setItem('phone_number', '${UserAuth.phoneNumber}');" +
         // "localStorage.setItem('client_token', '${UserAuth.clientToken}');" +
         // "localStorage.setItem('user_access_token', '${UserAuth.userAccessToken}');"
@@ -269,20 +244,7 @@ fun setUpWebView(){
     //     Log.d("test1234", "setWebviewLocalStorage:$it ")
     //   })
 
-    view.evaluateJavascript(setWVStorage, null)
-
-      // webView.evaluateJavascript(phoneNumber,  {
-      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
-      // })
-      // webView.evaluateJavascript(outletName,  {
-      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
-      // })
-      // webView.evaluateJavascript(clientToken,  {
-      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
-      // })
-      // webView.evaluateJavascript(userAccessToken,  {
-      //   Log.d("test1234", "setWebviewLocalStorage:$it ")
-      // })
+    // view.evaluateJavascript(setWVStorage, null)
   }
 
   override fun onBackPressed(){
@@ -301,6 +263,10 @@ fun setUpWebView(){
         }
       }
     }catch (e:Exception){
+      ErrorStatus.type = "sdk"
+      ErrorStatus.code = e.message.toString()
+      ErrorStatus.message = e.message.toString()
+      generalListener?.onError(ErrorStatus)
       finish()
     }
   }
