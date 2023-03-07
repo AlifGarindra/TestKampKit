@@ -266,9 +266,12 @@ class MainActivity : AppCompatActivity() {
       override fun onClientTokenExpired() {
         api!!.getClientToken{
           PpobUser.clientToken = it
-          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
-          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
-          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openPpob(this@MainActivity)
+          SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
+          if(PpobUser.userAccessToken != ""){
+            SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+          }else{
+            SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+          }
           refreshStateApp("ct")
           refreshStateSDK("ct")
         }
