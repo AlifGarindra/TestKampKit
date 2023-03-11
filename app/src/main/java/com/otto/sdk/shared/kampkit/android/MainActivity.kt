@@ -2,6 +2,7 @@ package com.otto.sdk.shared.kampkit.android
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -137,21 +138,20 @@ class MainActivity : AppCompatActivity() {
 
     openActivationButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openActivation(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openActivation(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openActivation(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).openActivation(this@MainActivity)
         refreshStateSDK("uat")
       }
     })
 
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
-        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
       }
     })
 
@@ -188,8 +188,9 @@ class MainActivity : AppCompatActivity() {
 
     resetSessionButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).clearSDKSession()
-        refreshStateSDK()
+        // SDKManager.getInstance(this@MainActivity).clearSDKSession()
+        // refreshStateSDK()
+        getUserInfo()
       }
     })
   }
@@ -254,6 +255,8 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
+        Log.d("testsynchronous", "oncloseppob - getuserinfo")
+        Log.d("testsynchronous", "oncloseppob - getuserinfo")
         getUserInfo()
       }
 
@@ -264,12 +267,15 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClientTokenExpired() {
+        Log.d("testsynchronous", "onclienttokenexpired")
         api!!.getClientToken{
           PpobUser.clientToken = it
           SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
           if(PpobUser.userAccessToken != ""){
-            SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+            Log.d("testsynchronous", "onclienttokenexpired - buka ppob")
+              SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
           }else{
+            Log.d("testsynchronous", "onclienttokenexpired - open aktivasi")
             SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
           }
           refreshStateApp("ct")
@@ -280,6 +286,7 @@ class MainActivity : AppCompatActivity() {
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity, "token expired!", Toast.LENGTH_SHORT)
         showError.show()
+        Log.d("testsynchronous", "onuseraccesstokenexpired")
         api!!.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
             userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
@@ -291,12 +298,13 @@ class MainActivity : AppCompatActivity() {
           // SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
-          Log.d("test1234", "onUserAccessTokenExpired: openppob1 ")
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-          Log.d("test1234", "onUserAccessTokenExpired: openppob2 ")
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-          Log.d("test1234", "onUserAccessTokenExpired: openppob3 ")
-          SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          Log.d("testsynchronous", "onuseraccesstokenexpired - getuserinfonih")
+          getUserInfo()
+          Log.d("testsynchronous", "onuseraccesstokenexpired - setuseraccesstoken - open ppob")
+            SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          // Log.d("test1234", "onUserAccessTokenExpired: openppob3 ")
+          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
 
         },{
           sharedPref!!.clearValue(phoneNumberInput.text.toString())
@@ -323,6 +331,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
+        Log.d("testsynchronous", "onuserprofile")
         runOnUiThread{
           val showError = Toast.makeText(this@MainActivity, UserInfoStatus.balance, Toast.LENGTH_SHORT)
           showError.show()

@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -23,6 +24,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.otto.sdk.shared.localData.ErrorStatus
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import otto.com.sdk.SDKManager
 import java.time.LocalDateTime
@@ -35,6 +43,8 @@ import java.util.Locale
 class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() {
   var value : String = ""
   var generalListener = SDKManager.getInstance(context).generalListener
+var handler = Handler();
+  val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
 private fun checkBluetooth(){
   val REQUEST_ENABLE_BT = 1 // Any integer value
@@ -78,14 +88,68 @@ private fun checkBluetooth(){
   @JavascriptInterface
   fun copyToClipBoard(text:String?){
     Log.d("test1234", "copyToClipBoard:$text ")
-    try{
-      var clipBoard : ClipboardManager = webview.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-      var clip : ClipData = ClipData.newPlainText("fromwebview",text!!)
-      clipBoard.setPrimaryClip(clip)
-      Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
-    }catch (e:Exception){
-      Log.d("test1234", "copyToClipBoard:$e ")
-    }
+    // generalListener?.onUserAccessTokenExpired()
+    // generalListener?.onClientTokenExpired()
+    // Log.d("testsynchronous", "tutupwebview")
+    // (webview.context!! as Activity).finish()
+    // runBlocking {
+    //   generalListener?.onUserAccessTokenExpired()
+    //   generalListener?.onClientTokenExpired()
+    //   Log.d("testsynchronous", "habisiniclose")
+    //   (webview.context!! as Activity).finish()
+    // }
+    // coroutineScope.launch(Dispatchers.IO) {
+      // runBlocking {
+      //   withContext(Dispatchers.Main) {
+      //     generalListener?.onUserAccessTokenExpired()
+      //   }
+      // }
+      // runBlocking {
+      //   withContext(Dispatchers.Main) {
+      //     generalListener?.onClientTokenExpired()
+      //   }
+      // }
+      // runBlocking {
+      //   withContext(Dispatchers.Main) {
+      //     Log.d("testsynchronous", "habisiniclose")
+      //     (webview.context!! as Activity).finish()
+      //
+      //   }
+      // runBlocking {
+      //   withContext(Dispatchers.Main) {
+      //     generalListener?.onUserAccessTokenExpired()
+      //     generalListener?.onClientTokenExpired()
+      //     Log.d("testsynchronous", "habisiniclose")
+      //     (webview.context!! as Activity).finish()
+      //   }
+      //   }
+      // val deferred1 = CompletableDeferred<Unit>()
+      // val deferred2 = CompletableDeferred<Unit>()
+      //
+      // withContext(Dispatchers.Main) {
+      //   generalListener?.onUserAccessTokenExpired()
+      //   deferred1.complete(Unit)
+      // }
+      // withContext(Dispatchers.Main) {
+      //   generalListener?.onUserAccessTokenExpired()
+      //   deferred2.complete(Unit)
+      // }
+      // generalListener?.onClientTokenExpired()
+      // deferred1.await()
+      // deferred1.await()
+      // // wait for the deferred to complete before continuing
+      // Log.d("testsynchronous", "habisiniclose")
+      // (webview.context!! as Activity).finish()
+    // }
+
+    // try{
+    //   var clipBoard : ClipboardManager = webview.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    //   var clip : ClipData = ClipData.newPlainText("fromwebview",text!!)
+    //   clipBoard.setPrimaryClip(clip)
+    //   Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+    // }catch (e:Exception){
+    //   Log.d("test1234", "copyToClipBoard:$e ")
+    // }
   }
 
   @JavascriptInterface

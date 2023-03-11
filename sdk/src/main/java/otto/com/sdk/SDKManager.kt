@@ -78,7 +78,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun setUserAccessToken(token:String? = null) : SDKManager {
     if(token != null){
       UserAuth.userAccessToken = token
-        getUserInfo{
+        getUserInfo("setuseraccesstoken"){
           generalListener?.onUserProfile(it)
         }
     }else{
@@ -130,7 +130,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
 
-  private fun getUserInfo(onSuccess:(UserInfoStatus)->Unit){
+  private fun getUserInfo(from:String,onSuccess:(UserInfoStatus)->Unit){
     var xtrace :String = UUID.randomUUID().toString()
     try{
       checkFirstAuthLayer()
@@ -156,6 +156,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
             401->{
               if(meta?.code!= null){
                 if(meta?.code == "01"){
+                  Log.d("testsynchronous", "kena expired dari${from}")
                   generalListener?.onUserAccessTokenExpired()
                 }
                 else{
@@ -242,7 +243,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun userInfoListener(listener : UserInfoListener){
-    getUserInfo {
+    getUserInfo("getuserinfo") {
       listener?.onUserInfo(it)
     }
   }
