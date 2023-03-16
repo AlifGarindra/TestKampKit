@@ -33,6 +33,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import otto.com.sdk.SDKManager
+import otto.com.sdk.static.userTokenTask.inProgress
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -88,68 +89,14 @@ private fun checkBluetooth(){
   @JavascriptInterface
   fun copyToClipBoard(text:String?){
     Log.d("test1234", "copyToClipBoard:$text ")
-    // generalListener?.onUserAccessTokenExpired()
-    // generalListener?.onClientTokenExpired()
-    // Log.d("testsynchronous", "tutupwebview")
-    // (webview.context!! as Activity).finish()
-    // runBlocking {
-    //   generalListener?.onUserAccessTokenExpired()
-    //   generalListener?.onClientTokenExpired()
-    //   Log.d("testsynchronous", "habisiniclose")
-    //   (webview.context!! as Activity).finish()
-    // }
-    // coroutineScope.launch(Dispatchers.IO) {
-      // runBlocking {
-      //   withContext(Dispatchers.Main) {
-      //     generalListener?.onUserAccessTokenExpired()
-      //   }
-      // }
-      // runBlocking {
-      //   withContext(Dispatchers.Main) {
-      //     generalListener?.onClientTokenExpired()
-      //   }
-      // }
-      // runBlocking {
-      //   withContext(Dispatchers.Main) {
-      //     Log.d("testsynchronous", "habisiniclose")
-      //     (webview.context!! as Activity).finish()
-      //
-      //   }
-      // runBlocking {
-      //   withContext(Dispatchers.Main) {
-      //     generalListener?.onUserAccessTokenExpired()
-      //     generalListener?.onClientTokenExpired()
-      //     Log.d("testsynchronous", "habisiniclose")
-      //     (webview.context!! as Activity).finish()
-      //   }
-      //   }
-      // val deferred1 = CompletableDeferred<Unit>()
-      // val deferred2 = CompletableDeferred<Unit>()
-      //
-      // withContext(Dispatchers.Main) {
-      //   generalListener?.onUserAccessTokenExpired()
-      //   deferred1.complete(Unit)
-      // }
-      // withContext(Dispatchers.Main) {
-      //   generalListener?.onUserAccessTokenExpired()
-      //   deferred2.complete(Unit)
-      // }
-      // generalListener?.onClientTokenExpired()
-      // deferred1.await()
-      // deferred1.await()
-      // // wait for the deferred to complete before continuing
-      // Log.d("testsynchronous", "habisiniclose")
-      // (webview.context!! as Activity).finish()
-    // }
-
-    // try{
-    //   var clipBoard : ClipboardManager = webview.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    //   var clip : ClipData = ClipData.newPlainText("fromwebview",text!!)
-    //   clipBoard.setPrimaryClip(clip)
-    //   Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
-    // }catch (e:Exception){
-    //   Log.d("test1234", "copyToClipBoard:$e ")
-    // }
+    try{
+      var clipBoard : ClipboardManager = webview.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+      var clip : ClipData = ClipData.newPlainText("fromwebview",text!!)
+      clipBoard.setPrimaryClip(clip)
+      Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
+    }catch (e:Exception){
+      Log.d("test1234", "copyToClipBoard:$e ")
+    }
   }
 
   @JavascriptInterface
@@ -170,7 +117,7 @@ private fun checkBluetooth(){
 
   @JavascriptInterface
   fun onUserAccessTokenExpired(){
-      generalListener?.onUserAccessTokenExpired()
+   SDKManager.getInstance(context).shouldNotifyExpired()
     (webview.context!! as Activity).finish()
   }
 

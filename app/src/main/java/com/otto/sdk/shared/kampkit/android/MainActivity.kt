@@ -188,9 +188,9 @@ class MainActivity : AppCompatActivity() {
 
     resetSessionButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        // SDKManager.getInstance(this@MainActivity).clearSDKSession()
-        // refreshStateSDK()
-        getUserInfo()
+        SDKManager.getInstance(this@MainActivity).clearSDKSession()
+        refreshStateSDK()
+        // getUserInfo()
       }
     })
   }
@@ -255,8 +255,9 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
-        Log.d("testsynchronous", "oncloseppob - getuserinfo")
-        Log.d("testsynchronous", "oncloseppob - getuserinfo")
+        Log.d("testsynchronous", "oncloseppob - getuserinfo 1")
+        getUserInfo()
+        Log.d("testsynchronous", "oncloseppob - getuserinfo 2")
         getUserInfo()
       }
 
@@ -298,7 +299,9 @@ class MainActivity : AppCompatActivity() {
           // SDKManager.getInstance(this@MainActivity).setUserAccessToken(userToken)
           refreshStateApp("uat")
           refreshStateSDK("uat")
-          Log.d("testsynchronous", "onuseraccesstokenexpired - getuserinfonih")
+          Log.d("testsynchronous", "onuseraccesstokenexpired - getuserinfonih 1")
+          getUserInfo()
+          Log.d("testsynchronous", "onuseraccesstokenexpired - getuserinfonih 2")
           getUserInfo()
           Log.d("testsynchronous", "onuseraccesstokenexpired - setuseraccesstoken - open ppob")
             SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)

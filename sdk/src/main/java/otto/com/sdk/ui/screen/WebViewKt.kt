@@ -3,6 +3,7 @@ package otto.com.sdk.ui.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.http.SslError
@@ -10,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebResourceRequest
@@ -39,13 +41,27 @@ class WebViewKt : AppCompatActivity() {
   var generalListener : GeneralListener? = SDKManager.getInstance(this).generalListener
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Log.d("testsynchronous", "onCreate: jalan")
     setContentView(R.layout.activity_webview_kt)
     requestPhonePermissions()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
       bluetoothPhonePermissions()
     }
     setUpWebView()
+    Log.d("testsynchronous", "onCreate selesai: jalan")
     }
+
+  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+  override fun onNewIntent(intent: Intent?) {
+    super.onNewIntent(intent)
+    Log.d("testsynchronous", "onNewIntent: jalan ")
+    requestPhonePermissions()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      bluetoothPhonePermissions()
+    }
+    setUpWebView()
+    Log.d("testsynchronous", "onNewIntent - selesai: jalan ")
+  }
 
   override fun onDestroy() {
     webView.evaluateJavascript("localStorage.clear()",{
@@ -165,7 +181,7 @@ fun setUpWebView(){
   headers["OUTLET-NAME"] = UserAuth.outletName
   headers["CLIENT-TOKEN"] = UserAuth.clientToken
   headers["USER-ACCESS-TOKEN"] = UserAuth.userAccessToken
-
+  Log.d("testsynchronous", "headers - uat: ${UserAuth.userAccessToken} ")
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl != null){
     webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl,headers)

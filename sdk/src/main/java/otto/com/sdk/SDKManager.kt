@@ -20,6 +20,7 @@ import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 // import io.sentry.Sentry
 import org.koin.android.ext.android.inject
+import otto.com.sdk.static.userTokenTask.inProgress
 import java.util.UUID
 
 // data class Config(val clientKey: String)
@@ -84,6 +85,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }else{
       UserAuth.userAccessToken = ""
     }
+    Log.d("testsynchronous", "setUserAccessToken: selesai update uat ")
     return this@SDKManager
   }
 
@@ -150,6 +152,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
                 UserInfoStatus.accountId = userInfo.account!!.account_id!!
                 UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
                 UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+                inProgress = false
                 onSuccess(UserInfoStatus)
               }
             }
@@ -157,7 +160,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
               if(meta?.code!= null){
                 if(meta?.code == "01"){
                   Log.d("testsynchronous", "kena expired dari${from}")
-                  generalListener?.onUserAccessTokenExpired()
+                 shouldNotifyExpired()
                 }
                 else{
                   onErrorHandler("http", meta!!.code!!, meta!!.message!!)
@@ -187,10 +190,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
+
+
   fun openPpob(context:Context) {
     try {
       checkFirstAuthLayer()
-      checkSecondAuthLayer()
       networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       // intent.putExtra("type","openPpob")
@@ -203,7 +207,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun openProduct(context:Context,product:String){
     try {
       checkFirstAuthLayer()
-      checkSecondAuthLayer()
       networkChecking()
       var intent = Intent(mContext,WebViewKt::class.java)
       intent.putExtra("urlPPOB","${product}")
@@ -248,6 +251,15 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
+ fun shouldNotifyExpired(){
+  if(inProgress == true){
+    Log.d("testsynchronous", "shouldNotifyExpired - Blocked ")
+  }else{
+    Log.d("testsynchronous", "shouldNotifyExpired - Called ")
+    inProgress = true
+    generalListener?.onUserAccessTokenExpired()
+  }
+}
 
   fun clearSDKSession(){
     UserAuth.reset()
