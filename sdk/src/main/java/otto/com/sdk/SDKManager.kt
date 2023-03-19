@@ -20,7 +20,9 @@ import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 // import io.sentry.Sentry
 import org.koin.android.ext.android.inject
+import otto.com.sdk.static.userTokenTask.expiredUat
 import otto.com.sdk.static.userTokenTask.inProgress
+import otto.com.sdk.static.userTokenTask.userInfoRunning
 import java.util.UUID
 
 // data class Config(val clientKey: String)
@@ -79,9 +81,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun setUserAccessToken(token:String? = null) : SDKManager {
     if(token != null){
       UserAuth.userAccessToken = token
+      if(userInfoRunning != true){
         getUserInfo("setuseraccesstoken"){
           generalListener?.onUserProfile(it)
         }
+      }
     }else{
       UserAuth.userAccessToken = ""
     }
@@ -138,40 +142,52 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       networkChecking()
+      var userAccessToken = UserAuth.userAccessToken
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
-      ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,xtrace,
-        onResponse = {
-            status,userInfo ->
-          if(userInfo.meta!== null){
-            meta = userInfo.meta!!
-          }
-          when(status){
-            200 ->{
-              if(userInfo.account !== null){
-                UserInfoStatus.accountId = userInfo.account!!.account_id!!
-                UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
-                UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
-                inProgress = false
-                onSuccess(UserInfoStatus)
-              }
+      if(userAccessToken == expiredUat){
+        Log.d("testsynchronous", "getUserInfo: blocked - ${userAccessToken} ")
+      }else{
+        userInfoRunning = true
+        Log.d("testsynchronous", "getUserInfo: ${userInfoRunning} ")
+        ppobRepository.fetchUserInfo("${nowdate}",userAccessToken,UserAuth.phoneNumber,xtrace,
+          onResponse = {
+              status,userInfo ->
+            userInfoRunning = false
+            Log.d("testsynchronous", "getUserInfo: ${userInfoRunning} ")
+            if(userInfo.meta!== null){
+              meta = userInfo.meta!!
             }
-            401->{
-              if(meta?.code!= null){
-                if(meta?.code == "01"){
-                  Log.d("testsynchronous", "kena expired dari${from}")
-                 shouldNotifyExpired()
-                }
-                else{
-                  onErrorHandler("http", meta!!.code!!, meta!!.message!!)
+            when(status){
+              200 ->{
+                if(userInfo.account !== null){
+                  UserInfoStatus.accountId = userInfo.account!!.account_id!!
+                  UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
+                  UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
+                  inProgress = false
+                  expiredUat = ""
+                  onSuccess(UserInfoStatus)
                 }
               }
+              401->{
+                if(meta?.code!= null){
+                  if(meta?.code == "01"){
+                    Log.d("testsynchronous", "kena expired dari${from}")
+                    expiredUat = userAccessToken
+                    shouldNotifyExpired()
+                  }
+                  else{
+                    onErrorHandler("http", meta!!.code!!, meta!!.message!!)
+                  }
+                }
+              }
+              else->{
+                onErrorHandler("http",meta!!.code!!,meta!!.message!!)
+              }
             }
-            else->{
-              onErrorHandler("http",meta!!.code!!,meta!!.message!!)
-            }
-          }
-        })
+          })
+      }
+
     }catch(e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
@@ -246,16 +262,19 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun userInfoListener(listener : UserInfoListener){
-    getUserInfo("getuserinfo") {
-      listener?.onUserInfo(it)
+    if(userInfoRunning != true){
+      getUserInfo("getuserinfo") {
+        listener?.onUserInfo(it)
+      }
     }
   }
 
  fun shouldNotifyExpired(){
+   var uat = UserAuth.userAccessToken
   if(inProgress == true){
-    Log.d("testsynchronous", "shouldNotifyExpired - Blocked ")
+    Log.d("testsynchronous", "shouldNotifyExpired - Blocked - ${uat} ")
   }else{
-    Log.d("testsynchronous", "shouldNotifyExpired - Called ")
+    Log.d("testsynchronous", "shouldNotifyExpired - Called - ${uat} ")
     inProgress = true
     generalListener?.onUserAccessTokenExpired()
   }
