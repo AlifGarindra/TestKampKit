@@ -17,29 +17,19 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.anggastudio.printama.Printama
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.otto.sdk.shared.localData.ErrorStatus
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import otto.com.sdk.SDKManager
-import otto.com.sdk.static.userTokenTask.inProgress
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.util.Locale
+import otto.com.sdk.static.userTokenTask
+
 
 class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() {
   var value : String = ""
@@ -117,7 +107,28 @@ private fun checkBluetooth(){
 
   @JavascriptInterface
   fun onUserAccessTokenExpired(){
-   SDKManager.getInstance(context).shouldNotifyExpired()
+    var counter = userTokenTask.failCounter
+    var timestamp = userTokenTask.failTimeStamp
+    val nowdate : Long = System.currentTimeMillis() / 1000
+    if(timestamp != null && timestamp <= nowdate){
+      userTokenTask.failCounter = 4
+      userTokenTask.inProgress = false
+      userTokenTask.failTimeStamp = null
+    }else{
+      if(counter == 0){
+        userTokenTask.failCounter = 4
+        userTokenTask.inProgress = false
+        userTokenTask.failTimeStamp = null
+      }
+    }
+    if(userTokenTask.inProgress && userTokenTask.failCounter != 4){
+      userTokenTask.failCounter = userTokenTask.failCounter - 1
+    }else{
+      userTokenTask.failCounter = userTokenTask.failCounter - 1
+      userTokenTask.inProgress = true
+      userTokenTask.failTimeStamp = nowdate + 10
+      generalListener?.onUserAccessTokenExpired()
+    }
     (webview.context!! as Activity).finish()
   }
 

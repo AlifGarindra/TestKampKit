@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity() {
   }
 
   override fun onResume() {
-    // refreshStateApp()
-    // refreshStateSDK()
     super.onResume()
   }
 
@@ -151,9 +149,6 @@ class MainActivity : AppCompatActivity() {
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         SDKManager.getInstance(this@MainActivity).setClientToken(clientTokenLabelSDK.text.toString()).setUserAccessToken(userAccessTokenLabelSDK.text.toString()).openPpob(this@MainActivity)
-        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-        // SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
       }
     })
 
@@ -255,7 +250,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
-        Log.d("testsynchronous", "oncloseppob - getuserinfo 2")
+        Log.d("testsynchronous", "oncloseppob - getuserinfo 1")
         getUserInfo()
       }
 
@@ -293,13 +288,13 @@ class MainActivity : AppCompatActivity() {
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
           PpobUser.userAccessToken = userToken
           PpobUser.refreshToken = refreshToken
+          Log.d("testsynchronous", "onuseraccesstokenexpired - get info 1 ")
+          getUserInfo()
           SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
+          Log.d("testsynchronous", "onuseraccesstokenexpired - get info 2 ")
+          getUserInfo()
           refreshStateApp("uat")
           refreshStateSDK("uat")
-          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-          // Log.d("test1234", "onUserAccessTokenExpired: openppob3 ")
-          // SDKManager.getInstance(this@MainActivity).setUserAccessToken(PpobUser.userAccessToken).openPpob(this@MainActivity)
-
         },{
           sharedPref!!.clearValue(phoneNumberInput.text.toString())
           PpobUser.userAccessToken = ""

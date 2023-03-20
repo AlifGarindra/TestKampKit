@@ -20,9 +20,7 @@ import org.koin.dsl.module
 import otto.com.sdk.ui.screen.WebViewKt
 // import io.sentry.Sentry
 import org.koin.android.ext.android.inject
-import otto.com.sdk.static.userTokenTask.expiredUat
-import otto.com.sdk.static.userTokenTask.inProgress
-import otto.com.sdk.static.userTokenTask.userInfoRunning
+import otto.com.sdk.static.userTokenTask
 import java.util.UUID
 
 // data class Config(val clientKey: String)
@@ -67,7 +65,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
 
-
   fun setOutletName(name:String) : SDKManager {
     UserAuth.outletName = name
     return this@SDKManager
@@ -81,7 +78,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   fun setUserAccessToken(token:String? = null) : SDKManager {
     if(token != null){
       UserAuth.userAccessToken = token
-      if(userInfoRunning != true){
+      if(userTokenTask.userInfoRunning != true){
         getUserInfo("setuseraccesstoken"){
           generalListener?.onUserProfile(it)
         }
@@ -145,16 +142,13 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       var userAccessToken = UserAuth.userAccessToken
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
-      if(userAccessToken == expiredUat){
-        Log.d("testsynchronous", "getUserInfo: blocked - ${userAccessToken} ")
-      }else{
-        userInfoRunning = true
-        Log.d("testsynchronous", "getUserInfo: ${userInfoRunning} ")
+        userTokenTask.userInfoRunning = true
+        Log.d("testsynchronous", "getUserInfo: ${userTokenTask.userInfoRunning} ")
         ppobRepository.fetchUserInfo("${nowdate}",userAccessToken,UserAuth.phoneNumber,xtrace,
           onResponse = {
               status,userInfo ->
-            userInfoRunning = false
-            Log.d("testsynchronous", "getUserInfo: ${userInfoRunning} ")
+            userTokenTask.userInfoRunning = false
+            Log.d("testsynchronous", "getUserInfo: ${userTokenTask.userInfoRunning} ")
             if(userInfo.meta!== null){
               meta = userInfo.meta!!
             }
@@ -164,8 +158,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
                   UserInfoStatus.accountId = userInfo.account!!.account_id!!
                   UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
                   UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
-                  inProgress = false
-                  expiredUat = ""
+                  userTokenTask.inProgress = false
                   onSuccess(UserInfoStatus)
                 }
               }
@@ -173,7 +166,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
                 if(meta?.code!= null){
                   if(meta?.code == "01"){
                     Log.d("testsynchronous", "kena expired dari${from}")
-                    expiredUat = userAccessToken
                     shouldNotifyExpired()
                   }
                   else{
@@ -186,8 +178,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
               }
             }
           })
-      }
-
     }catch(e:Exception){
       onErrorHandler("sdk",e.message.toString(),e.message.toString())
     }
@@ -262,20 +252,34 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   }
 
   fun userInfoListener(listener : UserInfoListener){
-    if(userInfoRunning != true){
+    if(userTokenTask.userInfoRunning != true){
       getUserInfo("getuserinfo") {
         listener?.onUserInfo(it)
       }
     }
   }
 
- fun shouldNotifyExpired(){
-   var uat = UserAuth.userAccessToken
-  if(inProgress == true){
-    Log.d("testsynchronous", "shouldNotifyExpired - Blocked - ${uat} ")
+ private fun shouldNotifyExpired(){
+   var counter = userTokenTask.failCounter
+   var timestamp = userTokenTask.failTimeStamp
+   val nowdate : Long = System.currentTimeMillis() / 1000
+   if(timestamp != null && timestamp <= nowdate){
+     userTokenTask.failCounter = 4
+     userTokenTask.inProgress = false
+     userTokenTask.failTimeStamp = null
+   }else{
+     if(counter == 0){
+       userTokenTask.failCounter = 4
+       userTokenTask.inProgress = false
+       userTokenTask.failTimeStamp = null
+     }
+   }
+  if(userTokenTask.inProgress && userTokenTask.failCounter != 4){
+    userTokenTask.failCounter = userTokenTask.failCounter - 1
   }else{
-    Log.d("testsynchronous", "shouldNotifyExpired - Called - ${uat} ")
-    inProgress = true
+    userTokenTask.failCounter = userTokenTask.failCounter - 1
+    userTokenTask.inProgress = true
+    userTokenTask.failTimeStamp = nowdate + 10
     generalListener?.onUserAccessTokenExpired()
   }
 }
