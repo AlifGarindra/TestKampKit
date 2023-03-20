@@ -111,22 +111,22 @@ private fun checkBluetooth(){
     var timestamp = userTokenTask.failTimeStamp
     val nowdate : Long = System.currentTimeMillis() / 1000
     if(timestamp != null && timestamp <= nowdate){
-      userTokenTask.failCounter = 4
+      userTokenTask.failCounter = 5
       userTokenTask.inProgress = false
       userTokenTask.failTimeStamp = null
     }else{
       if(counter == 0){
-        userTokenTask.failCounter = 4
+        userTokenTask.failCounter = 5
         userTokenTask.inProgress = false
         userTokenTask.failTimeStamp = null
       }
     }
-    if(userTokenTask.inProgress && userTokenTask.failCounter != 4){
+    if(userTokenTask.inProgress && userTokenTask.failCounter != 5){
       userTokenTask.failCounter = userTokenTask.failCounter - 1
     }else{
       userTokenTask.failCounter = userTokenTask.failCounter - 1
       userTokenTask.inProgress = true
-      userTokenTask.failTimeStamp = nowdate + 10
+      userTokenTask.failTimeStamp = nowdate + 20
       generalListener?.onUserAccessTokenExpired()
     }
     (webview.context!! as Activity).finish()

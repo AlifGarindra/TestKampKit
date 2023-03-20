@@ -90,42 +90,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     return this@SDKManager
   }
 
-
-  // fun trySentry(){
-  //   var status = object{
-  //     val helloWorld = "hellow"
-  //     val helloWorld2 = "hellow"
-  //   }
-  //   try {
-  //     // throw Exception()
-  //     val data = 20 / 0
-  //   } catch (e: Exception) {
-  //     Sentry.captureException(e)
-  //   }
-  // }
-
-  // fun testingHOC(integer: (Int) -> Unit){
-  //   integer(10)
-  // }
-  //
-  // fun getBalancePPOB() : String{
-  //   return "10000"
-  // }
-
-  // fun getPosts(resp:(Any)->(Unit)){
-  //   try{
-  //     var test = postRepository.fetchFirstPost()
-  //     resp(test)
-  //   }catch(e:Exception){
-  //     resp(e)
-  //   }
-  // }
-
-  // @SuppressLint("HardwareIds")
-  // fun getDeviceId() : String{
-  //   return Settings.Secure.getString( mContext.contentResolver,Settings.Secure.ANDROID_ID).toString()
-  // }
-
   fun useSandbox() : SDKManager{
     Constants.isSandbox = true
     Log.d("testsandbox", "useSandbox:${Constants.environtment.Base_URL}")
@@ -159,6 +123,8 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
                   UserInfoStatus.balance = userInfo.account?.balance_amount.toString()
                   UserInfoStatus.phoneNumber = userInfo.account!!.mobile_phone_number!!
                   userTokenTask.inProgress = false
+                  userTokenTask.failCounter = 5
+                  userTokenTask.failTimeStamp = null
                   onSuccess(UserInfoStatus)
                 }
               }
@@ -264,22 +230,22 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
    var timestamp = userTokenTask.failTimeStamp
    val nowdate : Long = System.currentTimeMillis() / 1000
    if(timestamp != null && timestamp <= nowdate){
-     userTokenTask.failCounter = 4
+     userTokenTask.failCounter = 5
      userTokenTask.inProgress = false
      userTokenTask.failTimeStamp = null
    }else{
      if(counter == 0){
-       userTokenTask.failCounter = 4
+       userTokenTask.failCounter = 5
        userTokenTask.inProgress = false
        userTokenTask.failTimeStamp = null
      }
    }
-  if(userTokenTask.inProgress && userTokenTask.failCounter != 4){
+  if(userTokenTask.inProgress && userTokenTask.failCounter != 5){
     userTokenTask.failCounter = userTokenTask.failCounter - 1
   }else{
     userTokenTask.failCounter = userTokenTask.failCounter - 1
     userTokenTask.inProgress = true
-    userTokenTask.failTimeStamp = nowdate + 10
+    userTokenTask.failTimeStamp = nowdate + 20
     generalListener?.onUserAccessTokenExpired()
   }
 }
