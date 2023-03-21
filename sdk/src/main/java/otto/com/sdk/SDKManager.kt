@@ -103,12 +103,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       checkFirstAuthLayer()
       checkSecondAuthLayer()
       networkChecking()
-      var userAccessToken = UserAuth.userAccessToken
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
         userTokenTask.userInfoRunning = true
         Log.d("testsynchronous", "getUserInfo: ${userTokenTask.userInfoRunning} ")
-        ppobRepository.fetchUserInfo("${nowdate}",userAccessToken,UserAuth.phoneNumber,xtrace,
+        ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,xtrace,
           onResponse = {
               status,userInfo ->
             userTokenTask.userInfoRunning = false

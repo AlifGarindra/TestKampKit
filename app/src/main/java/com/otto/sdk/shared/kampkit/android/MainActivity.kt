@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    Log.d("testsynchronous", "onCreate: ")
     if(Build.VERSION.SDK_INT > 19 ){
       api = PpobApi()
       setGeneralListener()
@@ -51,8 +52,28 @@ class MainActivity : AppCompatActivity() {
     // getUserInfo()
   }
 
+  override fun onStart() {
+    super.onStart()
+    Log.d("testsynchronous", "onStart: ")
+    if(Build.VERSION.SDK_INT > 19 ){
+      api = PpobApi()
+      setGeneralListener()
+      onLabelSet()
+      onPressButton()
+      sharedPref = SharedPref(this@MainActivity)
+    }
+  }
+
   override fun onResume() {
     super.onResume()
+    Log.d("testsynchronous", "onResume: ")
+    if(Build.VERSION.SDK_INT > 19 ){
+      api = PpobApi()
+      setGeneralListener()
+      onLabelSet()
+      onPressButton()
+      sharedPref = SharedPref(this@MainActivity)
+    }
   }
 
   fun getUserInfo() {
