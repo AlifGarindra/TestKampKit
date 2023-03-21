@@ -86,7 +86,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }else{
       UserAuth.userAccessToken = ""
     }
-    Log.d("testsynchronous", "setUserAccessToken: selesai update uat ")
     return this@SDKManager
   }
 
@@ -106,12 +105,10 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
       val nowdate : Long = System.currentTimeMillis() / 1000
       var meta : Meta? = null
         userTokenTask.userInfoRunning = true
-        Log.d("testsynchronous", "getUserInfo: ${userTokenTask.userInfoRunning} ")
         ppobRepository.fetchUserInfo("${nowdate}",UserAuth.userAccessToken,UserAuth.phoneNumber,xtrace,
           onResponse = {
               status,userInfo ->
             userTokenTask.userInfoRunning = false
-            Log.d("testsynchronous", "getUserInfo: ${userTokenTask.userInfoRunning} ")
             if(userInfo.meta!== null){
               meta = userInfo.meta!!
             }
@@ -130,7 +127,6 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
               401->{
                 if(meta?.code!= null){
                   if(meta?.code == "01"){
-                    Log.d("testsynchronous", "kena expired dari${from}")
                     shouldNotifyExpired()
                   }
                   else{
