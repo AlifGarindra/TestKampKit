@@ -1,6 +1,5 @@
 package otto.com.sdk.ui.data
 
-import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -8,9 +7,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Handler
 import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -23,18 +20,21 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.otto.sdk.shared.localData.ErrorStatus
+import com.otto.sdk.shared.localData.UserAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import org.json.JSONObject
+import otto.com.sdk.R
 import otto.com.sdk.SDKManager
 import otto.com.sdk.static.userTokenTask
-
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() {
   var value : String = ""
   var generalListener = SDKManager.getInstance(context).generalListener
-var handler = Handler();
   val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
 private fun checkBluetooth(){
@@ -110,6 +110,9 @@ private fun checkBluetooth(){
     var counter = userTokenTask.failCounter
     var timestamp = userTokenTask.failTimeStamp
     val nowdate : Long = System.currentTimeMillis() / 1000
+    Log.d("testsynchronous", "onUserAccessTokenExpired-fromwv - failtimestamp -  ${timestamp}")
+    Log.d("testsynchronous", "onUserAccessTokenExpired-fromwv - failcounter -  ${counter}")
+
     if(timestamp != null && timestamp <= nowdate){
       userTokenTask.failCounter = 5
       userTokenTask.inProgress = false
@@ -122,8 +125,10 @@ private fun checkBluetooth(){
       }
     }
     if(userTokenTask.inProgress && userTokenTask.failCounter != 5){
+      Log.d("testsynchronous", "onUserAccessTokenExpired-fromwv - inprogress and failcounter != 5")
       userTokenTask.failCounter = userTokenTask.failCounter - 1
     }else{
+      Log.d("testsynchronous", "onUserAccessTokenExpired-fromwv - running")
       userTokenTask.failCounter = userTokenTask.failCounter - 1
       userTokenTask.inProgress = true
       userTokenTask.failTimeStamp = nowdate + 20
@@ -141,44 +146,72 @@ private fun checkBluetooth(){
   @RequiresApi(Build.VERSION_CODES.M)
   @JavascriptInterface
   fun onPrintHistory(data:String?,hargaJual:String? = "0"){
-
     checkBluetooth()
     var jElm: JsonElement = JsonParser.parseString(data)
     var jObj : JsonObject = jElm.asJsonObject
     var trans = jObj.get("transaction").asJsonObject
-    var transArray = jObj.getAsJsonArray("transaction_array")
+    var refID = trans.get("wallet_reference_number").asString
+    var transArray = jObj.getAsJsonArray("transaction_receipt_new")
+    var locale = jObj.getAsJsonObject("locale")
     var translist = transArray.asList()
+    Log.d("test1234", "${jElm}")
+    val dateFormat = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+    val currentTime = Calendar.getInstance().time
+    val formattedTime = dateFormat.format(currentTime)
 
     Printama.showPrinterList(webview.context!! as FragmentActivity,{
       Printama.with(context,{printama ->
         printama.connect({
-          for(i in translist){
-            var iObj = i.asJsonObject
-            var title = iObj.get("title").asString
-            var value = iObj.get("value").asString
-            printama.printTextJustify("$title : ",value)
+          val LoreedoIsimpel = Printama.getBitmapFromVector(context, R.drawable.oreedo_isimpel)
+          printama.printImage(LoreedoIsimpel,Printama.FULL_WIDTH,Printama.CENTER)
+          printama.addNewLine()
+          if(refID != null || refID != ""){
+            printama.setSmallText()
+            printama.printText("Ref No: $refID",Printama.CENTER)
             printama.addNewLine()
           }
-          if(trans.has("transaction_state")){
-            var transState = trans.get("transaction_state").asString
-            var actualState = ""
-            if(transState == "PENDING"){
-              actualState = "Tertunda"
+          if(UserAuth.outletName != ""){
+              printama.printTextBold(UserAuth.outletName,Printama.CENTER)
+              printama.addNewLine()
             }
-            if(transState == "SUCCESS"){
-              actualState = "Berhasil"
-            }
-            if(transState == "FAILED"){
-              actualState = "Gagal"
-            }
-            printama.printTextJustify("Status : ", actualState)
+          if(locale!= null){
+            var product_type = locale.get("product_type").asString
+            printama.printTextBold(product_type,Printama.CENTER)
             printama.addNewLine()
+          }
+          printama.printText("Payment Receipt",Printama.CENTER)
+          printama.addNewLine()
+          for(i in translist){
+            printama.addNewLine(2)
+            var iObj = i.asJsonObject
+            Log.d("test1234", "keyset ${iObj.keySet()}")
+            var title = iObj.get("title").asString
+            var valueCheck = iObj.get("value").isJsonArray
+            printama.setSmallText()
+            printama.printText(title)
+            printama.addNewLine()
+            printama.setNormalText()
+            if(valueCheck){
+              var value = iObj.getAsJsonArray("value")
+              for(v in value){
+                var vObj = v.asJsonObject
+                if(value[0] != v){
+                  printama.addNewLine()
+                }
+                printama.printTextBold("${vObj.get("title").asString}: ${vObj.get("value").asString}")
+              }
+            }else{
+              var value = iObj.get("value").asString
+              printama.printTextBold(value)
+            }
           }
           if(hargaJual != ""){
             printama.addNewLine(2)
-            printama.printTextJustify("Total Harga : ", "Rp "+ hargaJual)
+            printama.printTextNormal("TOTAL ",Printama.LEFT)
+            printama.printTextBold( "Rp"+ hargaJual,Printama.RIGHT)
           }
-          printama.setNormalText()
+          printama.addNewLine(2)
+          printama.printText("Printed $formattedTime",Printama.CENTER)
           printama.feedPaper()
           printama.close()
         },{

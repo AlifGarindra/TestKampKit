@@ -3,6 +3,7 @@ package otto.com.sdk.ui.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -43,30 +44,35 @@ class WebViewKt : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     Log.d("testsynchronous", "onCreate: jalan")
     setContentView(R.layout.activity_webview_kt)
-    requestPhonePermissions()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      bluetoothPhonePermissions()
+    if(UserAuth.clientToken != "" && UserAuth.phoneNumber != ""){
+      requestPhonePermissions()
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        bluetoothPhonePermissions()
+      }
+      setUpWebView()
+      Log.d("testsynchronous", "onCreate selesai: jalan")
+    }else{
+      (this as Activity).finish()
     }
-    setUpWebView()
-    Log.d("testsynchronous", "onCreate selesai: jalan")
     }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
     Log.d("testsynchronous", "onNewIntent: jalan ")
-    requestPhonePermissions()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      bluetoothPhonePermissions()
+    if(UserAuth.clientToken != "" && UserAuth.phoneNumber != ""){
+      requestPhonePermissions()
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        bluetoothPhonePermissions()
+      }
+      setUpWebView()
+      Log.d("testsynchronous", "onNewIntent selesai: jalan")
+    }else{
+      (this as Activity).finish()
     }
-    setUpWebView()
-    Log.d("testsynchronous", "onNewIntent - selesai: jalan ")
   }
 
   override fun onDestroy() {
-    webView.evaluateJavascript("localStorage.clear()",{
-      Log.d("test1234", "onPageFinished:$it ")
-    })
     var status = GeneralStatus
     status.state = "destroy"
     status.message = ""

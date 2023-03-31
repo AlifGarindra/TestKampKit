@@ -40,8 +40,8 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Log.d("test1234", "onCreate mainact: ")
     setContentView(R.layout.activity_main)
-    Log.d("testsynchronous", "onCreate: ")
     if(Build.VERSION.SDK_INT > 19 ){
       api = PpobApi()
       setGeneralListener()
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onStart() {
     super.onStart()
-    Log.d("testsynchronous", "onStart: ")
+    Log.d("test1234", "onStart mainact: ")
     if(Build.VERSION.SDK_INT > 19 ){
       api = PpobApi()
       setGeneralListener()
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onResume() {
     super.onResume()
-    Log.d("testsynchronous", "onResume: ")
+    Log.d("test1234", "onResume mainact: ")
     if(Build.VERSION.SDK_INT > 19 ){
       api = PpobApi()
       setGeneralListener()
@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
       sharedPref = SharedPref(this@MainActivity)
     }
   }
-
   fun getUserInfo() {
     SDKManager.getInstance(this@MainActivity).userInfoListener(object : UserInfoListener {
       override fun onUserInfo(userInfo: UserInfoStatus) {
@@ -129,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     userAccessTokenExpiredApp.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
         api!!.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
-          userToken, refreshToken ->
+            userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
           val jsonString = gson.toJson(localUserToken)
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
@@ -158,7 +157,7 @@ class MainActivity : AppCompatActivity() {
 
     openActivationButton.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).setClientToken(clientTokenLabelSDK.text.toString()).openActivation(this@MainActivity)
+        SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
         refreshStateSDK("uat")
         refreshStateApp("uat")
       }
@@ -166,7 +165,10 @@ class MainActivity : AppCompatActivity() {
 
     openPPOBButtonSdk.setOnClickListener(object : View.OnClickListener {
       override fun onClick(v: View?) {
-        SDKManager.getInstance(this@MainActivity).setClientToken(clientTokenLabelSDK.text.toString()).setUserAccessToken(userAccessTokenLabelSDK.text.toString()).openPpob(this@MainActivity)
+        getUserInfo()
+        SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+        refreshStateSDK("uat")
+        refreshStateApp("uat")
       }
     })
 
@@ -210,25 +212,25 @@ class MainActivity : AppCompatActivity() {
 
   fun refreshStateSDK(state: String? = null) {
     runOnUiThread {
-    if (state != null) {
-      if (state == "phone") {
+      if (state != null) {
+        if (state == "phone") {
+          phoneNumberLabel.text = UserAuth.phoneNumber
+        }
+        if (state == "outlet") {
+          outletNameLabel.text = UserAuth.outletName
+        }
+        if (state == "ct") {
+          clientTokenLabelSDK.text = UserAuth.clientToken
+        }
+        if (state == "uat") {
+          userAccessTokenLabelSDK.text = UserAuth.userAccessToken
+        }
+      } else {
         phoneNumberLabel.text = UserAuth.phoneNumber
-      }
-      if (state == "outlet") {
         outletNameLabel.text = UserAuth.outletName
-      }
-      if (state == "ct") {
         clientTokenLabelSDK.text = UserAuth.clientToken
-      }
-      if (state == "uat") {
         userAccessTokenLabelSDK.text = UserAuth.userAccessToken
       }
-    } else {
-      phoneNumberLabel.text = UserAuth.phoneNumber
-      outletNameLabel.text = UserAuth.outletName
-      clientTokenLabelSDK.text = UserAuth.clientToken
-      userAccessTokenLabelSDK.text = UserAuth.userAccessToken
-    }
     }
   }
 
@@ -264,31 +266,25 @@ class MainActivity : AppCompatActivity() {
   fun setGeneralListener() {
     SDKManager.getInstance(this).generalListener = object : GeneralListener {
       override fun onOpenPPOB(status: GeneralStatus) {
-        Log.d("test1234", "isopen?: ${status.state}")
       }
 
       override fun onClosePPOB(status: GeneralStatus) {
-        Log.d("testsynchronous", "oncloseppob - getuserinfo 1")
         getUserInfo()
       }
 
       override fun onError(status: ErrorStatus) {
-        Log.d("testsynchronous", "${status.message} ${status.code}")
-
+        Log.d("test", "${status.message} ${status.code}")
       }
 
       override fun onClientTokenExpired() {
-        Log.d("testsynchronous", "onclienttokenexpired")
         api!!.getClientToken{
           PpobUser.clientToken = it
           SDKManager.getInstance(this@MainActivity).setClientToken(PpobUser.clientToken)
           refreshStateApp("ct")
           refreshStateSDK("ct")
           if(PpobUser.userAccessToken != ""){
-            Log.d("testsynchronous", "onclienttokenexpired - buka ppob")
-              SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
+            SDKManager.getInstance(this@MainActivity).openPpob(this@MainActivity)
           }else{
-            Log.d("testsynchronous", "onclienttokenexpired - open aktivasi")
             SDKManager.getInstance(this@MainActivity).openActivation(this@MainActivity)
           }
         }
@@ -297,7 +293,6 @@ class MainActivity : AppCompatActivity() {
       override fun onUserAccessTokenExpired() {
         val showError = Toast.makeText(this@MainActivity, "token expired!", Toast.LENGTH_SHORT)
         showError.show()
-        Log.d("testsynchronous", "onuseraccesstokenexpired")
         api!!.refreshUserAccessToken(PpobUser.clientToken,PpobUser.refreshToken,{
             userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
@@ -321,7 +316,7 @@ class MainActivity : AppCompatActivity() {
 
       override fun onAuthCode(authCode: String) {
         api!!.generateUserAccessToken(clientToken = PpobUser.clientToken, phoneNumber = phoneNumberInput.text.toString(),authCode= authCode){
-          userToken, refreshToken ->
+            userToken, refreshToken ->
           var localUserToken = LocalUserToken(userToken,refreshToken)
           val jsonString = gson.toJson(localUserToken)
           sharedPref!!.storeValue(phoneNumberInput.text.toString(),jsonString)
@@ -335,12 +330,10 @@ class MainActivity : AppCompatActivity() {
       }
 
       override fun onUserProfile(userInfo: UserInfoStatus) {
-        Log.d("testsynchronous", "onuserprofile")
         runOnUiThread{
           val showError = Toast.makeText(this@MainActivity, UserInfoStatus.balance, Toast.LENGTH_SHORT)
           showError.show()
         }
-        Log.d("test1234", "onUserProfile: ${userInfo.balance}")
       }
 
     }
