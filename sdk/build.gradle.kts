@@ -154,7 +154,7 @@ afterEvaluate{
         afterEvaluate {
           groupId = "id.ottodigital.sdk"
           artifactId = "ppob"
-          version = "1.0.2"
+          version = "1.0.3"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
