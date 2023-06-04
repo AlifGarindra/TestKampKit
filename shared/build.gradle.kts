@@ -53,9 +53,9 @@ android {
 kotlin {
     // jvm()
     android()
-    // ios()
+    ios()
     // Note: iosSimulatorArm64 target requires that all dependencies have M1 support
-    // iosSimulatorArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         all {

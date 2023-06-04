@@ -32,10 +32,13 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+
+// aall functions to provide a communication between webview javascript and native android function
+
 class nativeDo(var context : Context,var webview:WebView) : AppCompatActivity() {
   var value : String = ""
   var generalListener = SDKManager.getInstance(context).generalListener
-  val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
+  // val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
 private fun checkBluetooth(){
   val REQUEST_ENABLE_BT = 1 // Any integer value

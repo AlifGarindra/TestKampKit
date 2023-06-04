@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
+//function to download image and notify
+
 public class JavaScriptInterface {
   private Context context;
   public JavaScriptInterface(Context context) {

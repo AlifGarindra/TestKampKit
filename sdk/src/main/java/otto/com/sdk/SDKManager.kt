@@ -23,6 +23,8 @@ import org.koin.android.ext.android.inject
 import otto.com.sdk.static.userTokenTask
 import java.util.UUID
 
+// main entry to the sdk
+
 // data class Config(val clientKey: String)
 class SDKManager private constructor(context: Context) : AppCompatActivity()  {
   private val ppobRepository : PpobRepository by inject()
@@ -220,6 +222,7 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     }
   }
 
+  //function to determine should the sdk notify onUserAccessTokenExpired() or not
  private fun shouldNotifyExpired(){
    var counter = userTokenTask.failCounter
    var timestamp = userTokenTask.failTimeStamp
@@ -249,23 +252,11 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     UserAuth.reset()
   }
 
-
+  //function to initialize the sdk
   fun build(): SDKManager {
-
-    // Sentry.init { options ->
-    //   options.dsn = "https://03b330c4b8da43d0801e3afcbc6f3983@o4504072784773120.ingest.sentry.io/4504073112387584"
-    //   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-    //   // We recommend adjusting this value in production.
-    //   options.tracesSampleRate = 1.0
-    //   // When first trying Sentry it's good to see what the SDK is doing:
-    //   options.isDebug = true
-    // }
-
     initKoin(
       module {
         single<Context> { mContext }
-        // single<Config> { Config(clientKey) }
-        // viewModel { ProfileViewModel(get(), get { parametersOf("ProfileViewModel") }) }
         single<SharedPreferences> {
           get<Context>().getSharedPreferences(
             "STARTER_SETTINGS",
@@ -280,8 +271,5 @@ class SDKManager private constructor(context: Context) : AppCompatActivity()  {
     )
     return this@SDKManager
   }
-  // fun createMainScreen(): Composable {
-  //   val vm = ViewModelProvider.AndroidViewModelFactory(mContext as Application)
-  //     .create(ProfileViewModel::class.java)
-  // }
+
 }
