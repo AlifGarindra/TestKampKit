@@ -56,11 +56,11 @@ dependencies {
 
   implementation("androidx.core:core-ktx:1.8.0")
   implementation("androidx.appcompat:appcompat:1.5.0")
-  implementation("com.google.android.material:material:1.6.1")
+  // implementation("com.google.android.material:material:1.6.1")
   // implementation(project(mapOf("path" to ":shared")))
   // testImplementation("junit:junit:4.13.2")
-  androidTestImplementation("androidx.test.ext:junit:1.1.3")
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+  // androidTestImplementation("androidx.test.ext:junit:1.1.3")
+  // androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
   api(project(":shared"))
   // uncomment the line under if you want to use the shared library from ottodigital server
