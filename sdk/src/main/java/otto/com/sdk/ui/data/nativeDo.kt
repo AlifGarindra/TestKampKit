@@ -99,16 +99,6 @@ private fun checkBluetooth(){
   }
 
   @JavascriptInterface
-  fun exitWebview(causeString : String?){
-    // Log.d("test1234", "exitWebview:$causeString")
-    // var cause : JSONObject = JSONObject(causeString)
-    // if(cause.has("http") && cause.has("meta"  )){
-      generalListener?.onUserAccessTokenExpired()
-    // }
-    (webview.context!! as Activity).finish()
-  }
-
-  @JavascriptInterface
   fun onUserAccessTokenExpired(){
     var counter = userTokenTask.failCounter
     var timestamp = userTokenTask.failTimeStamp
