@@ -19,7 +19,9 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -103,10 +105,24 @@ fun setUpWebView(){
       return false
     }
 
+
     @SuppressLint("WebViewClientOnReceivedSslError")
-    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler, error: SslError?) {
-      Log.d("test1234", "onReceivedSslError:${error!!} ")
-      handler.proceed()
+    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler, error: SslError) {
+      Log.e("SSL Error", "Error: ${error.primaryError}")
+
+      view?.context?.let {
+        AlertDialog.Builder(it)
+          .setTitle("SSL Error")
+          .setMessage("There is a problem with the SSL certificate. Do you want to proceed?")
+          .setPositiveButton("Proceed") { _, _ ->
+            handler.proceed()
+          }
+          .setNegativeButton("Cancel") { _, _ ->
+            handler.cancel()
+          }
+          .setCancelable(false)
+          .show()
+      }
     }
     @Deprecated("Deprecated in Java")
     @SuppressWarnings("deprecation")
@@ -187,13 +203,14 @@ fun setUpWebView(){
   headers["OUTLET-NAME"] = UserAuth.outletName
   headers["CLIENT-TOKEN"] = UserAuth.clientToken
   headers["USER-ACCESS-TOKEN"] = UserAuth.userAccessToken
-  Log.d("testsynchronous", "headers - uat: ${UserAuth.userAccessToken} ")
+  Log.d("testsynchronous", "headers - uat: ${UserAuth.userAccessToken}")
   var openUrl =  intent.getStringExtra("urlPPOB")
   if(openUrl != null){
     webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug+'/'+openUrl,headers)
   }else{
     // webView.loadUrl("https://phoenix-imkas.ottodigital.id/sakumas?phoneNumber=0895611439571")
     webView.loadUrl(Constants.environtment.Ppob_Domain+Constants.environtment.Ppob_Menu_Slug,headers)
+    // webView.loadUrl("https://expired-rsa-ev.ssl.com/?_gl=1*1njn39n*_gcl_au*NDkwOTU1MTMyLjE2ODgzNTk0MjE.")
 
   }
 }
