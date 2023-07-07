@@ -62,9 +62,9 @@ dependencies {
   // androidTestImplementation("androidx.test.ext:junit:1.1.3")
   // androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
   // implementation("io.sentry:sentry:6.6.0")
-  api(project(":shared"))
+  // api(project(":shared"))
   // uncomment the line under if you want to use the shared library from ottodigital server
-  // api("id.ottodigital.sdk:ppob.shared:0.0.6")
+  api("id.ottodigital.sdk:ppob.shared:0.0.6")
   implementation ("com.google.code.gson:gson:2.10.1")
   implementation("com.github.anggastudio:Printama:0.9.7")
   // api("com.alifg.libraries:kampkitshared:1.1.4")
@@ -154,7 +154,7 @@ afterEvaluate{
         afterEvaluate {
           groupId = "id.ottodigital.sdk"
           artifactId = "ppob"
-          version = "1.0.3"
+          version = "1.0.4"
           // artifact("$projectDir/libs/sharedkampkit.aar"){
           //   classifier = "sharedkampkit"
           //   extension = "aar"
